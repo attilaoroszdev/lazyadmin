@@ -22,35 +22,49 @@
 
 
 
-	
+
 # The following fuinctions are provided as is. No guarantees that theY1ll evven work.
 # They meant are to allow for opening stuff in new terminal tab, or terminal window.
-# If your favourite terminal emulator uses different key combos, you might need to 
-# set those manually	
+# If your favourite terminal emulator uses different key combos, you might need to
+# set those manually
 #
 # You will need to install xdotool for these.
 
 
-		
+# This will enter a directory, execute a command or script, then return to the original directory
+# Usage:
+# run_function_in_tmp_directory "<target_tmp_:dir>" "<function_or_script>"
+function run_function_in_tmp_directory {
+
+    currentdirectory=$(pwd)
+    cd $1
+    $2
+    cd $currentdirectory
+
+}
+
+
+
+
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
 function run_command_in_new_tab {
 
 
-    
-    
+
+
     originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
-    
+
 
     WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
     xdotool windowfocus $WID
     xdotool key ctrl+shift+t $WID
 
 
-    # This is a workaround, for whne non-us layouts cause xdotool 
-    # to occasionally garble output (non-consistently, even within 
+    # This is a workaround, for whne non-us layouts cause xdotool
+    # to occasionally garble output (non-consistently, even within
     # the same session)
-    setxkbmap -layout us   
+    setxkbmap -layout us
 
     sleep 1
     xdotool type --delay 1 --clearmodifiers "$1"
@@ -61,7 +75,7 @@ function run_command_in_new_tab {
     # the keyboard layout back correctly, you might manually need to
     # Set it back to your own preference
     # get the correct values with
-    # setxkbmap -query 
+    # setxkbmap -query
     # (You might need to set variant as well as model, etc)
     setxkbmap -layout $originallayout
 
@@ -69,33 +83,33 @@ function run_command_in_new_tab {
 
 
 
-    
+
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
 function run_command_in_new_window {
 
     originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
-    
+
 
     WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
     xdotool windowfocus $WID
     xdotool key ctrl+shift+n $WID
-    
-        # This is a workaround, for whne non-us layouts cause xdotool 
-    # to occasionally garble output (non-consistently, even within 
+
+        # This is a workaround, for whne non-us layouts cause xdotool
+    # to occasionally garble output (non-consistently, even within
     # the same session)
-    setxkbmap -layout us  
+    setxkbmap -layout us
 
     sleep 1
     xdotool type --delay 1 --clearmodifiers "$1"
 
     xdotool key Return
-    
+
     # If you find that the beow command does not set_add_info_line
     # the keyboard layout back correctly, you might manually need to
     # Set it back to your own preference
     # get the correct values with
-    # setxkbmap -query 
+    # setxkbmap -query
     # (You might need to set variant as well as model, etc)
     setxkbmap -layout $originallayout
 
