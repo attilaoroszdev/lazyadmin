@@ -145,16 +145,6 @@ function read_descriptor {
 	fi
 }
 
-#function read_sub_descriptor {
-#	OLDIFS="$IFS"
-#	IFS=$'\n'
-#	if [[ "$activepanel" = "right" ]]; then
-#		menudescentry=( `cat $menufile | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'` )
-#	else
-#		menudescentry=( `cat $menufile | sed -n '/'_descsubmenu$1$2'/{:a;n;/'_enddescsubmenu$1$2'/q;p;ba}'` )
-#	fi
-#	IFS="$OLDIFS"
-#}
 
 # Load the items shown in the tab
 function read_tab_items {
@@ -462,7 +452,7 @@ function set_add_info_line {
 }
 
 
-# Causes the selector to jump to the "other end" of the menu, if reaching either the top ir the bottom
+# Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
 function infinite_menu {
 	if [[ "$activepanel" = "right" ]]; then
 		limit=$rightpanellength
@@ -514,9 +504,8 @@ function pick_menu_item {
 case $key in
 
  $'\e[A'|$'\e0A')
-	#Double jump if run on skip
 	
-
+	#Double jump if run on skip
 	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
 		((menupos--))
 	fi
@@ -524,9 +513,12 @@ case $key in
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
 		((menupos--))
 	fi
+	
 	((menupos--))
 	 ;;
+	 
  $'\e[B'|$'\e0B')
+ 
 	#Double jump if running on skip
 	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
 		((menupos++))
@@ -538,7 +530,9 @@ case $key in
 	
 	((menupos++))
 	;;
+	
  $'\e[D'|$'\e0D')
+ 
 	if [[ "$submenu" = "false" ]]; then
 		if [[ $tabpos -gt 0 ]]; then
 			clear_menu
@@ -547,6 +541,7 @@ case $key in
 		fi
 	fi
 	;;
+	
  $'\e[C'|$'\e0C')
 	if [[ "$submenu" = "false" ]]; then
 		if [[ $tabpos -lt $tablength ]]; then
@@ -557,6 +552,7 @@ case $key in
 	fi
 	;;
 't')
+
 	if $rightpanel && [[ "$activepanel" = "left" ]]; then
 		activepanel="right"
 	elif $rightpanel && [[ "$activepanel" = "right" ]]; then
@@ -603,7 +599,7 @@ case $key in
 	display_help
 	;;
  "x") #this handles exit function
-	functright2
+	functright3
 	;;
 'b' | "B")
 		if [[ "$submenu" = "true" ]]; then
@@ -770,7 +766,7 @@ function menu_item_picker_subflags	{
 		;;
 	"x" | "X") 
 		#this handles exit
-		functright2
+		functright3
 		;;
 	'b' | "B")
 		back_to_main_menu
@@ -986,7 +982,7 @@ function functright1 {
 	
 }
 
-function functright2 {
+function functright3 {
 
 	if [[ "$root" == "true" ]]; then
 		exit_n_menu "Leaving root shell"
@@ -996,7 +992,7 @@ function functright2 {
 	
 }
 
-function functright3 {
+function functright2 {
 
 	back_to_main_menu
 	

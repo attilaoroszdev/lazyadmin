@@ -19,17 +19,17 @@
 # Contact: attila.orosz@mail.com
 
 
-# To set the height of each menu (main menu and submenus, modify the 
+# To set the height of each menu (main menu and submenus, modify the
 #
-# $normalmenuheight and $submenuheight 
+# $normalmenuheight and $submenuheight
 #
 # variables in the
 #
-# '/config/lazy/admin/core/la-menu-defaults 
+# '/config/lazy/admin/core/la-menu-defaults
 #
 # file
 #
-# This is to ensure that similar menus have similar layouts even though they may have a different number of 
+# This is to ensure that similar menus have similar layouts even though they may have a different number of
 # entries (i.e. they draw the line at the bottom the saame place
 
 
@@ -67,7 +67,7 @@ Show example of setting flags to a command
 _enddescmenu0
 
 
-#Submenuitems for submenu01 - two digit numbers indicate submenus, 
+#Submenuitems for submenu01 - two digit numbers indicate submenus,
 #where the first digit (0) indicates the main menu entry the submenu belongs
 #and the second digit (1) indicates the submenu number
 
@@ -116,7 +116,7 @@ This is the first menuitem on the second tab
 skip
 This is the third menuitem on the second tab
 This is the fourth meniutem on the second tab
-Last item. You could squeeze one more, but it would be tight. 
+Last item. You could squeeze one more, but it would be tight.
 _enddescmenu1
 
 
@@ -166,44 +166,48 @@ Switch, add, modify or remove profiles for the same user
 _enddescmenu5
 
 
-#Contents of the right panel. only change this if you alter right panel functionality
+###----- Contents of the right panel. Only change this if you alter right panel functionality -----###
 
 
-#In the main menus
-# skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the 
-# menu positions for the other entries are identical 8needed for aliases, when using enter for selection)
+#----- In the main menus -----#
+
+# Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
+# menu positions for the other entries are identical (needed for aliases, when using enter for selection)
 # This is necessary, for "b -Back to Main Menu" is added in the submenu function
 
 _rightpanel
-r - Reflow Menu 
+r - Reflow Menu
 h - Get Help
+skip
 x - Exit
 _endrightpanel
 
 
-#In the submenus (contains back link)
-
-_subrightpanel
-r - Reflow menu
-h - Get Help
-x - Exit
-b - Back to Main Menu
-_endsubrightpanel
-
-#Descriptions of menuitems in main menu in the same order as the items above
+#---Descriptions of menuitems in main menu in the same order as the items above---#
 
 _rightpaneldesc
 Use this option after resizing the terminal window, or changing terminal size
 Display the detailed help file
-Exit n-menus, and return to your normal shell... and life...
+skip
+Exit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
 
-#Descriptions of menuitems in submenus in the same order as the items above
+#-----In the submenus (contains back link)-----#
+
+_subrightpanel
+r - Reflow menu
+h - Get Help
+b - Back to Main Menu
+x - Exit
+_endsubrightpanel
+
+
+#---Descriptions of menuitems in submenus in the same order as the items above---#
 
 _subrightpaneldesc
 Use this option after resizing the terminal window, or changing terminal size
 Display the detailed help file
-Exit n-menus, and return to your normal shell... and life...
 Return to main menu
+Exit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
