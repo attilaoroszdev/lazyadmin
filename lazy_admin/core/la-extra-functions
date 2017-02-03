@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
-#   Copyright (C) 2015  Attila Orosz
+#   Copyright (C) 2017  Attila Orosz
 #
 # This file is part of Lazy Admin
 #

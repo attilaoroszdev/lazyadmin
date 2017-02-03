@@ -1,4 +1,4 @@
-Copyright (c)  2015 Attila Orosz
+Copyright (c)  2017 Attila Orosz
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
 or any later version published by the Free Software Foundation;
@@ -6,16 +6,16 @@ with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
 A copy of the license is included in the section entitled "GNU
 Free Documentation License".
 
-Help file for n-menus
+Help file for Lazy Admin
 
 This will basically display the help page(s)
 Write whatever you want here
 
-By default it will have a detailed description of how to use n-menus and how to customize them
+By default it will have a detailed description of how to use Lazy Admin and how to customize them
 
 So here we go:
 
-The basic functionality of N-Menus is to provide a pseudo graphical UI, one tht can be navigated by the arrow keys, or with keyboard shortcuts.
+The basic functionality of Lazy Admin is to provide a pseudo graphical UI, one tht can be navigated by the arrow keys, or with keyboard shortcuts.
 
 The usability might be questionable. If you are a lazy sys admin, who is tired of typing long commands and cannot remember the aliases he set (it must come with age), you might find it handy.
 
@@ -38,7 +38,7 @@ By default it is set to have six tabs, five of which are free to use (or even al
 
 You can also use sub-menus, if you like, each could hold up to eight entries. This means, with 5 times 5 main menus, each holding 8 sub-menus, theoretically your total number or entries would be 200... if that is not enough, you could even increase like main menu height by one or two (adding one row of main menus opens op the possibility of adding 40 more entries in sub-menus)
 
-The maximum number of entries the main menu could could hold is 6, and the sub-menus could fit 9, but that would be a squeeze. Also, if you add more than that, the layout will break. You should adjust the defaults "normalmenuheight" and "submenuheight" in the n-defaults file ($HOME/.config/n-menus/n-defaults) to change this.
+The maximum number of entries the main menu could could hold is 6, and the sub-menus could fit 9, but that would be a squeeze. Also, if you add more than that, the layout will break. You should adjust the defaults "normalmenuheight" and "submenuheight" in the la-menu-defaults file ($HOME/.config/lazy_admin/la-menu-defaults) to change this.
 
 Using only sub-menus will have the solo disadvantage of not being able to handle flag-setting sub-menus (or not just yet). more on that later.
 
@@ -99,7 +99,7 @@ Working:
 	r - Re-flow menus
 	h - Display help
 	b - Back to main menu 
-	x - Exit n-menus
+	x - Exit la-menus
 
 Flags:
 
@@ -196,7 +196,7 @@ I have not yet implemented any user-friendly way to change stuff around... Proce
 Changing menu entries |
 -----------------------
 
-All the menu-entries will be stored in a file in $HOME/.config/n-menus/n-menuentries. While the installer only offers a local instll ATM, this might at a later stage change to /usr/local/share/n-menus/n-menuentries whenever a system-wide install will be available.
+All the menu-entries will be stored in a file in $HOME/.config/lazy_admin/la-menuentries. While the installer only offers a local instll ATM, this might at a later stage change to /usr/local/share/lazy_admin/la-menuentries whenever a system-wide install will be available.
 
 For now, just find the above file. I have tried to comment the file extensively, bt this only seems to make it more cluttered. anyway, it will hopefully be self-explanatory for the most.
 
@@ -287,18 +287,18 @@ Menu functions |
 
 You will find two files:
 
-	$HOME/.config.n-menus/n-user-functions
+	$HOME/.config/lazy_admin/n-user-functions
 
 and
 
-	$HOME/.config.n-menus/n-user-function-aliases
+	$HOME/.config/lazy_admin/n-user-function-aliases
 
 
 In the first file, you want to define any bash scripts in the form of a 'function', (or in whatever format you fancy, as long as it works), to use with the menus.
 
 Give them any name, there are very few restrictions (i.e., do not use the same name twice... besides following the usual naming conventions)
 
-To to tie them to your menus, you should use the 'n-menu-aliases' file
+To to tie them to your menus, you should use the 'la-menu-aliases' file
 
 Here you will find functions and “sub-functions,” (by name, that is) these will represent menu and sub-menu entries. Naming these will be similar to the naming of menus.
 
