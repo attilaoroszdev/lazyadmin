@@ -1,7 +1,7 @@
-# n-menus is a simple bash based pseudo UI to easily store and execute bash commands and user functions
-#   Copyright (C) 2015  Attila Orosz
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
 #
-# This file is part of n-menus
+# This file is part of Lazy Admin
 #
 # n-menus is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -14,7 +14,7 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with n-menus.  If not, see <http://www.gnu.org/licenses/>.
+# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
@@ -153,6 +153,9 @@ _descmenu4
 Write your own menus here
 _enddescmenu4
 
+
+# Keep these ion the last tab to preserve hotkeys
+
 _menu5
 e - Edit menu entries
 d - Edit script defaults
@@ -166,10 +169,10 @@ Switch, add, modify or remove profiles for the same user
 _enddescmenu5
 
 
-###----- Contents of the right panel. Only change this if you alter right panel functionality -----###
+### Contents of the right panel. Only change this if you alter right panel functionality ###
 
 
-#----- In the main menus -----#
+## In the main menus ##
 
 # Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
 # menu positions for the other entries are identical (needed for aliases, when using enter for selection)
@@ -183,7 +186,7 @@ x - Exit
 _endrightpanel
 
 
-#---Descriptions of menuitems in main menu in the same order as the items above---#
+## Descriptions of menuitems in main menu in the same order as the items above ##
 
 _rightpaneldesc
 Use this option after resizing the terminal window, or changing terminal size
@@ -193,7 +196,7 @@ Exit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
 
-#-----In the submenus (contains back link)-----#
+## In the submenus (contains back link)  ##
 
 _subrightpanel
 r - Reflow menu
@@ -203,7 +206,7 @@ x - Exit
 _endsubrightpanel
 
 
-#---Descriptions of menuitems in submenus in the same order as the items above---#
+## Descriptions of menuitems in submenus in the same order as the items above ##
 
 _subrightpaneldesc
 Use this option after resizing the terminal window, or changing terminal size

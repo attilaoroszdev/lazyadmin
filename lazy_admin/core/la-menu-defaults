@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# n-menus is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
 #   Copyright (C) 2015  Attila Orosz
 #
-# This file is part of n-menus
+# This file is part of Lazy Admin
 #
 # n-menus is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,7 +16,7 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with n-menus.  If not, see <http://www.gnu.org/licenses/>.
+# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
