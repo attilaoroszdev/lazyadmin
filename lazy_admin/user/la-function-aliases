@@ -1,0 +1,194 @@
+#!/bin/bash
+
+# n-menus is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2015  Attila Orosz
+#
+# This file is part of n-menus
+#
+# n-menus is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with n-menus.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+. $HOME/.config/lazy_admin/user/la-user-functions
+. $HOME/.config/lazy_admin/core/la-extra-functions
+
+
+#Main menu functions in the format of funct#tab#menuitem
+#First tab is 0, first item is 0
+#E.g. 
+#Fist tab first item is: funct00
+#Second tab tird menuitem is: funct12
+#
+#You could implement your functions right here, but it is probably 
+#easier and less messy to put them in a separate file, and it will make 
+#them easier to reuse or reorganise in the menu
+
+function funct00 {
+	
+	#call the built in, fantastic function example. o yeah
+	example_function
+	
+}
+
+function funct01 {
+	
+	#To invoke a submenu, you can use the enter_submenu function, as defined in n-menu-functions. give the menu title as a first argument, enclosd in ""
+	enter_submenu $@ "Example title"
+}
+
+function funct02 {
+		localhost_ping
+		
+}
+
+function funct03 {
+	
+	#Here is an example of how to invoke the flag setting submenu
+	#
+	#Call flags_submenu_function with the following arguments:
+	#
+	#$1 - Title of submenu, enclosed in ""
+	#$2 - Function to execute
+	#$3 to $9 - A list of the flags entered literally
+	#
+	#Note 0: You could set 10 or more arguments, but the shortkeys 
+	#(i.e. using the keyboard to add the flags) wil only work up to nine 
+	#parameters
+	#
+	#Note 1: You can hard-code items that contain whitespace by placing 
+	#them in single or doune quotes. (See '-c 3' here) For flexibility 
+	#it might be better to only hardcode the first part and the optional 
+	#bit could be entered manually, using the "m - Enter flags manually" 
+	#functionality. I.e. You could pass -c as an argument, then set the 
+	#number manually, as in the last argument
+	#
+	#Note 2: You must literally enter all arguments, along with the 
+	#adequate number of hyphens (- or --)
+	#
+	#Note 3: The manual set option can be useful for setting the hostname/any 
+	#other argumenrt (in that case just take out the "localhost" bit 
+	#from the original function "flagtets_localhostping in this case)
+	
+	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+
+	
+}
+
+function funct10 {
+	
+dummy_function
+		
+}
+
+function funct12 {
+	dummy_function
+	
+}
+
+function funct13 {
+	dummy_function
+	
+	
+}
+
+function funct14 {
+	dummy_function
+	
+}
+
+function funct20 {
+	
+	dummy_function
+	
+}
+
+function funct21 {
+	
+	dummy_function
+	
+}
+
+function funct22 {
+	
+	dummy_function
+	
+}
+
+function funct23 {
+	
+	dummy_function
+	
+}
+
+function funct24 {
+
+	dummy_function
+	
+}
+
+function funct30 {
+	
+	dummy_function
+	
+}
+
+function funct40 {
+	
+	dummy_function
+	
+}
+
+function funct50 {
+	
+	editmenu_dummy
+	
+}
+
+function funct51 {
+	
+	editdefaults_dummy
+	
+}
+
+function funct52 {
+	
+	profiles_dummy
+	
+}
+
+#Submenu functions. these will have a similar naming system, except 
+#they would be extended by submenu position as well, making it subfunctt###
+# or sunfunct#tabpositionin#mainmenupositionin#submenuposition
+#that is, for e.g. the first tab second menuitem, 3rd submenuitem:
+# subfunct012
+#for the third tab, first submenu, fifth submenuitem
+# subfunct204
+#and soon
+
+function subfunct010 {
+	
+	localhost_ping
+	
+}
+
+function subfunct011 {
+	
+	example_function
+
+}
+
+function subfunct013 {
+	
+	dummy_function
+	}
