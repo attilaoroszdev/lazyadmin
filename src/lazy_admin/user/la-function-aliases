@@ -20,10 +20,11 @@
 #
 # Contact: attila.orosz@mail.com
 
-APP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+USER_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CORE_DIR="$(dirname "$CORE_DIR")/core"
 
-. $APP_DIR/la-user-functions
-. $APP_DIR/../core/la-extra-functions
+. "$USER_DIR/la-user-functions"
+. "$CORE_DIR/la-extra-functions"
 
 
 

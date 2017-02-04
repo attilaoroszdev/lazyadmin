@@ -27,21 +27,24 @@
 #Cusom "user functions" will be stored in ./n-functions
 
 
-if [ -f $menufile ]; then
-echo "Setting menus..."
+if [[ -f $menufile ]]; then
+    echo "Setting menus..."
 else
 	clear
 	echo
-	echo "Error: cannot find menuentries file in default location. Exiting..."
-	echo $menufile
-	exit 65
+    echo "Looked for menus in:"
+    echo $menufile
+    echo
+	echo "Error: Cannot find menuentries file in default location. Exiting..."
+    echo
+    exit 65
 fi
 
 #This function will read the menu entries from the menu entries file as set in defaults
 function read_menu_items {
 
-if [[ "$submenu" = "true" ]]; then 
-	
+if [[ "$submenu" = "true" ]]; then
+
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	menuentry=( `cat $menufile | sed -n '/'_submenu$1$2'/{:a;n;/'_endsubmenu$1$2'/q;p;ba}'` )
@@ -66,20 +69,20 @@ function set_flags_submenu_items {
 	#Parse the argument list into the array, starting form the 5th argument
 	arrayoffset=2
 	arraycounter=1
-	
+
 
 	for i in "$@"; do
-	
-		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le $# ]]; then
-	
+
+		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le 10 ]]; then
+
 			let currentflagitem=$arraycounter-2
 			menuentry[currentflagitem-1]="$currentflagitem - Set flag $i"
-		
+
 		fi
 		((arraycounter++))
-	
+
 	done
-	
+
 	#Check if entries have already been written, by checking last element
 		lastentry=${menuentry[${#menuentry[@]}-1]}
 	if [[ "$lastentry" != "d - Delete set flags" ]]; then
@@ -87,9 +90,9 @@ function set_flags_submenu_items {
 		menuentry+=("c - Commit with flags")
 		menuentry+=("d - Delete set flags")
 	fi
-	
+
 	menulength=${#menuentry[@]}
-	
+
 }
 
 function write_flags_descriptor {
@@ -97,9 +100,9 @@ function write_flags_descriptor {
 	tput cup $cursorpos $menuwidth
 	echo -e "\033[1K"
 	tput cup $cursorpos 2
-	
+
 	case ${menuentry[$menupos]} in
-	
+
 	"m - Manually enter flags ")
 	echo "Manually enter flags for the command specified"
 	;;
@@ -119,9 +122,9 @@ function write_flags_descriptor {
 
 # read descriptor lines for menu items
 function read_descriptor {
-	
+
 	if [[ "$submenu" = "true" ]]; then
-	
+
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	if [[ "$activepanel" = "right" ]]; then
@@ -130,9 +133,9 @@ function read_descriptor {
 		menudescentry=( `cat $menufile | sed -n '/'_descsubmenu$1$2'/{:a;n;/'_enddescsubmenu$1$2'/q;p;ba}'` )
 	fi
 	IFS="$OLDIFS"
-	
+
 	else
-	
+
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	if [[ "$activepanel" = "right" ]]; then
@@ -141,7 +144,7 @@ function read_descriptor {
 		menudescentry=( `cat $menufile | sed -n '/'_descmenu$tabpos'/{:a;n;/'_enddescmenu$tabpos'/q;p;ba}'` )
 	fi
 	IFS="$OLDIFS"
-	
+
 	fi
 }
 
@@ -171,7 +174,7 @@ function read_rightpanel_items {
 		rightpanelentry=( `cat $menufile | sed -n '/'_rightpanel'/{:a;n;/'_endrightpanel'/q;p;ba}'` )
 	fi
 	IFS="$OLDIFS"
-	
+
 	rightpanellength=${#rightpanelentry[@]}
 }
 
@@ -181,30 +184,30 @@ function write_tab_items {
 	for (( n=0; n <= $tablength; n++ ))
 	do
 		if [[ n -eq $tabpos ]]; then
-			
+
 			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m|"
-			
+
 		else
-		
+
 			echo -n " ${tabentry[n]} |"
-		
+
 		fi
 	done
 }
 
 # Populate the drawn menu template with themenuitelms
 function write_menu_items {
-	
+
 #draw the menu items
-#If the position is right, it changes the background. 
+#If the position is right, it changes the background.
 #As the variable does not get modified, this needs no resetting
 
 for (( n=0; n < $menulength; n++ ))
 do
 	if [[ "${menuentry[n]}" = "skip" ]]; then
-	
+
 	((n++))
-	
+
 	fi
 	if [[ n -eq $menupos ]] && [[ "$activepanel" = "left" ]];then
 		tput cup $(( n + $headerheight + 2 )) 2
@@ -212,9 +215,9 @@ do
 	else
 		tput cup $(( n + $headerheight + 2 )) 2
 		echo "${menuentry[n]}"
-		
+
 	fi
-	
+
 done
 
 cursorpos=`tput lines`
@@ -228,9 +231,9 @@ function write_rightpanel_items {
 for (( n=0; n < $rightpanellength; n++ ))
 do
 	if [[ "${rightpanelentry[n]}" = "skip" ]]; then
-	
+
 	((n++))
-	
+
 	fi
 	if [[ n -eq $menupos ]] && [[ "$activepanel" = "right" ]]; then
 		tput cup $(( n + $headerheight + 2 )) $(( $menuwidth-$rightpanelwidth+3 ))
@@ -238,7 +241,7 @@ do
 	else
 		tput cup $(( n + $headerheight + 2 )) $(( $menuwidth-$rightpanelwidth+3 ))
 		echo "${rightpanelentry[n]}"
-		
+
 	fi
 done
 
@@ -246,14 +249,14 @@ cursorpos=`tput lines`
 tput cup $cursorpos 0
 }
 
-#Draws a line 
+#Draws a line
 function draw_line {
-	
+
 	#draw line with the length of the screen/window width
 	for (( i=0; i<$menuwidth; i++ ))
 	do
 		echo -n "―"
-	done	
+	done
 	#cursor goes to next row
 
 }
@@ -269,11 +272,11 @@ function clear_menu {
 
 #Draws the outline of the menu, with spaces left out for inclusion of items
 function draw_menu {
-	
+
 	if [[ "$subflagsmenu" = "true" ]]; then
 		let menuheight=$menulength+3
 	fi
-	
+
 	if [[ "$submenu" = "true" ]]; then
 		headerheight=$subheaderheight;
 		title=$submenutitle
@@ -281,33 +284,33 @@ function draw_menu {
 		headerheight=$mainheaderheight
 		title=$maintitle
 	fi
-	
+
 	if [[ "$root" == "true" ]]; then
-	
+
 		title=$title$roottitle
 	fi
-		
+
 	## Set width of screen and panels
 	menuwidth=( `tput cols` - 1 )
-	
+
 	if ! $rightpanel; then
 		rightpanelwidth=0
 	fi
-	
+
 	leftpanelwidth=$(( $menuwidth-$rightpanelwidth ))
-	
+
 	#clear menu area. Should be done each time tabs or submenus are changed
 	clear_menu
-	
+
 	#draw title
 	cursorpos=0
 	tput cup $cursorpos 0
 	draw_line
 	((cursorpos++))
-	tput cup $cursorpos 0 
+	tput cup $cursorpos 0
 	echo "|       "
 	tput cup $cursorpos $(( menuwidth/2 - (${#title}/2) ))
-	
+
 	#title must be set by function for submenus...
 	if [[ "$root" != "true" ]]; then
 		echo -e "\e[01m$title\e[00m"
@@ -318,7 +321,7 @@ function draw_menu {
 	echo "|"
 	((cursorpos++))
 	draw_line
-	
+
 	#Draw top and bottom border of menu tabs
 	#Skip this for submenus
 	if ! $submenu; then
@@ -326,16 +329,16 @@ function draw_menu {
 		tput cup $cursorpos 0
 		echo -n "|"
 		tput cup $cursorpos $menuwidth
-		echo "|"	
+		echo "|"
 		((cursorpos++))
 		tput cup $cursorpos 0
 		draw_line
 	fi
-	
+
 	# If rigth panel is on, draw its separator
 	if $rightpanel; then
 	cursorpos=$(( headerheight+1 ))
-	
+
 	for (( i=0; i<menuheight; i++ ))
 	do
 	tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
@@ -343,13 +346,13 @@ function draw_menu {
 	((cursorpos++))
 	done
 	fi
-	
+
 		cursorpos=$(( $headerheight+$menuheight ))
-	
+
 		tput cup $cursorpos 0
 	draw_line
 	(( cursorpos+=$(( $descriptorheight+1 )) ))
-	
+
 	tput cup $cursorpos 0
 	draw_line
 
@@ -381,7 +384,7 @@ function draw_add_info_line {
 #Clears the additional info area
 
 function clear_add_info {
-	
+
 	cursorpos=$(( $headerheight+$menuheight+$descriptorheight+2 ))
 	tput cup $cursorpos $menuwidth
 	echo -e "\033[1K"
@@ -389,7 +392,7 @@ function clear_add_info {
 	tput cup $cursorpos $menuwidth
 	echo -e "\033[1K"
 	((cursorpos-=3))
-		
+
 }
 
 # This could also be called for certain menus
@@ -398,12 +401,12 @@ function clear_add_info {
 #This is dynamic content as opposd to thje static descriptor line
 
 function write_additional_info {
-	
+
 	if [[ "$1" = "true" ]]; then
-		
+
 		draw_add_info_line
 		echo $2
-		
+
 	fi
 }
 
@@ -414,30 +417,30 @@ function set_add_info_line {
 
 	#delete the extra line, we will write only when needed
 	clear_add_info
-	
-	
-	
+
+
+
 	#
 	# ToDo: Make this function also read from the menu file and set info line accordingly
 	# Dynamic oinfo could be set with a keyword,
 	#
-	
-	
-	
+
+
+
 	#if [[ "$submenu" = "false" ]]; then
 #		case $tabpos in
 #		0)
 #			write_additional_info true "This here is the very first tab"
 #			;;
 #		2)
-#			#Set info text into a variable depending on the poutcom of the if statement. 
+#			#Set info text into a variable depending on the poutcom of the if statement.
 #			#It could also be from any function, command, etc
 #			if [[ $menupos -gt 1 ]]; then
 #				infotowrite="You are below the second menu item"
 #			else
 #				infotowrite="You are above the third menu item"
 #			fi
-#	
+#
 #			write_additional_info true "$infotowrite"
 #			;;
 #		4)
@@ -446,7 +449,7 @@ function set_add_info_line {
 #		esac
 #	else
 #	write_additional_info true "This is the submenu \"$submenutitle\". Press b to return to main menu."
-#			
+#
 #	fi
 
 }
@@ -459,20 +462,20 @@ function infinite_menu {
 	else
 		limit=$menulength
 	fi
-		
-	
+
+
 	if [[ $menupos -ge $limit ]]; then
 		menupos=0
 	fi
 	if [[ $menupos -lt 0 ]]; then
 		menupos=$(( $limit-1 ))
 	fi
-	
-		
+
+
 }
 
 # This function will invoke a submenu where you can set flags/arguments/parameters for the spcified command or function
-# Call with parameters (args), like this: 
+# Call with parameters (args), like this:
 #
 # submenu_flags_function $tabpos $menupos "Title" function_or_command_to_call 1st_flag 2nd_flag 3rd_flag 4th_flag 5th_flag
 #
@@ -504,7 +507,7 @@ function pick_menu_item {
 case $key in
 
  $'\e[A'|$'\e0A')
-	
+
 	#Double jump if run on skip
 	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
 		((menupos--))
@@ -513,12 +516,12 @@ case $key in
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
 		((menupos--))
 	fi
-	
+
 	((menupos--))
 	 ;;
-	 
+
  $'\e[B'|$'\e0B')
- 
+
 	#Double jump if running on skip
 	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
 		((menupos++))
@@ -527,12 +530,12 @@ case $key in
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
 		((menupos++))
 	fi
-	
+
 	((menupos++))
 	;;
-	
+
  $'\e[D'|$'\e0D')
- 
+
 	if [[ "$submenu" = "false" ]]; then
 		if [[ $tabpos -gt 0 ]]; then
 			clear_menu
@@ -541,7 +544,7 @@ case $key in
 		fi
 	fi
 	;;
-	
+
  $'\e[C'|$'\e0C')
 	if [[ "$submenu" = "false" ]]; then
 		if [[ $tabpos -lt $tablength ]]; then
@@ -559,9 +562,9 @@ case $key in
 		activepanel="left"
 	fi
  ;;
- 
+
  [0-9])
-	
+
 	# If numeric input is selected
 	if [[ $key -le $menulength ]] && [[ $key -ge 0 ]]; then
 	((key--))
@@ -571,7 +574,7 @@ case $key in
 	else
 		funct$tabpos$key $tabpos $menupos
 	fi
-	
+
 	fi
 	 ;;
 
@@ -583,9 +586,9 @@ case $key in
 		if [[ "$submenu" = "true" ]]; then
 			subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
 		else
-			
+
 				funct$tabpos$menupos $tabpos $menupos
-			
+
 		fi
 	fi
 	init_menu
@@ -623,7 +626,7 @@ case $key in
 		funct51
 		init_menu
 	fi
-	
+
 	;;
 
 
@@ -631,16 +634,16 @@ case $key in
 esac
 
 	}
-		
+
 function menu_item_picker_subflags	{
-	
+
 	read -sN1 key # 1 char (not delimiter), silent
 		read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
 		read -sN1 -t 0.0001 k2
 		read -sN1 -t 0.0001 k3
 		key+=${k1}${k2}${k3}
-		
-		
+
+
 		case $key in
 
 		$'\e[A'|$'\e0A')
@@ -657,20 +660,20 @@ function menu_item_picker_subflags	{
 			fi
 			((menupos++))
 			;;
-				
+
 		[0-9])
-	
+
 		# If numeric input is selected
 		let argstoset=$#-3
 		if [[ $key -le "$argstoset+1" ]] && [[ $key -ge 0 ]]; then
 		((key+=2))
-		
+
 		set_args=$set_args' '${!key}
 		fi
 		;;
-		
-		
-		'm' | 'M')  echo 
+
+
+		'm' | 'M')  echo
 		    echo "Type your arguments here, and press enter "
 			echo
 			read -p "> " lineargs
@@ -678,46 +681,50 @@ function menu_item_picker_subflags	{
 			clear
 			draw_menu
 			;;
-	
-		'c' | 'C') 
-		
+
+		'c' | 'C')
+
 			clear
+			echo
+			echo "Executing:"
+			echo "$submenucommand $set_args"
+			echo
 			$submenucommand $set_args
-			echo 
+			echo
 			echo "Now press a key to get back to the menu"
-			read -n 1 -s keypress 	
+			read -n 1 -s keypress
 			break
 			;;
-	
+
 		'd' | 'D') set_args=''
 			clear
 			draw_menu
 			;;
- 
- 
+
+
 		'')
 			# If enter is pressed
 			if [[ "$activepanel" = "right" ]]; then
-				
+
 				functright$menupos
-			
+
 			else
 					let argstoset=$#-3
 					if [[ $menupos -le "$argstoset" ]] && [[ $menupos -ge 0 ]]; then
-							
+
 							#reference parameters by number according to menuposition
 							let addarg=$menupos+3
-														
+
 							set_args=$set_args' '${@:$addarg:1}
-							
+
 					else
-					
+
 					let manual_flags=$argstoset+1
 					let commit_flags=$argstoset+2
 					let delete_flags=$argstoset+3
-							
+
 					case $menupos in
-								
+
 					$manual_flags)  echo
 						echo "Type your arguments here, and press enter"
 						echo
@@ -725,29 +732,32 @@ function menu_item_picker_subflags	{
 						set_args=$set_args' '$lineargs
 						clear
 						draw_menu
-	
+
 						;;
-	
-					$commit_flags) 
+
+					$commit_flags)
 						clear
+						echo "Executing:"
+			            echo "$submenucommand $set_args"
+			            echo
 						$submenucommand $set_args
-						echo 
+						echo
 						echo "Now press a key to get back to the menu"
-						read -n 1 -s keypress 	
+						read -n 1 -s keypress
 						break
 						;;
-			
+
 					$delete_flags) set_args=''
 						clear
 						draw_menu
 					;;
-		
+
 					esac
 				fi
-	
+
 			fi
 			;;
-	
+
 	#switch between left and right menus
 	't' |'T')
 			if $rightpanel && [[ "$activepanel" = "left" ]]; then
@@ -756,7 +766,7 @@ function menu_item_picker_subflags	{
 				activepanel="left"
 			fi
 		;;
-	
+
 	#right menu items (on keypress)
 	"r" | "R")
 		reflow_menu
@@ -764,49 +774,49 @@ function menu_item_picker_subflags	{
 	"h" | "H")
 		display_help
 		;;
-	"x" | "X") 
+	"x" | "X")
 		#this handles exit
 		functright3
 		;;
 	'b' | "B")
 		back_to_main_menu
 		;;
-	
+
 	esac
-	
+
 }
 
 
 function flags_submenu_function {
-	
+
 	menuentry=()
-	
-	if [[ "$submenu" == "true" ]]; then 
+
+	if [[ "$submenu" == "true" ]]; then
 		sourcesubmenu="true"
 	else
 		sourcesubmenu="false"
 	fi
-	
+
 	submenu="true"
 	subflagsmenu="true"
 	submenutitle="$1"
 	submenucommand="$2"
 	menupos=0
-	
+
 	#Have to empty the arguments each time, as set_submenu_function is not an "object", but just a single instance of a function.
 	#Best avoid confusion
 	set_args=""
-		
+
 	clear
-	
+
 	set_flags_submenu_items "$@"
-	
+
 	read_rightpanel_items
 	draw_menu
 	while true; do
-		
+
 		set_flags_submenu_items "$@"
-		
+
 		read_rightpanel_items
 		infinite_menu
 		write_menu_items
@@ -821,17 +831,17 @@ function flags_submenu_function {
 		echo
 
 		## TODO: Got to make sure this does not go ovber the screen limit
-		echo "Full command: "$submenucommand $set_args 
-		
-		
+		echo "Active command: "$submenucommand $set_args
+
+
 		#if [[ -n $set_args ]]; then
 	    #   echo "The active flags (args) are: $set_args"
 		#else
 		#	echo "No flags (args) specified"
 		#fi
-	
+
 	menu_item_picker_subflags "$@"
-		
+
 
 	done
 	submenu="$sourcesubmenu"
@@ -842,42 +852,42 @@ function flags_submenu_function {
 #this is the standard reflow function
 
 function reflow_menu {
-	
+
 	clear
 	draw_menu
 	infinite_menu
 	write_menu_items
 	write_descriptor
-	
+
 }
 
 function display_help {
 
 	clear
-	
+
 	echo
 	echo "Advice on how to use and customes n-menus will follow"
-	echo 
+	echo
 	echo "To navigate use the Arrow keys, or PageUp, PageDown"
 	echo "To exit, press 'q'"
-	echo 
+	echo
 	echo "Press any key to continue to the help page"
 	echo
 	read -n 1 -s keypress
-		
+
 	cat $helpfile | less
-		
+
 	init_menu
 }
 
 function exit_la_menus {
-	
+
 	clear
 	echo
 	echo "$@"
-	echo 
+	echo
 	exit 0
-	
+
 }
 
 function back_to_main_menu {
@@ -888,7 +898,7 @@ function back_to_main_menu {
 	menupos=0
 	init_menu
 	break
-	
+
 }
 
 
@@ -899,7 +909,7 @@ submenu="false"
 subflagsmenu="false"
 
 read_tab_items
-read_menu_items 
+read_menu_items
 read_descriptor
 infinite_menu
 
@@ -920,7 +930,7 @@ pick_menu_item
 }
 
 function sub_menu {
-	
+
 submenu="true"
 subflagsmenu="false"
 
@@ -950,7 +960,7 @@ function init_menu {
 	else
 		root="true"
 	fi
-	
+
 	clear
 	read_menu_items $1 $2
 	read_descriptor $2 $2
@@ -960,7 +970,7 @@ function init_menu {
 }
 
 function enter_submenu {
-	
+
 	submenu="true"
 	submenutitle="$3"
 	mainmenupos="$menupos"
@@ -974,15 +984,15 @@ function enter_submenu {
 #Right panel functions
 
 function functright0 {
-	
+
 	reflow_menu
-	
+
 }
 
 function functright1 {
 
 	display_help
-	
+
 }
 
 function functright3 {
@@ -992,13 +1002,13 @@ function functright3 {
 	else
 		exit_la_menus "Exiting..."
 	fi
-	
+
 }
 
 function functright2 {
 
 	back_to_main_menu
-	
+
 }
 
 function functright4 {
@@ -1012,7 +1022,7 @@ echo "nothing"
 
 # Initialises and displays the main menu
 function main {
-	
+
 		if [[ "$@" != "" ]]; then
 
 	oldmaintitle="$maintitle"
@@ -1022,13 +1032,12 @@ function main {
 			maintitle="$oldmaintitle"
 		fi
 	fi
-	
+
 	init_menu
 
 while true; do
-	
+
 	main_menu
 
 done
 }
-

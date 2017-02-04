@@ -21,8 +21,10 @@
 # Contact: attila.orosz@mail.com
 
 
-APP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-. $APP_DIR/../core/la-extra-functions
+USER_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CORE_DIR="$(dirname "$CORE_DIR")/core"
+
+. "$CORE_DIR/la-extra-functions"
 
 
 # Set your custom functions here, if any custom script is to be called
