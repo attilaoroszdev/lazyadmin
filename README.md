@@ -6,18 +6,6 @@ Lazy Admin will draw a pseudo graphical menu on your termainal, or terminal emul
 
 You can thin of Lazy Admin as aliases on steroids. People are inherently visual. Instead of remembering  and typing out long commands, funny script names, and all their parameters, or even funnier aliases, you can store the on a conveniently navigable tabbed menu-like interface.
 
-## Screenshots
-
-They say that a picture is worth a thousand words. So here's Lazy Admin in 4000 words:
-
-![](/media/lazy-admin-1.png)
-
-![](/media/lazy-admin-2.png)
-
-![](/media/lazy-admin-3.png)
-
-![](/media/lazy-admin-4.png)
-
 ## What does it do?
 
 * **Arrow-key navigation** - No awkward keyboard bindings. Arrow keys do what you expect them to do
@@ -30,6 +18,19 @@ They say that a picture is worth a thousand words. So here's Lazy Admin in 4000 
 * **Optional side panel** - with predefined items like *Help*, *Reflow menu*, and *Exit*, which can also hold user defined items. Ideal for holding menu items that might apply to all tabs.
 * **No dependencies "pure" bash interface** - ideal for managing servers via SSH.
 * **Easy set-up** - The "interactive" installer script is completely platform independent. Settings can be changed by editing simple text files. Script aliases bind scripts to menu items by position, and a user script "repository" file is also available.
+
+## Screenshots
+
+They say that a picture is worth a thousand words. So here's Lazy Admin in 4000 words:
+
+![](/media/lazy-admin-1.png)
+
+![](/media/lazy-admin-2.png)
+
+![](/media/lazy-admin-3.png)
+
+![](/media/lazy-admin-4.png)
+
 
 ## Yeak ok, but why *Lazy* Admin?
 
