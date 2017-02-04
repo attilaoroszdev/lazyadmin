@@ -6,7 +6,17 @@ Lazy Admin will draw a pseudo graphical menu on your termainal, or terminal emul
 
 You can thin of Lazy Admin as aliases on steroids. People are inherently visual. Instead of remembering  and typing out long commands, funny script names, and all their parameters, or even funnier aliases, you can store the on a conveniently navigable tabbed menu-like interface.
 
-***IMAGE***
+## Screenshots
+
+They say that a picture is worth a thousand words. So here's Lazy Admin in 4000 words:
+
+![](/media/lazy-admin-1.png)
+
+![](/media/lazy-admin-2.png)
+
+![](/media/lazy-admin-3.png)
+
+![](/media/lazy-admin-4.png)
 
 ## What does it do?
 
@@ -23,7 +33,7 @@ You can thin of Lazy Admin as aliases on steroids. People are inherently visual.
 
 ## Yeak ok, but why *Lazy* Admin?
 
-Because it's meant for sysadmins, who are lazy. lazy to type, lazy to remember, etc.
+Because it's meant for sysadmins, who are lazy. Lazy to type, lazy to remember, etc.
 
 ## Does it make sense?
 
@@ -103,7 +113,7 @@ To **change some default values**, like increase the menu capacity (current heig
 
 There are some **special functions** predefined in `$HOME/.config/lazy_admin/core/la-extra-functions`, through which you can run stuff in a new terminal tab or new terminal window (regardless of what terminal emulator you are using).
 
-> **Hint** These will only work in you local emulator, so if you will need to establish a new remote connection if you are working remotely
+> **Hint** These will only work in you local emulator, so if you will need to establish a new remote connection from each new tab or window if you are working remotely, so this might not make so much sense anyway. Good for local use though.
 
 Another special function is `run_function_in_tmp_directory` which will enter a given directory, run a function or command, then return to the original directory. It can save you some repetitive scripting.
 
