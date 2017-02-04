@@ -275,9 +275,10 @@ function draw_menu {
 
 	if [[ "$subflagsmenu" = "true" ]]; then
 		let menuheight=$menulength+3
-	fi
-
-	if [[ "$submenu" = "true" ]]; then
+		headerheight=$subheaderheight;
+		title=$subflagsmenutitle
+		
+	elif [[ "$submenu" = "true" ]]; then
 		headerheight=$subheaderheight;
 		title=$submenutitle
 	else
@@ -818,7 +819,7 @@ function flags_submenu_function {
 
 	submenu="true"
 	subflagsmenu="true"
-	submenutitle="$1"
+	subflagsmenutitle="$1"
 	submenucommand="$2"
 	menupos=0
 
