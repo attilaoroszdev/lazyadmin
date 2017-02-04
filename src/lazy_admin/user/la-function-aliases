@@ -47,7 +47,7 @@ function funct00 {
 function funct01 {
 	
 	#To invoke a submenu, you can use the enter_submenu function, as defined in n-menu-functions. give the menu title as a first argument, enclosd in ""
-	enter_submenu $@ "Example title"
+	enter_submenu $@ "Sample submenu title"
 }
 
 function funct02 {

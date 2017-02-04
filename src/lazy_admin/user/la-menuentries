@@ -50,7 +50,7 @@ _endmenutab
 #Menu for install available
 
 _menu0
-1 - Run Example Function
+1 - Run sample function
 2 - Show submenu...
 3 - Ping localhost
 4 - Ping localhost with flags submenu (f)
@@ -73,7 +73,7 @@ _enddescmenu0
 
 _submenu01
 1 - First submenu item - Ping locahost
-2 - Second item - Run Example Function (again...)
+2 - Second item - Run sample function (again...)
 skip
 4 - Fourth submenu item - Noting here yet
 5 - Fifth submenu item - Noting here yet
