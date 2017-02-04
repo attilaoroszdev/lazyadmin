@@ -820,12 +820,15 @@ function flags_submenu_function {
 		echo
 		echo
 
-		## Got to make sure this does not go ovber the screen limit, look for the example it might be in the todo file
-		if [[ -n $set_args ]]; then
-			echo "The active flags (args) are: $set_args"
-		else
-			echo "No flags (args) specified"
-		fi
+		## TODO: Got to make sure this does not go ovber the screen limit
+		echo "Full command: "$submenucommand $set_args 
+		
+		
+		#if [[ -n $set_args ]]; then
+	    #   echo "The active flags (args) are: $set_args"
+		#else
+		#	echo "No flags (args) specified"
+		#fi
 	
 	menu_item_picker_subflags "$@"
 		
