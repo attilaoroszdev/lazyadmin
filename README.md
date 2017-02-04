@@ -53,7 +53,7 @@ You can access the configuration files from `$HOME/.config/lazy_admin/user/`
 
 ### Adding menu items
 
-To **add menu items**, open the file named `menu-entries`, and follow the instructions in the comments. It's quite well documented.
+To **add menu items**, open the file named `la-menuentries`, and follow the instructions in the comments. It's quite well documented.
 
 ### Binding commands to menus
 
