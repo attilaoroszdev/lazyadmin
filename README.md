@@ -1,6 +1,6 @@
 # Lazy Admin - a bash cli menu system.
 
-Lazy Admin will draw a pseudo graphical menu on your termainal, or terminal emulator, using nothing but `bash`, and `sed`.
+Lazy Admin will draw a pseudo graphical menu on your terminal, or terminal emulator, using nothing but `bash`, and `sed`.
 
 ## Why Lazy Admin?
 
@@ -124,7 +124,7 @@ I will most likely include a more detailed guide here as well, but for now, plea
 
 ## Future plans
 
-There are a few imporoivements on the way, such as:
+There are a few improvements on the way, such as:
 
 * [ ] A better install script
 * [ ] Global install option (currently it's per user only)
