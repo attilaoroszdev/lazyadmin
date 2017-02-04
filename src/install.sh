@@ -1,7 +1,11 @@
 #!/bin/bash
 clear
 
-if [[ -f "./lazy_admin_0.2b.tar.gz" ]]; then
+
+installtarball=./la-core-files-0.3-a.tar.gz
+
+
+if [[ -f $installtarball ]]; then
  echo
  echo "Found archive..."
 else
@@ -139,7 +143,7 @@ fi
 echo
 echo "Extractng files..."
 
-tar xvzC $HOME/.config/ -f ./lazy_admin_0.1b.tar.gz
+tar xvzC $HOME/.config/ -f $installtarball
 
 echo
 echo "Extract seems to have finished. No error check here, so not sure..."
