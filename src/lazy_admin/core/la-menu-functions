@@ -66,14 +66,14 @@ fi
 }
 
 function set_flags_submenu_items {
-	#Parse the argument list into the array, starting form the 5th argument
+	#Parse the argument list into the array, starting form the 3rd argument
 	arrayoffset=2
 	arraycounter=1
 
 
 	for i in "$@"; do
 
-		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le 10 ]]; then
+		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le 11 ]]; then
 
 			let currentflagitem=$arraycounter-2
 			menuentry[currentflagitem-1]="$currentflagitem - Set flag $i"
@@ -84,7 +84,7 @@ function set_flags_submenu_items {
 	done
 
 	#Check if entries have already been written, by checking last element
-		lastentry=${menuentry[${#menuentry[@]}-1]}
+	lastentry=${menuentry[${#menuentry[@]}-1]}
 	if [[ "$lastentry" != "d - Delete set flags" ]]; then
 		menuentry+=("m - Manually enter flags ")
 		menuentry+=("c - Commit with flags")
@@ -709,7 +709,26 @@ function menu_item_picker_subflags	{
 				functright$menupos
 
 			else
-					let argstoset=$#-3
+					                   
+                    # Alllow maximum 9 items. 
+                    # 9 have been written, but this counts the offset 
+                    # in args instead of what was really selected
+                    # The total number of args is 11 (the title, command itself, then the 
+                    # "real" args)
+                    maxlengthoffset=0;
+                    
+                    if [[ $# -gt 11 ]]; then
+                                            
+                        let lenghtdiff=$#-11                       
+                        let maxlengthoffset=$maxlengthoffset+$lenghtdiff
+                    
+                    fi
+
+
+                    let argstoset=$#-3-$maxlengthoffset 
+					
+					
+					
 					if [[ $menupos -le "$argstoset" ]] && [[ $menupos -ge 0 ]]; then
 
 							#reference parameters by number according to menuposition
