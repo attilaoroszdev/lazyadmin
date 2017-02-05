@@ -277,7 +277,7 @@ function draw_menu {
 		let menuheight=$menulength+3
 		headerheight=$subheaderheight;
 		title=$subflagsmenutitle
-		
+
 	elif [[ "$submenu" = "true" ]]; then
 		headerheight=$subheaderheight;
 		title=$submenutitle
@@ -675,10 +675,12 @@ function menu_item_picker_subflags	{
 
 
 		'm' | 'M')  echo
+            tput cnorm
 		    echo "Type your arguments here, and press enter "
 			echo
 			read -p "> " lineargs
 			set_args=$set_args' '$lineargs
+            tput civis
 			clear
 			draw_menu
 			;;
@@ -710,26 +712,26 @@ function menu_item_picker_subflags	{
 				functright$menupos
 
 			else
-					                   
-                    # Alllow maximum 9 items. 
-                    # 9 have been written, but this counts the offset 
+
+                    # Alllow maximum 9 items.
+                    # 9 have been written, but this counts the offset
                     # in args instead of what was really selected
-                    # The total number of args is 11 (the title, command itself, then the 
+                    # The total number of args is 11 (the title, command itself, then the
                     # "real" args)
                     maxlengthoffset=0;
-                    
+
                     if [[ $# -gt 11 ]]; then
-                                            
-                        let lenghtdiff=$#-11                       
+
+                        let lenghtdiff=$#-11
                         let maxlengthoffset=$maxlengthoffset+$lenghtdiff
-                    
+
                     fi
 
 
-                    let argstoset=$#-3-$maxlengthoffset 
-					
-					
-					
+                    let argstoset=$#-3-$maxlengthoffset
+
+
+
 					if [[ $menupos -le "$argstoset" ]] && [[ $menupos -ge 0 ]]; then
 
 							#reference parameters by number according to menuposition
@@ -746,10 +748,12 @@ function menu_item_picker_subflags	{
 					case $menupos in
 
 					$manual_flags)  echo
+                        tput cnorm
 						echo "Type your arguments here, and press enter"
 						echo
 						read -p "> " lineargs
 						set_args=$set_args' '$lineargs
+                        tput civis
 						clear
 						draw_menu
 
@@ -902,6 +906,18 @@ function display_help {
 
 function exit_la_menus {
 
+
+    if [[ $restorecursor == "true"  ]]; then
+
+        tput cnorm
+
+    fi
+
+    if [[  $rootexitflag == "true" ]]; then
+
+        tput cnorm
+
+    fi
 	clear
 	echo
 	echo "$@"
@@ -1020,6 +1036,7 @@ function functright3 {
 	if [[ "$root" == "true" ]]; then
 		exit_la_menus "Leaving root shell"
 	else
+
 		exit_la_menus "Exiting..."
 	fi
 
@@ -1043,21 +1060,32 @@ echo "nothing"
 # Initialises and displays the main menu
 function main {
 
-		if [[ "$@" != "" ]]; then
+    restorecursor=$2
 
-	oldmaintitle="$maintitle"
-	maintitle="$@"
-		else
-		if [[ "$oldmaintitle" != "" ]]; then
-			maintitle="$oldmaintitle"
-		fi
-	fi
+   #Hide the cursor, we dn't really need it
+   tput civis
 
-	init_menu
+   if [[ $1 != "default"  ]]; then
 
-while true; do
+       oldmaintitle="$maintitle"
+       maintitle="$1"
+       
+   else
 
-	main_menu
+       if [[ "$oldmaintitle" != "" ]]; then
 
-done
+               maintitle="$oldmaintitle"
+
+       fi
+
+   fi
+
+
+   init_menu
+
+   while true; do
+
+           main_menu
+
+   done
 }

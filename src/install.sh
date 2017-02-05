@@ -166,6 +166,7 @@ echo
 echo "Creating new starter file:"
 echo
 echo "$installdir/la-menus"
+
 touch ./la-menus
 
 echo "#!/bin/bash" >> ./la-menus
@@ -174,8 +175,22 @@ echo ". $HOME/.config/lazy_admin/core/la-menu-defaults" >> ./la-menus
 echo ". $HOME/.config/lazy_admin/core/la-menu-functions" >> ./la-menus
 echo ". $HOME/.config/lazy_admin/user/la-function-aliases" >> ./la-menus
 echo "" >> ./la-menus
-echo "main \"$@\"" >> ./la-menus
+echo "if [[ $1 == ""  ]]; then"  >> ./la-menus
+echo "    arg1=\"default\""  >> ./la-menus
+echo "else"  >> ./la-menus
+echo "    arg1=$1" echo ""  >> ./la-menus
+echo "fi"  >> ./la-menus
+echo ""  >> ./la-menus
+echo "if [[ $2 == "" ]];  then"   >> ./la-menus
+echo "arg2=\"true\""  >> ./la-menus
+echo "else"  >> ./la-menus
+echo "    arg2=$2"  >> ./la-menus
+echo "fi"  >> ./la-menus
+echo "" >>  >> ./la-menus
+echo "main $arg1 $arg2"  >> ./la-menus
+
 sleep 1
+
 echo
 echo "Done."
 echo

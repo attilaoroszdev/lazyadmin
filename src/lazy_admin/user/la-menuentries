@@ -54,6 +54,7 @@ _menu0
 2 - Show submenu...
 3 - Ping localhost
 4 - Ping localhost with flags submenu (f)
+5 - Launch a root shell
 _endmenu0
 
 
@@ -64,6 +65,7 @@ Will run an example function
 This menuitem leads to a submenu
 This will ping the localhost 5 times
 Show example of setting flags to a command
+Enter root mode. Be very careful!
 _enddescmenu0
 
 

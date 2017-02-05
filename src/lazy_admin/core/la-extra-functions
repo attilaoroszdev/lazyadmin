@@ -27,8 +27,23 @@
 # They meant are to allow for opening stuff in new terminal tab, or terminal window.
 # If your favourite terminal emulator uses different key combos, you might need to
 # set those manually
-#
-# You will need to install xdotool for these.
+
+
+# Use this at your own risk-...
+function enter_root_shell {
+
+     rootexitflag="true"
+    # TODO check if sudo is installed AND user has sudo rights. if not, do it with su
+    clear
+    echo
+    echo "Gaining privileges..."
+    echo
+    sudo la-menus "default" "false"
+
+}
+
+
+
 
 
 # This will enter a directory, execute a command or script, then return to the original directory
@@ -44,7 +59,7 @@ function run_function_in_tmp_directory {
 }
 
 
-
+# You will need to install xdotool for these.
 
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
