@@ -23,11 +23,6 @@
 
 
 
-
-#No touchy-touchy!
-CORE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-USER_DIR="$(dirname "$CORE_DIR")/user"
-
 # You can alter these if you like
 # An explanation of what does what will be included in the help entries
 tabpos=0

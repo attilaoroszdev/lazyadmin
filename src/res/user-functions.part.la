@@ -21,11 +21,9 @@
 # Contact: attila.orosz@mail.com
 
 
-USER_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-CORE_DIR="$(dirname "$CORE_DIR")/core"
 
-. "$CORE_DIR/la-extra-functions"
 
+. "$PLUGINS_DIR/la-extra-functions"
 
 # Set your custom functions here, if any custom script is to be called
 # from the menus

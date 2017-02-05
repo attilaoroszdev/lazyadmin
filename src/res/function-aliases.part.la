@@ -20,13 +20,8 @@
 #
 # Contact: attila.orosz@mail.com
 
-USER_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-CORE_DIR="$(dirname "$CORE_DIR")/core"
 
-. "$USER_DIR/la-user-functions"
-. "$CORE_DIR/la-extra-functions"
-
-
+. "$PLUGINS_DIR/la-extra-functions"
 
 #Main menu functions in the format of funct#tab#menuitem
 #First tab is 0, first item is 0
