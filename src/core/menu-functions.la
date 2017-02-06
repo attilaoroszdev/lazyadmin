@@ -184,11 +184,11 @@ function write_tab_items {
 	do
 		if [[ n -eq $tabpos ]]; then
 
-			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m|"
+			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m│"
 
 		else
 
-			echo -n " ${tabentry[n]} |"
+			echo -n " ${tabentry[n]} │"
 
 		fi
 	done
@@ -308,7 +308,7 @@ function draw_menu {
 	draw_line
 	((cursorpos++))
 	tput cup $cursorpos 0
-	echo "|       "
+	echo "│       "
 	tput cup $cursorpos $(( menuwidth/2 - (${#title}/2) ))
 
 	#title must be set by function for submenus...
@@ -318,7 +318,7 @@ function draw_menu {
 		echo -e "\e[01m\e[01;31m$title\e[00m"
 	fi
 	tput cup $cursorpos $menuwidth
-	echo "|"
+	echo "│"
 	((cursorpos++))
 	draw_line
 
@@ -327,9 +327,9 @@ function draw_menu {
 	if ! $submenu; then
 		((cursorpos++))
 		tput cup $cursorpos 0
-		echo -n "|"
+		echo -n "│"
 		tput cup $cursorpos $menuwidth
-		echo "|"
+		echo "│"
 		((cursorpos++))
 		tput cup $cursorpos 0
 		draw_line
@@ -342,7 +342,7 @@ function draw_menu {
 	for (( i=0; i<menuheight; i++ ))
 	do
 	tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
-	echo "|"
+	echo "│"
 	((cursorpos++))
 	done
 	fi
