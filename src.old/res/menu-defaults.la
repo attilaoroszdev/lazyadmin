@@ -21,14 +21,14 @@
 #
 # Contact: attila.orosz@mail.com
 
+USERDIRPLACEHOLDER
 
 
 # You can alter these if you like
 # An explanation of what does what will be included in the help entries
 tabpos=0
 menupos=0
-menufile="$USER_DIR/la-menuentries"
-helpfile="$CORE_DIR/la-help"
+menufile="$USER_DIR/menu-entries.la"
 normalmenuheight=8
 submenuheight=11
 maintitle="Lazy Admin - Development Version"

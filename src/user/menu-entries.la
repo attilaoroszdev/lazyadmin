@@ -1,0 +1,219 @@
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# n-menus is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+
+
+# To set the height of each menu (main menu and submenus, modify the
+#
+# $normalmenuheight and $submenuheight
+#
+# variables in the
+#
+# '/config/lazy/admin/core/la-menu-defaults
+#
+# file
+#
+# This is to ensure that similar menus have similar layouts even though they may have a different number of
+# entries (i.e. they draw the line at the bottom the saame place
+
+
+
+#The tabs displayed at the top. Change names here as desired
+#The last one should remain setup, unless you with to disable that functionality
+
+_menutab
+Demo Functions
+Second Tab
+Third tab
+Fourth Tab
+Fifth Tab
+Setup
+_endmenutab
+
+
+#Menu for install available
+
+_menu0
+1 - Run sample function
+2 - Show submenu...
+3 - Ping localhost
+4 - Ping localhost with flags submenu (f)
+5 - Launch a root shell
+_endmenu0
+
+
+#Descriptor for each menu item, to be displayed bnelow menu, in order
+
+_descmenu0
+Will run an example function
+This menuitem leads to a submenu
+This will ping the localhost 5 times
+Show example of setting flags to a command
+Enter root mode. Be very careful!
+_enddescmenu0
+
+
+#Submenuitems for submenu01 - two digit numbers indicate submenus,
+#where the first digit (0) indicates the main menu entry the submenu belongs
+#and the second digit (1) indicates the submenu number
+
+_submenu01
+1 - First submenu item - Ping locahost
+2 - Second item - Run sample function (again...)
+skip
+4 - Fourth submenu item - Noting here yet
+5 - Fifth submenu item - Noting here yet
+6 - Sixth submenu item - Noting here yet
+7 - Seventh submenu item - Noting here yet
+8 - Eighth submenu item - Noting here yet
+_endsubmenu01
+
+
+# Descriptor for the submenus
+
+_descsubmenu01
+This will be the first item in the submenu. I like to ping thngs...
+The second item, obviously. The next one is skipped.
+skip
+The previous item was skipped.
+You can keep on adding items
+Much more then in the main menu
+Up to eight
+You could squeeze one more, but eight is already plenty
+_enddescsubmenu01
+
+
+
+#Second tab
+
+_menu1
+1 - First Menuitem
+skip
+3 - Third Menuitem
+4 - Fourth Menuitem
+5 - Fifth Menuitem
+_endmenu1
+
+
+#Descriptor lines for the menu items
+
+_descmenu1
+This is the first menuitem on the second tab
+skip
+This is the third menuitem on the second tab
+This is the fourth meniutem on the second tab
+Last item. You could squeeze one more, but it would be tight.
+_enddescmenu1
+
+
+#Third Tab
+_menu2
+1 - Fisrt Menuitem
+2 - Second Menuitem
+3 - Third Menuitem
+4 - Fourth Menuitem
+5 - Fifth Menuitem
+_endmenu2
+
+_descmenu2
+This is the first menuitem on the third tab
+This is the second menuitem on the third tab
+This is the third menuitem on the third tab
+This is the fourth meniutem on the third tabs
+This is the fifth meniutem on the third tabs
+_enddescmenu2
+
+_menu3
+Nothing yet
+_endmenu3
+
+_descmenu3
+Write your own menus here
+_enddescmenu3
+
+_menu4
+Nothing yet
+_endmenu4
+
+_descmenu4
+Write your own menus here
+_enddescmenu4
+
+
+# Keep these ion the last tab to preserve hotkeys
+
+_menu5
+e - Edit menu entries
+d - Edit script defaults
+p - Profiles...
+_endmenu5
+
+_descmenu5
+Interactively change menu entries
+Edit default menu length, number of tabs, etc.
+Switch, add, modify or remove profiles for the same user
+_enddescmenu5
+
+
+### Contents of the right panel. Only change this if you alter right panel functionality ###
+
+
+## In the main menus ##
+
+# Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
+# menu positions for the other entries are identical (needed for aliases, when using enter for selection)
+# This is necessary, for "b -Back to Main Menu" is added in the submenu function
+
+_rightpanel
+r - Reflow Menu
+h - Get Help
+skip
+x - Exit
+_endrightpanel
+
+
+## Descriptions of menuitems in main menu in the same order as the items above ##
+
+_rightpaneldesc
+Use this option after resizing the terminal window, or changing terminal size
+Display the detailed help file
+skip
+Exit Lazy Admin, and return to your normal shell... and life...
+_endrightpaneldesc
+
+
+## In the submenus (contains back link)  ##
+
+_subrightpanel
+r - Reflow menu
+h - Get Help
+b - Back to Main Menu
+x - Exit
+_endsubrightpanel
+
+
+## Descriptions of menuitems in submenus in the same order as the items above ##
+
+_subrightpaneldesc
+Use this option after resizing the terminal window, or changing terminal size
+Display the detailed help file
+Return to main menu
+Exit Lazy Admin, and return to your normal shell... and life...
+_endsubrightpaneldesc

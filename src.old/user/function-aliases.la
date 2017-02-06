@@ -21,7 +21,11 @@
 # Contact: attila.orosz@mail.com
 
 
-. "$PLUGINS_DIR/la-extra-functions"
+PLUGINSDIRPLACEHOLDER
+USERDIRPLACEHOLDER
+
+. "$PLUGINS_DIR/extra-functions.la"
+. "USER_DIR/user-functions.la"
 
 #Main menu functions in the format of funct#tab#menuitem
 #First tab is 0, first item is 0

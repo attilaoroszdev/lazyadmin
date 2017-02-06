@@ -21,7 +21,9 @@
 # Contact: attila.orosz@mail.com
 
 
-
+# Replace below line with
+# PLUGINSDIRPLACEHOLDER
+PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
 
 . "$PLUGINS_DIR/la-extra-functions"
 

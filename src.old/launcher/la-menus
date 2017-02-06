@@ -19,6 +19,8 @@
 # Contact: attila.orosz@mail.com
 
 
+INCLUDESPLACEHOLDER
+
 
 if [[ $1 == ""  ]]; then
     
