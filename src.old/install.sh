@@ -2,7 +2,7 @@
 clear
 
 
-installtarball=./installer-test.tar.gz
+installtarball=./vX.Xx-files.tar.gz
 
 
 if [[ -f $installtarball ]]; then
@@ -103,7 +103,7 @@ echo
 echo "Extracting Lazy Admin system and user files..."
 
 
-if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
+if [[ -d "$HOME/.config/LazyAdmin/user" ]]; then
 	echo
 	echo "A user config directory already exists. Can I purge it?"
     echo "This will delete all your previous configurations, so be careful."
@@ -111,8 +111,8 @@ if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
     echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to" 
     echo "keep the config files"
     echo
-	read -p "(yes/no) > " isitok
-	if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes" ]]; then
+	read -p "(yes/no) > " -n 1 isitok
+	if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes"]]; then
 		echo
 		echo
 		echo "Purging old configs..."
@@ -132,56 +132,46 @@ else
 	echo
 	echo "Creating config directory for user..."
 	mkdir "$HOME/.config/LazyAdmin/"
+	mkdir "$HOME/.config/LazyAdmin/user"
 	sleep 1
 	echo
 	echo "Done."
 	sleep 1
 fi
 
-userfilesdir="$HOME/.config/LazyAdmin"
+userfilesdir="$HOME/.config/LazyAdmin/user/"
 
 echo
-echo "Extracting files..."
+echo "Installing core..."
 
+
+mkdir "$HOME/.config/.LazyAdmin/temp/"
+tmpfilesdir="$HOME/.config/.LazyAdmin/temp/"
 
 
 if [[ $installtype = "local" ]]; then
 
-   if [[ -d "$HOME/.LazyAdmin/" ]]; then
-   
-        rm -rf "$HOME/.LazyAdmin/"
-   
-   fi
-
    mkdir "$HOME/.LazyAdmin/"
-   installdir="$HOME/.LazyAdmin"
+   installdir="$HOME/.LazyAdmin/"
 
 else 
 
   echo
   echo "Attempting to access /opt. Need root"
   echo
-  
-  if [[ -d "/opt/LazyAdmin/" ]]; then
-   
-       sudo rm -rf "/opt/LazyAdmin/"
-   
-   fi
-  
-  
   sudo mkdir "/opt/LazyAdmin/"
   sudo mkdir "/opt/LazyAdmin/res/"
-  installdir="/opt/LazyAdmin"
+  installdir="/opt/LazyAdmin/"
   
 fi
 
 
 # TODO Extract everything into their rightful places from here! No need for tem directory
 
-tar xvzC "$installdir" -f $installtarball "core"
-tar xvzC "$installdir" -f $installtarball "plugins"
-tar xvzC "$installdir" -f $installtarball "res"
-tar xvzC "$userfilesdir" -f $installtarball "user"
+tar xvzC -f "$installdir" $installtarball "core"
+tar xvzC -f "$installdir" $installtarball "plugins"
+tar xvzC -f "$installdir" $installtarball "res"
+tar xvzC -f "$userfilesdir" $installtarball "user"
 
 
 # mv "$tmpfilesdir/core" "$installdir"
@@ -199,50 +189,45 @@ tar xvzC "$userfilesdir" -f $installtarball "user"
 # build_script "$tmpfilesdir/res/" "$userfilesdir" "user-functions.la" 20 "PLUGINS_DIR=$installdir/plugins/" "user-functions.part.la"
 # build_script "$tmpfilesdir/res/" "$userfilesdir" "menu-entries.la" 20  "menu-entries.part.la"
 
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" "$userfilesdir/user/function-aliases.la"
-sed -i "s|USERDIRPLACEHOLDER|USER_DIR=$userfilesdir/user|" "$userfilesdir/user/function-aliases.la"
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" "$userfilesdir/user/user-functions.la"
-sed -i "s|USERDIRPLACEHOLDER|USER_DIR=$userfilesdir/user|" "$installdir/res/menu-defaults.la"
+sed 's/PLUGINSDIRPLACEHOLDER/PLUGINS_DIR=$installdir\/plugins\/' "$userfilesdir""function-aliases.la"
+sed 's/USERDIRPLACEHOLDER/USER_DIR=$userfilesdir/' "$userfilesdir""function-aliases.la"
+sed 's/PLUGINSDIRPLACEHOLDER/PLUGINS_DIR=$installdir\/plugins\/' "$userfilesdir""user-functions.la"
+sed 's/USERDIRPLACEHOLDER/USER_DIR=$userfilesdir/' "$installdir/res/menu-defaults.la"
 
 
 echo 
-echo "Extracing finished."
+echo "Core seems to have installed, unless you got an error mewssage"
 echo
 
 if [[ $installtype="local" ]]; then
 
-    launcherdir="$HOME"
-
-else
-
-    launcherdir=$"installdir"
-
+    installdir="$HOME"
 
 fi
 
 
 echo "I will put the starter file in $installdir"
 sleep 1
+cd $installdir
 
-
-if [[ -f "$launcherdir/la-menus" ]]; then
+if [[ -f "$installdir/la-menus" ]]; then
 	echo
 	echo "Starter file already exists. Removing..."
 
-	rm $launcherdir/la-menus
+	rm $installdir/la-menus
 	sleep 1
 fi
 
 echo
 echo "Creating new starter file:"
 echo
-echo "$launcherdir/la-menus"
+echo "$installdir/la-menus"
 
 
 #build_script "$tmpfilesdir/res/" "$installdir" "la-menus" 20 ". $installdir/res/menu-defaults.la" ". $installdir/core/menu-defaults.la" ". $userfilesdir/function-aliases.la" "launcher.part.la"
 
-tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/la-menus"
-sed -i "s|INCLUDESPLACEHOLDER|. $installdir/res/menu-defaults.la\n. $installdir/core/menu-functions.la\n. $userfilesdir/user/function-aliases.la|" "$launcherdir/la-menus"
+tar xvzC -f "$installdir" $installtarball --strip=1 "launcher/la.menus"
+sed -i 's/INCLUDESPLACEHOLDER/. $installdir\/res\/menu-defaults.la\n. $installdir\/core\/menu-functions.la\n. $userfilesdir\/function-aliases.la/' "$installdir""la-menus.la"
 
 
 sleep 1
@@ -254,7 +239,7 @@ echo
 echo "Attempting to make la-menus executable."
 echo "(If this step fails, you will need to do this manually)"
 
-chmod ug+rwx "$launcherdir/la-menus"
+chmod ug+rwx "$installdir/la-menus"
 
 sleep 1
 echo
@@ -262,7 +247,7 @@ echo "Done (unless you got an error here)."
 echo
 echo "Cleaning up temporary files..."
 
-
+rm -rf "$tmpfilesdir"
 
 echo
 echo "Done."
@@ -273,7 +258,7 @@ if [[ "$symlinking" == "true" ]]; then
 	echo "Now creating symlink in  $symlinkdir."
 	echo "It is likely a system directory, so sudo will be used..."
 	echo
-	sudo ln -s "$launcherdir/la-menus" "$symlinkdir/la-menus"
+	sudo ln -s "$installdir/la-menus" "$symlinkdir/la-menus"
 	sleep 1
 	echo
 	echo "All done!"
@@ -282,7 +267,7 @@ if [[ "$symlinking" == "true" ]]; then
 else
 	echo
 	echo "All done!"
-	echo "You can now start lazy Admin by typing (sh) $launcherdir/la-menus"
+	echo "You can now start lazy Admin by typing (sh) $installdir/la-menus"
 	echo "Check help for customizaton info and options."
 
 fi

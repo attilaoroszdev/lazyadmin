@@ -1,0 +1,269 @@
+#!/bin/bash
+
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# n-menus is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+
+PLUGINSDIRPLACEHOLDER
+
+. "$PLUGINS_DIR/la-extra-functions"
+
+# Set your custom functions here, if any custom script is to be called
+# from the menus
+
+
+#Function corresponding to choice 1 in the menu, install packages
+function example_function {
+	clear
+	
+	echo
+	echo "This is a dummy function to demonstrate how the menu system works"
+	echo
+	echo "You will now be presented with a multiple choice test of 40 questions."	
+	echo "You have 40 minutes to finish the test. Good luck..."
+	echo
+	echo "Press any key to start" 
+	echo
+	read -n 1 -s keypress 
+	
+	while true; do
+	clear
+	echo
+	echo "First question:"
+	echo
+	echo "Do you think this example function is dumb?"
+	echo "Select the number of the right answer"
+	echo
+	echo "1 - Yes"
+	echo "2 - Dunno..."
+	echo "3 - Right answer"
+	echo "4 - Left answer"
+	echo "5 - What?"
+	echo "6 - Cherry cake"
+	echo
+	read -p "> " -n 1 keypress	
+	
+	case $keypress in
+	
+	1) 
+	echo
+	echo
+	echo "Aha... Thanks..."
+	break
+	;;
+	2)
+	echo
+	echo
+	echo "Know what?"
+	break
+	;;
+	3) echo
+	echo
+	echo "Smartass..."
+	break
+	;;
+	4) 
+	echo
+	echo
+	echo "Very funny..."
+	break
+	;;
+	5) 
+	echo
+	echo
+	echo "never mind, go back to sleep, will you?"
+	break
+	;;
+	6) 
+	echo
+	echo
+	echo "Congratulations. You win."
+	break
+	;;
+	*) 
+	echo
+	echo
+	echo "No, you won't get away that easy. Press a key to go again."
+	read -n 1 -s keypress 
+	;;
+	esac
+done
+	echo
+	echo "Well, thanks fo your input. And your time. (It was well wasted.)"
+	echo "Please come agan..."
+	echo
+	echo "Press a key to get back to the menu..."
+	read -n 1 -s keypress 
+	clear
+	
+} #endfunction
+
+function flagtest_localhostping {
+	
+	clear
+	
+	echo
+	echo "Now we will ping localhost with the flags you have specified"
+	echo "The command executed will be:" 
+	echo
+	echo "ping $@ localhost"
+	echo
+	ping $@ localhost
+	echo
+	echo "now press a key to return to the menu" 
+	echo
+	read -n 1 -s keypress 
+	
+} #endfunction
+
+
+#This dummy function is there as a placeholder for empty menus. 
+#Only delete it, once all your menus are populated, to avoid error messages
+#Keeping it will allow you to easily fill the void, if/when changes occur, 
+#or you want to temporarily leave something "broken"
+
+function dummy_function {
+		
+		echo "If you can see this text, something is broken"
+
+}
+
+function localhost_ping {
+	
+	clear
+
+	echo
+	echo "Will ping localhost 5 times... "
+	echo
+	echo "ping -c 5 localhost"
+	echo
+	
+	ping -c 5 localhost
+	
+	echo
+	echo "Now press a key to get back to the menu"
+	read -n 1 -s keypress 
+	clear
+	
+} #endfunction
+
+#PLaceholder functions for the setup menu. only remove these if you also 
+#remove the setip menu ()ppointless to keep it for now...)
+
+function editmenu_dummy {
+	clear
+	
+	echo
+	echo "Coming soon..."
+	echo
+	echo "Here you will find a function to edit the menu entries interactively."
+	echo "How cool will that be."
+	echo 
+	echo "Now press a key to get back to the menu"
+	read -n 1 -s keypress 
+	clear
+	
+	}
+
+function editdefaults_dummy {
+	clear
+	
+	echo
+	echo "Comnig soon..."
+	echo
+	echo "Here you will find a function to edit the defalt variables like menu"
+	echo "height or total number of tabs, etc. interactively. How cool will that be."
+	echo 
+	echo "Now press a key to get back to the menu"
+	read -n 1 -s keypress 
+	clear
+	
+	}
+	
+function profiles_dummy {
+	clear
+	
+	echo
+	echo "Comnig soon..."
+	echo
+	echo "Here you will find a function to change, add, remove and edit different"
+	echo "profiles for the same user. interactively. How cool will that be."
+	echo 
+	echo "Now press a key to get back to the menu"
+	read -n 1 -s keypress 
+	clear
+	
+	
+	}
+	
+	
+	
+	
+	
+# The following functions are provided as is. No guarantees that theY1ll evven work.
+# They meant are to allow for opening stuff in new terminal tab, or terminal window.
+# If your favourite terminal emulator uses different key combos, you might need to 
+# set those manually	
+#
+# You will need to install xdotool for these.
+
+
+		
+# Usage: run_command_in_new_window "<command>"
+# Can also be used in la-function-aliases, to run your cusotm command in a new tab
+function run_command_in_new_tab {
+
+
+    
+    
+    originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
+    
+
+    WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
+    xdotool windowfocus $WID
+    xdotool key ctrl+shift+t $WID
+
+
+    # This is a workaround, for whne non-us layouts cause xdotool 
+    # to occasionally garble output (non-consistently, even within 
+    # the same session)
+    setxkbmap -layout us   
+
+    sleep 1
+    xdotool type --delay 1 --clearmodifiers "$1"
+    xdotool key Return
+
+
+     # If you find that the beow command does not set_add_info_line
+    # the keyboard layout back correctly, you might manually need to
+    # Set it back to your own preference
+    # get the correct values with
+    # setxkbmap -query 
+    # (You might need to set variant as well as model, etc)
+    setxkbmap -layout $originallayout
+
+}
+
+	
+	
+	
+	
+	
+

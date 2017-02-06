@@ -1,11 +1,10 @@
 #!/bin/bash
-
-# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
-#   Copyright (C) 2017  Attila Orosz
+#
+# Copyright (C) 2017  Attila Orosz
 #
 # This file is part of Lazy Admin
 #
-# n-menus is free software: you can redistribute it and/or modify
+# Lazy Admin is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -14,7 +13,7 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -66,14 +65,14 @@ fi
 }
 
 function set_flags_submenu_items {
-	#Parse the argument list into the array, starting form the 5th argument
+	#Parse the argument list into the array, starting form the 3rd argument
 	arrayoffset=2
 	arraycounter=1
 
 
 	for i in "$@"; do
 
-		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le 10 ]]; then
+		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le 11 ]]; then
 
 			let currentflagitem=$arraycounter-2
 			menuentry[currentflagitem-1]="$currentflagitem - Set flag $i"
@@ -84,7 +83,7 @@ function set_flags_submenu_items {
 	done
 
 	#Check if entries have already been written, by checking last element
-		lastentry=${menuentry[${#menuentry[@]}-1]}
+	lastentry=${menuentry[${#menuentry[@]}-1]}
 	if [[ "$lastentry" != "d - Delete set flags" ]]; then
 		menuentry+=("m - Manually enter flags ")
 		menuentry+=("c - Commit with flags")
@@ -275,9 +274,10 @@ function draw_menu {
 
 	if [[ "$subflagsmenu" = "true" ]]; then
 		let menuheight=$menulength+3
-	fi
+		headerheight=$subheaderheight;
+		title=$subflagsmenutitle
 
-	if [[ "$submenu" = "true" ]]; then
+	elif [[ "$submenu" = "true" ]]; then
 		headerheight=$subheaderheight;
 		title=$submenutitle
 	else
@@ -674,10 +674,12 @@ function menu_item_picker_subflags	{
 
 
 		'm' | 'M')  echo
+            tput cnorm
 		    echo "Type your arguments here, and press enter "
 			echo
 			read -p "> " lineargs
 			set_args=$set_args' '$lineargs
+            tput civis
 			clear
 			draw_menu
 			;;
@@ -709,7 +711,26 @@ function menu_item_picker_subflags	{
 				functright$menupos
 
 			else
-					let argstoset=$#-3
+
+                    # Alllow maximum 9 items.
+                    # 9 have been written, but this counts the offset
+                    # in args instead of what was really selected
+                    # The total number of args is 11 (the title, command itself, then the
+                    # "real" args)
+                    maxlengthoffset=0;
+
+                    if [[ $# -gt 11 ]]; then
+
+                        let lenghtdiff=$#-11
+                        let maxlengthoffset=$maxlengthoffset+$lenghtdiff
+
+                    fi
+
+
+                    let argstoset=$#-3-$maxlengthoffset
+
+
+
 					if [[ $menupos -le "$argstoset" ]] && [[ $menupos -ge 0 ]]; then
 
 							#reference parameters by number according to menuposition
@@ -726,10 +747,12 @@ function menu_item_picker_subflags	{
 					case $menupos in
 
 					$manual_flags)  echo
+                        tput cnorm
 						echo "Type your arguments here, and press enter"
 						echo
 						read -p "> " lineargs
 						set_args=$set_args' '$lineargs
+                        tput civis
 						clear
 						draw_menu
 
@@ -799,7 +822,7 @@ function flags_submenu_function {
 
 	submenu="true"
 	subflagsmenu="true"
-	submenutitle="$1"
+	subflagsmenutitle="$1"
 	submenucommand="$2"
 	menupos=0
 
@@ -882,6 +905,18 @@ function display_help {
 
 function exit_la_menus {
 
+
+    if [[ $restorecursor == "true"  ]]; then
+
+        tput cnorm
+
+    fi
+
+    if [[  $rootexitflag == "true" ]]; then
+
+        tput cnorm
+
+    fi
 	clear
 	echo
 	echo "$@"
@@ -1000,6 +1035,7 @@ function functright3 {
 	if [[ "$root" == "true" ]]; then
 		exit_la_menus "Leaving root shell"
 	else
+
 		exit_la_menus "Exiting..."
 	fi
 
@@ -1023,21 +1059,32 @@ echo "nothing"
 # Initialises and displays the main menu
 function main {
 
-		if [[ "$@" != "" ]]; then
+    restorecursor=$2
 
-	oldmaintitle="$maintitle"
-	maintitle="$@"
-		else
-		if [[ "$oldmaintitle" != "" ]]; then
-			maintitle="$oldmaintitle"
-		fi
-	fi
+   #Hide the cursor, we dn't really need it
+   tput civis
 
-	init_menu
+   if [[ $1 != "default"  ]]; then
 
-while true; do
+       oldmaintitle="$maintitle"
+       maintitle="$1"
+       
+   else
 
-	main_menu
+       if [[ "$oldmaintitle" != "" ]]; then
 
-done
+               maintitle="$oldmaintitle"
+
+       fi
+
+   fi
+
+
+   init_menu
+
+   while true; do
+
+           main_menu
+
+   done
 }
