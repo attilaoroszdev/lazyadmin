@@ -179,19 +179,97 @@ function read_rightpanel_items {
 
 #Display the menu tabs
 function write_tab_items {
+
+    # Mpodify top line first
+    
+    horizontalconnectorposition=0
+    
+    tput cup $(( headerheight - 2 )) $horizontalconnectorposition
+    
+	for (( n=0; n < $tablength; n++ ))
+	do
+		if [[ n -eq $tabpos ]]; then
+		
+		    horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[$tabpos]} + 3 ))
+		
+		
+		    tput cup $(( headerheight - 2 )) $horizontalconnectorposition
+		
+		echo -n "┯"
+
+			
+
+		else
+		    
+		    horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[n]} + 3 ))
+
+		    tput cup $(( headerheight - 2 )) $horizontalconnectorposition
+		
+		echo -n "┯"
+
+
+		fi
+	done
+    
+
 	tput cup $(( headerheight - 1 )) 1
 	for (( n=0; n <= $tablength; n++ ))
 	do
 		if [[ n -eq $tabpos ]]; then
 
-			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m│"
+			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m"
+			
+			if [[ n -lt $tablength ]]; then
+			
+			echo -n "│"
+			
+			fi
 
 		else
 
-			echo -n " ${tabentry[n]} │"
+			echo -n " ${tabentry[n]} "
+			
+			if [[ n -lt $tablength ]]; then
+			
+			echo -n "│"
+			
+			fi
+			
+			
 
 		fi
 	done
+	
+	horizontalconnectorposition=0
+    
+    tput cup $(( headerheight )) $horizontalconnectorposition
+    
+	for (( n=0; n < $tablength; n++ ))
+	do
+		if [[ n -eq $tabpos ]]; then
+		
+		    horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[$tabpos]} + 3 ))
+		
+		
+		    tput cup $(( headerheight )) $horizontalconnectorposition
+		
+		echo -n "┷"
+
+			
+
+		else
+		    
+		    horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[n]} + 3 ))
+
+		    tput cup $(( headerheight )) $horizontalconnectorposition
+		
+		echo -n "┷"
+
+
+		fi
+	done
+	
+	
 }
 
 # Populate the drawn menu template with themenuitelms
@@ -254,7 +332,7 @@ function draw_line {
 	#draw line with the length of the screen/window width
 	for (( i=0; i<$menuwidth; i++ ))
 	do
-		echo -n "―"
+		echo -n "━"
 	done
 	#cursor goes to next row
 
@@ -308,7 +386,7 @@ function draw_menu {
 	draw_line
 	((cursorpos++))
 	tput cup $cursorpos 0
-	echo "│       "
+	#echo "│       "
 	tput cup $cursorpos $(( menuwidth/2 - (${#title}/2) ))
 
 	#title must be set by function for submenus...
@@ -317,8 +395,8 @@ function draw_menu {
 	else
 		echo -e "\e[01m\e[01;31m$title\e[00m"
 	fi
-	tput cup $cursorpos $menuwidth
-	echo "│"
+	#tput cup $cursorpos $menuwidth
+	#echo "│"
 	((cursorpos++))
 	draw_line
 
@@ -327,9 +405,9 @@ function draw_menu {
 	if ! $submenu; then
 		((cursorpos++))
 		tput cup $cursorpos 0
-		echo -n "│"
+		#echo -n "│"
 		tput cup $cursorpos $menuwidth
-		echo "│"
+		#echo "│"
 		((cursorpos++))
 		tput cup $cursorpos 0
 		draw_line
@@ -337,20 +415,37 @@ function draw_menu {
 
 	# If rigth panel is on, draw its separator
 	if $rightpanel; then
-	cursorpos=$(( headerheight+1 ))
+	
+	    cursorpos=$headerheight
+	    tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
+	    echo "┯"
+	
+	    ((cursorpos++))
 
-	for (( i=0; i<menuheight; i++ ))
-	do
-	tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
-	echo "│"
-	((cursorpos++))
-	done
+	    for (( i=0; i<menuheight; i++ ))
+	    do
+	        tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
+	        echo "│"
+        	((cursorpos++))
+	    done
+          
+	    
+	    
 	fi
 
-		cursorpos=$(( $headerheight+$menuheight ))
+	cursorpos=$(( $headerheight+$menuheight ))
 
-		tput cup $cursorpos 0
+	tput cup $cursorpos 0
 	draw_line
+	
+	
+	if $rightpanel; then
+	
+	    tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
+	    echo "┷"
+	    
+	fi
+	
 	(( cursorpos+=$(( $descriptorheight+1 )) ))
 
 	tput cup $cursorpos 0
