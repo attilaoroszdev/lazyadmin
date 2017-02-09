@@ -161,14 +161,16 @@ _enddescmenu4
 
 _menu5
 e - Edit menu entries
-d - Edit script defaults
-p - Profiles...
+f - Edit user functions
+b - Bind functions to menus
+d - Edit default values
 _endmenu5
 
 _descmenu5
 Interactively change menu entries
+Add user defined scripts and functions
+Bind scripts and pre-defined functions to menu items
 Edit default menu length, number of tabs, etc.
-Switch, add, modify or remove profiles for the same user
 _enddescmenu5
 
 

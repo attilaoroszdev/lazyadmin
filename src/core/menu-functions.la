@@ -180,7 +180,7 @@ function read_rightpanel_items {
 #Display the menu tabs
 function write_tab_items {
 
-    # Mpodify top line first
+    # Mpodify top line first, draw connectors
     
     horizontalconnectorposition=0
     
@@ -211,6 +211,8 @@ function write_tab_items {
 		fi
 	done
     
+    
+    # Then write out the tab items, with separators
 
 	tput cup $(( headerheight - 1 )) 1
 	for (( n=0; n <= $tablength; n++ ))
@@ -219,9 +221,10 @@ function write_tab_items {
 
 			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m"
 			
+			# Do not write separator after last item
 			if [[ n -lt $tablength ]]; then
 			
-			echo -n "│"
+			    echo -n "│"
 			
 			fi
 
@@ -229,9 +232,10 @@ function write_tab_items {
 
 			echo -n " ${tabentry[n]} "
 			
+			# Do not write separator after last item
 			if [[ n -lt $tablength ]]; then
 			
-			echo -n "│"
+			    echo -n "│"
 			
 			fi
 			
@@ -240,6 +244,8 @@ function write_tab_items {
 		fi
 	done
 	
+
+    # Then draw connectors ont he bottom line
 	horizontalconnectorposition=0
     
     tput cup $(( headerheight )) $horizontalconnectorposition
@@ -301,6 +307,44 @@ cursorpos=`tput lines`
 tput cup $cursorpos 0
 
 }
+
+
+
+# This is hardcoded for now
+function write_help_menu_items {
+
+    menulength=3
+
+    helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
+    helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
+    helpmenuentry[2]="3 - The Lazy Admin man page (man)"
+
+    for (( n=0; n < $menulength; n++ ))
+do
+	if [[ "${helpmenuentry[n]}" = "skip" ]]; then
+
+	((n++))
+
+	fi
+	if [[ n -eq $menupos ]] && [[ "$activepanel" = "left" ]];then
+		tput cup $(( n + $headerheight + 2 )) 2
+		echo -e "\e[00;30;47m${helpmenuentry[$menupos]}\e[00m"
+	else
+		tput cup $(( n + $headerheight + 2 )) 2
+		echo "${helpmenuentry[n]}"
+
+	fi
+
+done
+
+
+}
+
+
+
+
+
+
 
 # Draw rightpanel items
 function write_rightpanel_items {
@@ -552,6 +596,7 @@ function set_add_info_line {
 
 # Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
 function infinite_menu {
+
 	if [[ "$activepanel" = "right" ]]; then
 		limit=$rightpanellength
 	else
@@ -565,7 +610,6 @@ function infinite_menu {
 	if [[ $menupos -lt 0 ]]; then
 		menupos=$(( $limit-1 ))
 	fi
-
 
 }
 
@@ -599,15 +643,162 @@ function pick_menu_item {
   read -sN1 -t 0.0001 k3
   key+=${k1}${k2}${k3}
 
-case $key in
+    case $key in
+
+         $'\e[A'|$'\e0A')
+
+	        #Double jump if run on skip
+	        if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
+		        ((menupos--))
+	        fi
+	        #Check for right panel too
+	        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
+		        ((menupos--))
+	        fi
+
+	        ((menupos--))
+	         ;;
+
+         $'\e[B'|$'\e0B')
+
+	        #Double jump if running on skip
+	        if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
+		        ((menupos++))
+	        fi
+	        #Chexck for right panel too
+	        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
+		        ((menupos++))
+	        fi
+
+	        ((menupos++))
+	        ;;
+
+         $'\e[D'|$'\e0D')
+
+	        if [[ "$submenu" = "false" ]]; then
+		        if [[ $tabpos -gt 0 ]]; then
+			        clear_menu
+			        menupos=0
+			        ((tabpos--))
+		        fi
+	        fi
+	        ;;
+
+         $'\e[C'|$'\e0C')
+	        if [[ "$submenu" = "false" ]]; then
+		        if [[ $tabpos -lt $tablength ]]; then
+			        clear_menu
+			        menupos=0
+			        ((tabpos++))
+		        fi
+	        fi
+	        ;;
+        't')
+
+	        if $rightpanel && [[ "$activepanel" = "left" ]]; then
+		        activepanel="right"
+	        elif $rightpanel && [[ "$activepanel" = "right" ]]; then
+		        activepanel="left"
+	        fi
+         ;;
+
+         [0-9])
+
+	        # If numeric input is selected
+	        if [[ $key -le $menulength ]] && [[ $key -ge 0 ]]; then
+	        ((key--))
+	        menupos=$key
+	        if [[ "$submenu" = "true" ]]; then
+		        subfunct$tabpos$mainmenupos$key $tabpos $menupos
+	        else
+		        funct$tabpos$key $tabpos $menupos
+	        fi
+
+	        fi
+	         ;;
+
+         '')
+	        # If enter is pressed
+	        if [[ "$activepanel" = "right" ]]; then
+		        functright$menupos
+	        else
+		        if [[ "$submenu" = "true" ]]; then
+			        subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
+		        else
+
+				        funct$tabpos$menupos $tabpos $menupos
+
+		        fi
+	        fi
+	        init_menu
+	         ;;
+
+        #right menu items (on keypress)
+         "r")	#put this into a function so that enter can be used, along with alias
+	        reflow_menu
+	        ;;
+        "h")
+	        display_help
+	        ;;
+         "x") #this handles exit function
+	        functright3
+	        ;;
+        'b' | "B")
+		        if [[ "$submenu" = "true" ]]; then
+			        back_to_main_menu
+		        fi
+		        ;;
+        "e" | "E")
+	        if [[ $tabpos = $tablength  ]]; then
+		        funct50
+		        init_menu
+	        fi
+	        ;;
+        "p" | "P")
+	        if [[ $tabpos = $tablength  ]]; then
+		        funct52
+		        init_menu
+	        fi
+	        ;;
+        "f" | "F")
+	        if [[ $tabpos = $tablength  ]]; then
+		        funct51
+		        init_menu
+	        fi
+	        ;;
+        "b" | "B")
+	        if [[ $tabpos = $tablength  ]]; then
+		        funct52
+		        init_menu
+	        fi
+	        ;;
+        "d" | "d")
+	        if [[ $tabpos = $tablength  ]]; then
+		        funct53
+		        init_menu
+	        fi
+	        ;;
+
+
+    esac
+
+}
+
+
+function pick_help_menu_item {
+
+  read -sN1 key # 1 char (not delimiter), silent
+  read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
+  read -sN1 -t 0.0001 k2
+  read -sN1 -t 0.0001 k3
+  key+=${k1}${k2}${k3}
+  
+  case $key in
 
  $'\e[A'|$'\e0A')
 
-	#Double jump if run on skip
-	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
-		((menupos--))
-	fi
-	#Check for right panel too
+	
+	#Check for right panel skip
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
 		((menupos--))
 	fi
@@ -617,118 +808,63 @@ case $key in
 
  $'\e[B'|$'\e0B')
 
-	#Double jump if running on skip
-	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
-		((menupos++))
-	fi
-	#Chexck for right panel too
+	
+	#Chexck for right panel skip
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
 		((menupos++))
 	fi
 
 	((menupos++))
 	;;
-
- $'\e[D'|$'\e0D')
-
-	if [[ "$submenu" = "false" ]]; then
-		if [[ $tabpos -gt 0 ]]; then
-			clear_menu
-			menupos=0
-			((tabpos--))
-		fi
-	fi
-	;;
-
- $'\e[C'|$'\e0C')
-	if [[ "$submenu" = "false" ]]; then
-		if [[ $tabpos -lt $tablength ]]; then
-			clear_menu
-			menupos=0
-			((tabpos++))
-		fi
-	fi
-	;;
-'t')
+  't')
 
 	if $rightpanel && [[ "$activepanel" = "left" ]]; then
 		activepanel="right"
 	elif $rightpanel && [[ "$activepanel" = "right" ]]; then
 		activepanel="left"
 	fi
- ;;
-
- [0-9])
+    ;;
+   [0-2])
 
 	# If numeric input is selected
-	if [[ $key -le $menulength ]] && [[ $key -ge 0 ]]; then
-	((key--))
-	menupos=$key
-	if [[ "$submenu" = "true" ]]; then
-		subfunct$tabpos$mainmenupos$key $tabpos $menupos
-	else
-		funct$tabpos$key $tabpos $menupos
-	fi
+	if [[ $key -le 2 ]] && [[ $key -ge 0 ]]; then
+	    ((key--))
+	    menupos=$key
+	    functhelp$key
 
 	fi
-	 ;;
-
- '')
+	;;
+    '')
 	# If enter is pressed
+	
+
+	
 	if [[ "$activepanel" = "right" ]]; then
 		functright$menupos
 	else
-		if [[ "$submenu" = "true" ]]; then
-			subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
-		else
-
-				funct$tabpos$menupos $tabpos $menupos
-
-		fi
+		
+		functhelp$menupos
+		
 	fi
 	init_menu
 	 ;;
 
-#right menu items (on keypress)
- "r")	#put this into a function so that enter can be used, along with alias
-	reflow_menu
-	;;
-"h")
-	display_help
-	;;
- "x") #this handles exit function
-	functright3
-	;;
-'b' | "B")
-		if [[ "$submenu" = "true" ]]; then
-			back_to_main_menu
-		fi
-		;;
-"e" | "E")
-	if [[ $tabpos = $tablength  ]]; then
-		funct50
-		init_menu
-	fi
-	;;
-"p" | "P")
-	if [[ $tabpos = $tablength  ]]; then
-		funct52
-		init_menu
-	fi
-	;;
-"d" | "D")
-	if [[ $tabpos = $tablength  ]]; then
-		funct51
-		init_menu
-	fi
-
-	;;
-
-
-
-esac
-
-	}
+    #right menu items (on keypress)
+     "r")	#put this into a function so that enter can be used, along with alias
+	    reflow_menu
+	    ;;
+     "x") #this handles exit function
+	    functright3
+	    ;;
+    'b' | "B")
+		    if [[ "$submenu" = "true" ]]; then
+			    back_to_main_menu
+		    fi
+		    ;;
+        
+    
+    esac
+}
 
 function menu_item_picker_subflags	{
 
@@ -981,20 +1117,7 @@ function reflow_menu {
 
 function display_help {
 
-	clear
-
-	echo
-	echo "Advice on how to use and customes n-menus will follow"
-	echo
-	echo "To navigate use the Arrow keys, or PageUp, PageDown"
-	echo "To exit, press 'q'"
-	echo
-	echo "Press any key to continue to the help page"
-	echo
-	read -n 1 -s keypress
-
-	cat $helpfile | less
-
+	enter_helpmenu
 	init_menu
 }
 
@@ -1061,28 +1184,45 @@ pick_menu_item
 
 function sub_menu {
 
-submenu="true"
-subflagsmenu="false"
+    submenu="true"
+    subflagsmenu="false"
 
-read_tab_items
-read_menu_items $1 $2
-read_descriptor $1 $2
-infinite_menu
+    read_tab_items
+    read_menu_items $1 $2
+    read_descriptor $1 $2
+    infinite_menu
 
-write_menu_items
+    write_menu_items
 
-if $rightpanel; then
-	write_rightpanel_items
-fi
+    if $rightpanel; then
+	    write_rightpanel_items
+    fi
 
-#Write basic description
-write_descriptor
+    #Write basic description
+    write_descriptor
 
-#Write any additional info, or clear the area, depending on the conditions set in the function
-set_add_info_line
-pick_menu_item
+    #Write any additional info, or clear the area, depending on the conditions set in the function
+    set_add_info_line
+    pick_menu_item
 
 }
+
+
+function help_menu {
+
+    submenu="true"
+    subflagsmenu="false"
+    infinite_menu
+    write_help_menu_items
+    
+    if $rightpanel; then
+	    write_rightpanel_items
+    fi
+    
+    pick_help_menu_item
+
+}
+
 
 function init_menu {
 	if [[ "$(whoami)" != "root" ]]; then
@@ -1099,6 +1239,24 @@ function init_menu {
 
 }
 
+function init_help_menu {
+
+    if [[ "$(whoami)" != "root" ]]; then
+		root="false"
+	else
+		root="true"
+	fi
+
+	clear
+
+	read_rightpanel_items
+	draw_menu
+
+
+
+}
+
+
 function enter_submenu {
 
 	submenu="true"
@@ -1110,6 +1268,22 @@ function enter_submenu {
 		sub_menu $1 $2
 	done
 }
+
+
+function enter_helpmenu {
+
+    submenu="true"
+	submenutitle="Help"
+	mainmenupos="$menupos"
+	menupos=0
+	init_menu $1 $2
+	while true; do
+		help_menu
+	done
+
+}
+
+
 
 #Right panel functions
 

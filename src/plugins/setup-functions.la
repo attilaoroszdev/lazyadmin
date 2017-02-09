@@ -1,0 +1,151 @@
+#!/bin/bash
+
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# n-menus is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+
+# Replace below two lines with
+# PLUGINSDIRPLACEHOLDER
+# RESDIRPLACEHOLDER
+RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
+
+. $RES_DIR/menu-defaults.la
+
+
+function check_editor {
+    
+    clear
+
+
+    if [[ $defaulteditor == "null" ]]; then
+    
+        if hash nano 2>/dev/null; then
+            
+            hasnano="true"
+        
+        fi
+        
+        if hash vi 2>/dev/null; then
+            
+            hasvi="true"
+        
+        fi
+        
+        if hash emacs 2>/dev/null; then
+            
+            hasemacs="true"
+        
+        fi
+        
+        
+        echo "Interactive setup will be implemented in a later version of Lazy Admin."
+        echo "Until then, you can just access the config files from here."
+        echo
+        echo "First you'll need to select your preferred editor."
+        echo "You can change it later by editing defaults"
+        echo "Pick a letter:"
+        echo
+        
+        if $hasnano; then
+        
+            echo "n - nano"
+        
+        fi
+        
+        
+        if $hasvi; then
+        
+            echo "v - vi"
+        
+        fi
+        
+         if $hasemacs; then
+        
+            echo "e - emacs"
+        
+        fi
+        
+        echo "c - Custom editor"
+        
+        read -p "> " -n 1 editorpreference
+        
+        
+        if [[ $editorpreference == "c" ]]; then
+        
+            
+            echo
+            echo "Please type in your preferred editor command, with any parameters applicable BEFORE the editable filename"
+            echo
+            read -p "> " editorpreference
+            sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+        
+        
+        else 
+        
+        
+            case $editorpreference in
+            
+                'n')
+                    editorpreference="nano"
+                    sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+                    
+                    ;;
+                'v')
+                    editorpreference="vi"
+                    sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+                    
+                    ;;
+                'e')
+                    editorpreference="emacs"
+                    sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+                    
+                    ;;
+            
+            
+            esac
+        
+        
+        
+        fi
+        
+               
+        
+        
+        defaulteditor=$editorpreference
+        
+        
+        
+        
+    fi
+    
+
+}
+
+
+function edit_setup_file {
+
+    check_editor
+
+    $defaulteditor $1 
+    
+    tput civis
+
+}
+

@@ -1,9 +1,50 @@
 #!/bin/bash
-clear
-
 
 installtarball=./installer-test.tar.gz
 
+
+# Installer function(s)
+
+function set_symlink_dir {
+
+	echo
+	echo
+	echo "Please specify where to symlink, so that you can start la-menus as a command."
+	echo "If you want no symlinking, just type \"none\" (without the quotes)"
+	echo
+    read -p "> " symlinkdir
+	while true; do
+		if [[ "$symlinkdir" == "none" ]]; then
+			symlinking="false"
+			echo
+			echo "No symbolic link will be created."
+			sleep 1
+			break
+		else
+			if [[ -d $symlinkdir ]]; then
+				echo
+				echo "A symbolic link will be created in"
+				echo
+				echo "$symlinkdir"
+				symlinking="true"
+				sleep 1
+				break
+			else
+				echo
+				echo "Not a valid directory, try again."
+				echo
+				read -p "> " symlinkdir
+			fi
+		fi
+
+	done
+}
+
+
+
+# Start install script
+
+clear
 
 if [[ -f $installtarball ]]; then
     echo
@@ -19,7 +60,7 @@ echo
 echo "This is the installer for Lazy Admin, a tool for admins who are lazy."
 echo
 echo "By the time you've finished customozing it, you will know why it is bad to be "
-echo "lazy, but for now, please provide some valuable detaila for installation".
+echo "lazy, but for now, please provide some valuable details for installation".
 echo 
 echo "First I need you to tell me, wether you want me to create a user" 
 echo "specific installation in $HOME/.LazyAdmin/, or install globally"
@@ -176,7 +217,6 @@ else
 fi
 
 
-# TODO Extract everything into their rightful places from here! No need for tem directory
 
 tar xvzC "$installdir" -f $installtarball "core"
 tar xvzC "$installdir" -f $installtarball "plugins"
@@ -184,26 +224,15 @@ tar xvzC "$installdir" -f $installtarball "res"
 tar xvzC "$userfilesdir" -f $installtarball "user"
 
 
-# mv "$tmpfilesdir/core" "$installdir"
-# mv "$tmpfilesdir/plugins" "$installdir"
-#
-# source "$tmpfilesdir/res/script-builder.la"
-#
-# build_script "$tmpfilesdir/res/" "$installdir/res/" "menu-defaults.la" 20 "CORE_DIR=$installdir/core/" "USER_DIR=$userfilesdir" "menu-defaults.part.la"
-# mv "$tmpfilesdir/res/usage-guide.part.md" "$installdir/res/usage-guide.md"
-# mv "$tmpfilesdir/res/configuration-guide.part.md" "$installdir/res/configuration-guide.md"
+sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$userfilesdir/user/function-aliases.la"
+sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/plugins/setup-functions.la"
+sed -i "s|USERDIRPLACEHOLDER|USER_DIR=\"$userfilesdir/user\"|" "$userfilesdir/user/function-aliases.la"
+sed -i "s|RESDIRPLACEHOLDER|USER_DIR=\"$installdir/res\"|" "$userfilesdir/user/function-aliases.la"
+sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$userfilesdir/user/user-functions.la"
+sed -i "s|USERDIRPLACEHOLDER|USER_DIR=\"$userfilesdir/user\"|" "$installdir/res/menu-defaults.la"
 
 
-
-# build_script "$tmpfilesdir/res/" "$userfilesdir" "function-aliases.la" 20 "PLUGINS_DIR=$installdir/plugins/" "function-aliases.part.la"
-# build_script "$tmpfilesdir/res/" "$userfilesdir" "user-functions.la" 20 "PLUGINS_DIR=$installdir/plugins/" "user-functions.part.la"
-# build_script "$tmpfilesdir/res/" "$userfilesdir" "menu-entries.la" 20  "menu-entries.part.la"
-
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" "$userfilesdir/user/function-aliases.la"
-sed -i "s|USERDIRPLACEHOLDER|USER_DIR=$userfilesdir/user|" "$userfilesdir/user/function-aliases.la"
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" "$userfilesdir/user/user-functions.la"
-sed -i "s|USERDIRPLACEHOLDER|USER_DIR=$userfilesdir/user|" "$installdir/res/menu-defaults.la"
-
+RESDIRPLACEHOLDER
 
 echo 
 echo "Extracing finished."
@@ -239,10 +268,9 @@ echo
 echo "$launcherdir/la-menus"
 
 
-#build_script "$tmpfilesdir/res/" "$installdir" "la-menus" 20 ". $installdir/res/menu-defaults.la" ". $installdir/core/menu-defaults.la" ". $userfilesdir/function-aliases.la" "launcher.part.la"
 
 tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/la-menus"
-sed -i "s|INCLUDESPLACEHOLDER|. $installdir/res/menu-defaults.la\n. $installdir/core/menu-functions.la\n. $userfilesdir/user/function-aliases.la|" "$launcherdir/la-menus"
+sed -i "s|INCLUDESPLACEHOLDER|. \"$installdir/res/menu-defaults.la\"\n. \"$installdir/core/menu-functions.la\"\n. \"$userfilesdir/user/function-aliases.la\"|" "$launcherdir/la-menus"
 
 
 sleep 1
@@ -273,6 +301,14 @@ if [[ "$symlinking" == "true" ]]; then
 	echo "Now creating symlink in  $symlinkdir."
 	echo "It is likely a system directory, so sudo will be used..."
 	echo
+
+    if [[ -f "$symlinkdir/la-menus" ]]; then
+    
+    
+        sudo rm "$symlinkdir/la-menus"
+    
+    fi
+
 	sudo ln -s "$launcherdir/la-menus" "$symlinkdir/la-menus"
 	sleep 1
 	echo
@@ -286,6 +322,13 @@ else
 	echo "Check help for customizaton info and options."
 
 fi
+
+
+# Get rid of the evidence...
+
+rm $installtarball
+rm ./install.sh
+
 echo
 echo "Now press anything to go back to doing whatever it was you did before..."
 read -n 1 -s keypress
@@ -294,41 +337,6 @@ exit 0
 
 
 
-# Installer functions
 
-function set_symlink_dir {
-
-	echo
-	echo
-	echo "Please specify where to symlink, so that you can start la-menus as a command."
-	echo "If you want no symlinking, just type \"none\" (without the quotes)"
-	echo
-    read -p "> " symlinkdir
-	while true; do
-		if [[ "$symlinkdir" == "none" ]]; then
-			symlinking="false"
-			echo
-			echo "No symbolic link will be created."
-			sleep 1
-			break
-		else
-			if [[ -d $symlinkdir ]]; then
-				echo
-				echo "A symbolic link will be created in"
-				echo
-				echo "$symlinkdir"
-				symlinking="true"
-				sleep 1
-				break
-			else
-				echo
-				echo "Not a valid directory, try again."
-				echo
-				read -p "> " symlinkdir
-			fi
-		fi
-
-	done
-}
 
 

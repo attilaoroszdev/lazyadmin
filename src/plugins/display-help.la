@@ -17,3 +17,53 @@
 # along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
+
+
+function display_markdown_help {
+
+    if hash pandoc 2>/dev/null; then
+    
+        pandocinstalled="true"
+        
+    fi
+    
+    if hash lynx 2>/dev/null; then
+    
+        lynxinstalled="true"
+        
+    fi
+    
+    
+    if [[ $pandocinstalled && $lynxinstalled ]]; then
+    
+    
+        pandoc "$1" | lynx -stdin
+        
+    else
+    
+        echo "Some dependencies are missing." 
+        echo "To display a formatted markdown, please install the following packag(es):"
+        echo
+        
+        if [[ ! $pandocinstalled ]]; then
+            
+            echo "  - pandoc"
+            
+        fi
+        
+        if [[ ! $lynxinstalled ]]; then
+            
+            echo "  - lynx"
+            
+        fi
+        
+        echo
+        echo "Now press any key to display plain text"
+        read -n 1 -s keypress 
+        
+        less "$1"
+    
+    fi
+    
+    
+}

@@ -24,10 +24,14 @@
 # Replace below two lines with
 # PLUGINSDIRPLACEHOLDER
 # USERDIRPLACEHOLDER
+# RESDIRPLACEHOLDER
 PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
 USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
+RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
 
 . "$PLUGINS_DIR/extra-functions.la"
+. "$PLUGINS_DIR/setup-functions.la"
+. "$PLUGINS_DIR/display-help.la"
 . "$USER_DIR/user-functions.la"
 
 #Main menu functions in the format of funct#tab#menuitem
@@ -163,21 +167,54 @@ function funct40 {
 
 function funct50 {
 
-	editmenu_dummy
+
+	edit_setup_file "$USER_DIR/menu-entries.la"
+	
 
 }
 
+
 function funct51 {
 
-	editdefaults_dummy
+	edit_setup_file "$USER_DIR/function-aliases.la"
 
 }
 
 function funct52 {
 
-	profiles_dummy
+	edit_setup_file "$USER_DIR/user-functions.la"
 
 }
+
+function funct53 {
+
+	#editdefaults_dummy
+	edit_setup_file "$RES_DIR/menu-defaults.la"
+
+}
+
+
+function functhelp0 {
+
+    display_markdown_help "$RES_DIR/usage-guide.md"
+
+}
+
+function functhelp1 {
+
+    display_markdown_help "$RES_DIR/configuration-guide.md"
+
+}
+
+
+function functhelp2 {
+
+    man la-menus
+
+}
+
+
+
 
 #Submenu functions. these will have a similar naming system, except
 #they would be extended by submenu position as well, making it subfunctt###
@@ -203,4 +240,4 @@ function subfunct011 {
 function subfunct013 {
 
 	dummy_function
-	}
+}
