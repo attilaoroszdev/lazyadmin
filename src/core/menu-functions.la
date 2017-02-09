@@ -42,6 +42,8 @@ fi
 #This function will read the menu entries from the menu entries file as set in defaults
 function read_menu_items {
 
+
+
 if [[ "$submenu" = "true" ]]; then
 
 	OLDIFS="$IFS"
@@ -61,6 +63,8 @@ else
 	menulength=${#menuentry[@]}
 
 fi
+
+
 
 }
 
@@ -176,6 +180,20 @@ function read_rightpanel_items {
 
 	rightpanellength=${#rightpanelentry[@]}
 }
+
+
+function read_help_rightpanel_items {
+	OLDIFS="$IFS"
+	IFS=$'\n'
+	
+	rightpanelentry=( `cat $menufile | sed -n '/'_helprightpanel'/{:a;n;/'_endhelprightpanel'/q;p;ba}'` )
+	
+	IFS="$OLDIFS"
+
+	rightpanellength=${#rightpanelentry[@]}
+}
+
+
 
 #Display the menu tabs
 function write_tab_items {
@@ -313,13 +331,15 @@ tput cup $cursorpos 0
 # This is hardcoded for now
 function write_help_menu_items {
 
-    menulength=3
+    helpmenulength=3
 
     helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
     helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
     helpmenuentry[2]="3 - The Lazy Admin man page (man)"
+    
+    
 
-    for (( n=0; n < $menulength; n++ ))
+    for (( n=0; n < $helpmenulength; n++ ))
 do
 	if [[ "${helpmenuentry[n]}" = "skip" ]]; then
 
@@ -394,12 +414,12 @@ function clear_menu {
 #Draws the outline of the menu, with spaces left out for inclusion of items
 function draw_menu {
 
-	if [[ "$subflagsmenu" = "true" ]]; then
+	if [[ $subflagsmenu == "true" ]]; then
 		let menuheight=$menulength+3
 		headerheight=$subheaderheight;
 		title=$subflagsmenutitle
 
-	elif [[ "$submenu" = "true" ]]; then
+	elif [[ $submenu == "true" ]]; then
 		headerheight=$subheaderheight;
 		title=$submenutitle
 	else
@@ -503,7 +523,30 @@ function write_descriptor {
 	tput cup $cursorpos $menuwidth
 	echo -e "\033[1K"
 	tput cup $cursorpos 2
-	echo "${menudescentry[$menupos]}"
+  	echo "${menudescentry[$menupos]}"
+}
+
+# Simply write a one line descriptor, as read from the menu file
+function write_help_descriptor {
+
+    helpmenudescentry[0]="Basic everyday usage"
+    helpmenudescentry[1]="imn depth configuration guide"
+    helpmenudescentry[2]="Display the traditional man paghe"
+
+	cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
+	tput cup $cursorpos $menuwidth
+	echo -e "\033[1K"
+	tput cup $cursorpos 2
+    
+    if [[ "$activepanel" = "right" ]]; then
+    
+        echo "${menudescentry[$menupos]}"
+    
+    else
+
+    	echo "${helpmenudescentry[$menupos]}"
+	
+	fi
 }
 
 
@@ -1043,6 +1086,8 @@ function menu_item_picker_subflags	{
 
 function flags_submenu_function {
 
+    
+
 	menuentry=()
 
 	if [[ "$submenu" == "true" ]]; then
@@ -1055,6 +1100,7 @@ function flags_submenu_function {
 	subflagsmenu="true"
 	subflagsmenutitle="$1"
 	submenucommand="$2"
+	submenucall="${@:3}"
 	menupos=0
 
 	#Have to empty the arguments each time, as set_submenu_function is not an "object", but just a single instance of a function.
@@ -1116,8 +1162,13 @@ function reflow_menu {
 }
 
 function display_help {
-
+    
+   
+    
+    
 	enter_helpmenu
+	
+	
 	init_menu
 }
 
@@ -1143,13 +1194,50 @@ function exit_la_menus {
 
 }
 
+
+
+
 function back_to_main_menu {
-	submenu="false"
-	subflagsmenu="false"
+
+    if [[ $remaininsubflagsmenu == "true" ]]; then
+    
+        remaininsubflagsmenu="false"
+        flags_submenu_function "$subflagsmenutitle" "$submenucommand" $submenucall
+        
+    
+    else
+
+    	subflagsmenu="false"
+
+    	
+    
+	fi
+	
+
+
+    if [[ $remaininsubmenu == "true" ]]; then
+    
+        remaininsubmenu="false"
+        submenutitle="$oldsubmenutitle"
+    
+    else
+
+    	submenu="false"
+    
+	
+	fi
+	
+	
+	
 	activepanel="left"
 	mainmenupos=0
 	menupos=0
+	
+
 	init_menu
+	
+
+
 	break
 
 }
@@ -1212,6 +1300,7 @@ function help_menu {
 
     submenu="true"
     subflagsmenu="false"
+    read_descriptor $1 $2
     infinite_menu
     write_help_menu_items
     
@@ -1219,6 +1308,7 @@ function help_menu {
 	    write_rightpanel_items
     fi
     
+    write_help_descriptor
     pick_help_menu_item
 
 }
@@ -1232,8 +1322,10 @@ function init_menu {
 	fi
 
 	clear
-	read_menu_items $1 $2
-	read_descriptor $2 $2
+	
+    read_menu_items $1 $2
+    read_descriptor $2 $2
+	
 	read_rightpanel_items
 	draw_menu
 
@@ -1241,6 +1333,7 @@ function init_menu {
 
 function init_help_menu {
 
+   
     if [[ "$(whoami)" != "root" ]]; then
 		root="false"
 	else
@@ -1249,7 +1342,8 @@ function init_help_menu {
 
 	clear
 
-	read_rightpanel_items
+	read_help_rightpanel_items
+	read_descriptor $2 $2
 	draw_menu
 
 
@@ -1272,11 +1366,39 @@ function enter_submenu {
 
 function enter_helpmenu {
 
+
+    if [[ $subflagsmenu == "true" ]]; then
+    
+        remaininsubflagsmenu="true"
+        subflagsmenutitle="Help"
+       
+    else 
+    
+        remaininsubflagsmenu="false"
+        
+    fi
+
+
+    if [[ $submenu == "true" ]]; then
+    
+        remaininsubmenu="true"
+        oldsubmenutitle="$submenutitle"
+       
+    else
+    
+        remaininsubmenu="false"
+        
+    fi
+    
+    
+
+
     submenu="true"
 	submenutitle="Help"
+
 	mainmenupos="$menupos"
 	menupos=0
-	init_menu $1 $2
+	init_help_menu
 	while true; do
 		help_menu
 	done

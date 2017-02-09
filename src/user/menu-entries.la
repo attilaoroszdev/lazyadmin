@@ -219,3 +219,24 @@ Display the detailed help file
 Return to main menu
 Exit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
+
+
+## Rightpanel items in help menus 
+
+_helprightpanel
+r - Reflow Menu
+skip
+b - Back to Main Menu
+x - Exit
+_endhelprightpanel
+
+
+## Descriptions of menuitems in main menu in the same order as the items above ##
+
+_rightpaneldesc
+Use this option after resizing the terminal window, or changing terminal size
+skip
+Return to parent menu
+Exit Lazy Admin, and return to your normal shell... and life...
+_endrightpaneldesc
+

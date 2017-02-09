@@ -7,7 +7,7 @@
 > Free Documentation License".
 
 
-# *Lazy Admnin Usage Guide*
+# Lazy Admnin Usage Guide
 
 ## **Oveview**
 
@@ -30,7 +30,7 @@ The maximum number of entries the main menu could could hold is 6, and the sub-m
 Using only sub-menus will have the solo disadvantage of not being able to handle flag-setting sub-menus (or not just yet). more on that later.
 
 
-# **Navigation**
+## **Navigation**
 
 
 Navigation is simple.

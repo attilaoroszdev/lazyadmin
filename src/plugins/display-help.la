@@ -40,9 +40,10 @@ function display_markdown_help {
         pandoc "$1" | lynx -stdin
         
     else
-    
+        clear
+        echo
         echo "Some dependencies are missing." 
-        echo "To display a formatted markdown, please install the following packag(es):"
+        echo "To display a formatted markdown,  install the following packag(es):"
         echo
         
         if [[ ! $pandocinstalled ]]; then
