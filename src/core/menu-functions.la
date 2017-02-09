@@ -331,7 +331,7 @@ tput cup $cursorpos 0
 # This is hardcoded for now
 function write_help_menu_items {
 
-    helpmenulength=3
+    menulength=3
 
     helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
     helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
@@ -339,7 +339,7 @@ function write_help_menu_items {
     
     
 
-    for (( n=0; n < $helpmenulength; n++ ))
+    for (( n=0; n < $menulength; n++ ))
 do
 	if [[ "${helpmenuentry[n]}" = "skip" ]]; then
 
