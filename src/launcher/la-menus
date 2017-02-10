@@ -19,7 +19,9 @@
 # Contact: attila.orosz@mail.com
 
 
-INCLUDESPLACEHOLDER
+COREDIRPLACEHOLDER
+
+. "$CORE_DIR/menu-functions.la"
 
 
 if [[ $1 == ""  ]]; then

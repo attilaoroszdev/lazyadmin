@@ -254,23 +254,23 @@ echo "I will put the starter file in $installdir"
 sleep 1
 
 
-if [[ -f "$launcherdir/la-menus" ]]; then
+if [[ -f "$launcherdir/ladmin" ]]; then
 	echo
 	echo "Starter file already exists. Removing..."
 
-	rm $launcherdir/la-menus
+	rm "$launcherdir/ladmin"
 	sleep 1
 fi
 
 echo
 echo "Creating new starter file:"
-echo
 echo "$launcherdir/la-menus"
+echo
 
 
 
 tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/la-menus"
-sed -i "s|INCLUDESPLACEHOLDER|. \"$installdir/res/menu-defaults.la\"\n. \"$installdir/core/menu-functions.la\"\n. \"$userfilesdir/user/function-aliases.la\"|" "$launcherdir/la-menus"
+sed -i "s|INCLUDESPLACEHOLDER|. \"$installdir/res/menu-defaults.la\"\n. \"$installdir/core/menu-functions.la\"\n. \"$userfilesdir/user/function-aliases.la\"|" "$launcherdir/ladmin"
 
 
 sleep 1
@@ -282,7 +282,7 @@ echo
 echo "Attempting to make la-menus executable."
 echo "(If this step fails, you will need to do this manually)"
 
-chmod ug+rwx "$launcherdir/la-menus"
+chmod ug+rwx "$launcherdir/ladmin"
 
 sleep 1
 echo
@@ -302,18 +302,20 @@ if [[ "$symlinking" == "true" ]]; then
 	echo "It is likely a system directory, so sudo will be used..."
 	echo
 
-    if [[ -f "$symlinkdir/la-menus" ]]; then
+    
+    if [[ -f "$symlinkdir/ladmin" ]]; then
     
     
-        sudo rm "$symlinkdir/la-menus"
+        sudo rm "$symlinkdir/ladmin"
     
     fi
 
-	sudo ln -s "$launcherdir/la-menus" "$symlinkdir/la-menus"
+
+	sudo ln -s "$launcherdir/la-menus" "$symlinkdir/ladmin"
 	sleep 1
 	echo
 	echo "All done!"
-	echo "You can now start Lazy Admin by Typing 'la-menus' as a command."
+	echo "You can now start Lazy Admin by Typing 'ladmin' as a command."
 	echo "Check help for customizaton info and options."
 else
 	echo

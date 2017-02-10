@@ -117,7 +117,7 @@ _endmenu1
 _descmenu1
 This is the first menuitem on the second tab
 skip
-This is the third menuitem on the second tab
+Third menuitem. Previous item was skipped
 This is the fourth meniutem on the second tab
 Last item. You could squeeze one more, but it would be tight.
 _enddescmenu1
@@ -187,17 +187,17 @@ _rightpanel
 r - Reflow Menu
 h - Get Help
 skip
-x - Exit
+q - Quit
 _endrightpanel
 
 
 ## Descriptions of menuitems in main menu in the same order as the items above ##
 
 _rightpaneldesc
-Use this option after resizing the terminal window, or changing terminal size
+Redraw the Lazy Admin UI
 Display the detailed help file
 skip
-Exit Lazy Admin, and return to your normal shell... and life...
+Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
 
@@ -207,17 +207,17 @@ _subrightpanel
 r - Reflow menu
 h - Get Help
 b - Back to Main Menu
-x - Exit
+q - Quit
 _endsubrightpanel
 
 
 ## Descriptions of menuitems in submenus in the same order as the items above ##
 
 _subrightpaneldesc
-Use this option after resizing the terminal window, or changing terminal size
+Redraw the Lazy Admin UI
 Display the detailed help file
 Return to main menu
-Exit Lazy Admin, and return to your normal shell... and life...
+Quit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
 
 
@@ -227,16 +227,16 @@ _helprightpanel
 r - Reflow Menu
 skip
 b - Back to Main Menu
-x - Exit
+q - Quit
 _endhelprightpanel
 
 
 ## Descriptions of menuitems in main menu in the same order as the items above ##
 
 _rightpaneldesc
-Use this option after resizing the terminal window, or changing terminal size
+Redraw the Lazy Admin UI
 skip
 Return to parent menu
-Exit Lazy Admin, and return to your normal shell... and life...
+Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
