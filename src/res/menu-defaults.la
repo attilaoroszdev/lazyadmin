@@ -23,7 +23,7 @@
 
 
 # Replace below line with
-# USERDIRPLACEHOLDER
+# USER_DIR="$HOME/.config/LazyAdmin/user"
 USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
 
 
@@ -48,7 +48,7 @@ displaylineconnectors="true"
 
 
 
-# Do not change these. (You ahve been warned)
+# Do not change these. (You have been warned)
 altmenu=false
 submenu="false"
 subflagsmenu="false"

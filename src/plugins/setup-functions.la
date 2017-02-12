@@ -21,8 +21,7 @@
 # Contact: attila.orosz@mail.com
 
 
-# Replace below two lines with
-# PLUGINSDIRPLACEHOLDER
+# Replace below line with
 # RESDIRPLACEHOLDER
 RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
 

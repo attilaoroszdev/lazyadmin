@@ -19,9 +19,10 @@
 # Contact: attila.orosz@mail.com
 
 
-COREDIRPLACEHOLDER
+INSTALLDIRPLACEHOLDER
+USER_DIR="$HOME/.config/LazyAdmin"
 
-. "$CORE_DIR/menu-functions.la"
+. "$INSTALL_DIR/core/menu-functions.la"
 
 
 if [[ $1 == ""  ]]; then
@@ -43,5 +44,27 @@ else
     arg2=$2
     
 fi
+
+
+
+# In case the user starts ladmin for the first time...
+if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]
+
+    
+  if [[ ! -d "$USER_DIR" ]]; then
+  
+    mkdir "$USER_DIR"
+    
+    tar -xvzC "$USER_DIR" -f "$INSTALL_DIR/res/user_fir_defaults.tar"
+    sed -i "s|RESDIRPLACEHOLDER|USER_DIR=\"$INSTALL_DIR/res\"|" "$USER_DIR/user/function-aliases.la"
+    sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$INSTALL_DIR/plugins\"|" "$USER_DIR/user/function-aliases.la"
+    sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$INSTALL_DIR/plugins\"|" "$USER_DIR/user/user-functions.la"
+    
+  
+  fi
+    
+
+fi
+
 
 main $arg1 $arg2

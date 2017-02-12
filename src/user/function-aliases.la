@@ -22,11 +22,11 @@
 
 
 # Replace below two lines with
+# USER_DIR="$HOME/.config/LazyAdmin/user"
 # PLUGINSDIRPLACEHOLDER
-# USERDIRPLACEHOLDER
 # RESDIRPLACEHOLDER
-PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
 USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
+PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
 RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
 
 . "$PLUGINS_DIR/extra-functions.la"

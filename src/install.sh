@@ -224,12 +224,24 @@ tar xvzC "$installdir" -f $installtarball "res"
 tar xvzC "$userfilesdir" -f $installtarball "user"
 
 
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$userfilesdir/user/function-aliases.la"
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/plugins/setup-functions.la"
-sed -i "s|USERDIRPLACEHOLDER|USER_DIR=\"$userfilesdir/user\"|" "$userfilesdir/user/function-aliases.la"
+
+# Store the tarball, in case of global instakll (we might need it later)
+# Needs to be done bfpore injectting values
+
+if [[ installtype == "global" ]]; then
+
+    tar -cvf "$installdir/res/user_fir_defaults.tar" "$userfilesdir/user"
+    
+fi
+
+
+
+sed -i "s|RESDIRPLACEHOLDER|USER_DIR=\"$installdir/res\"|" "$installdir/core/menu-functions.la"
 sed -i "s|RESDIRPLACEHOLDER|USER_DIR=\"$installdir/res\"|" "$userfilesdir/user/function-aliases.la"
+sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$userfilesdir/user/function-aliases.la"
 sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$userfilesdir/user/user-functions.la"
-sed -i "s|USERDIRPLACEHOLDER|USER_DIR=\"$userfilesdir/user\"|" "$installdir/res/menu-defaults.la"
+sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/plugins/setup-functions.la"
+
 
 
 RESDIRPLACEHOLDER
@@ -269,8 +281,8 @@ echo
 
 
 
-tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/la-menus"
-sed -i "s|INCLUDESPLACEHOLDER|. \"$installdir/res/menu-defaults.la\"\n. \"$installdir/core/menu-functions.la\"\n. \"$userfilesdir/user/function-aliases.la\"|" "$launcherdir/ladmin"
+tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
+sed -i "s|INSTALLDIRPLACEHOLDER|\"$installdir\"|" "$launcherdir/ladmin"
 
 
 sleep 1
@@ -326,8 +338,9 @@ else
 fi
 
 
-# Get rid of the evidence...
 
+
+# Get rid of the evidence...
 rm $installtarball
 rm ./install.sh
 

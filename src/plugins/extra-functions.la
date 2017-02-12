@@ -23,7 +23,8 @@
 
 
 
-# The following fuinctions are provided as is. No guarantees that theY1ll evven work.
+# The following fuinctions are provided "as is", or, in this case, "are".. 
+# No guarantees that theY1ll evven work.
 # They meant are to allow for opening stuff in new terminal tab, or terminal window.
 # If your favourite terminal emulator uses different key combos, you might need to
 # set those manually
@@ -38,7 +39,7 @@ function enter_root_shell {
     echo
     echo "Gaining privileges..."
     echo
-    sudo la-menus "default" "false"
+    sudo ladmin "default" "false"
 
 }
 

@@ -20,7 +20,7 @@
 # Contact: attila.orosz@mail.com
 
 # Replace below two lines with
-# USERDIRPLACEHOLDER
+# USER_DIR="$HOME/.config/LazyAdmin/user"
 # RESDIRPLACEHOLDER
 USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
 RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
