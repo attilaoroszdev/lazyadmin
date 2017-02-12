@@ -168,7 +168,7 @@ function funct40 {
 function funct50 {
 
 
-	edit_setup_file "$USER_DIR/menu-entries.la"
+	functsetup0
 	
 
 }
@@ -176,22 +176,50 @@ function funct50 {
 
 function funct51 {
 
-	edit_setup_file "$USER_DIR/function-aliases.la"
+	functsetup1
 
 }
 
 function funct52 {
 
-	edit_setup_file "$USER_DIR/user-functions.la"
+    functsetup2
 
 }
 
 function funct53 {
 
-	#editdefaults_dummy
-	edit_setup_file "$RES_DIR/menu-defaults.la"
+	functsetup3
 
 }
+
+
+function functsetup0 {
+
+    edit_setup_file "$USER_DIR/menu-entries.la"    
+    
+}
+
+
+function functsetup1 {
+
+   	edit_setup_file "$USER_DIR/user-functions.la"
+
+}
+
+
+function functsetup2 {
+   
+    edit_setup_file "$USER_DIR/function-aliases.la"
+       
+}
+
+
+function functsetup3 {
+
+   	edit_setup_file "$RES_DIR/menu-defaults.la"
+
+}
+
 
 
 function functhelp0 {

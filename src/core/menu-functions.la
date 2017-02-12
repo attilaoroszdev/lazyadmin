@@ -720,7 +720,7 @@ function pick_menu_item {
 	         ;;
 
         #right menu items (on keypress)
-         "r" | "R")	#put this into a function so that enter can be used, along with alias
+         "f" | "F")	#put this into a function so that enter can be used, along with alias
 	        reflow_menu
 	        ;;
         "h" | "H")
@@ -736,31 +736,25 @@ function pick_menu_item {
 		        ;;
         "e" | "E")
 	        if [[ $tabpos = $tablength  ]]; then
-		        funct50
+		        functsetup0
 		        init_menu
 	        fi
 	        ;;
-        "p" | "P")
+        "u" | "U")
 	        if [[ $tabpos = $tablength  ]]; then
-		        funct52
+		        functsetup1
 		        init_menu
 	        fi
 	        ;;
-        "f" | "F")
+        "m" | "M")
 	        if [[ $tabpos = $tablength  ]]; then
-		        funct51
+		        functsetup2
 		        init_menu
 	        fi
 	        ;;
-        "b" | "B")
+        "v" | "V")
 	        if [[ $tabpos = $tablength  ]]; then
-		        funct52
-		        init_menu
-	        fi
-	        ;;
-        "r" | "R")
-	        if [[ $tabpos = $tablength  ]]; then
-		        funct53
+		        functsetup3
 		        init_menu
 	        fi
 	        ;;
@@ -844,7 +838,7 @@ function pick_help_menu_item {
 	 ;;
 
     #right menu items (on keypress)
-     "r" | "R")	#put this into a function so that enter can be used, along with alias
+     "f" | "F")	#put this into a function so that enter can be used, along with alias
 	    reflow_menu
 	    ;;
      "q" | "Q") #this handles exit function
@@ -1028,7 +1022,7 @@ function menu_item_picker_subflags	{
 	
 
 	#right menu items (on keypress)
-	"r" | "R")
+	"f" | "F")
 		reflow_menu
 		;;
 	"h" | "H")

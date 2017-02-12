@@ -161,9 +161,9 @@ _enddescmenu4
 
 _menu5
 e - Edit menu entries
-f - Edit user functions
-b - Bind functions to menus
-d - Edit default values
+u - Edit user functions
+m - Bind functions to menus
+v - Edit default values
 _endmenu5
 
 _descmenu5
@@ -184,7 +184,7 @@ _enddescmenu5
 # This is necessary, for "b -Back to Main Menu" is added in the submenu function
 
 _rightpanel
-r - Reflow Menu
+f - Reflow Menu
 h - Get Help
 skip
 q - Quit
@@ -204,7 +204,7 @@ _endrightpaneldesc
 ## In the submenus (contains back link)  ##
 
 _subrightpanel
-r - Reflow menu
+f - Reflow menu
 h - Get Help
 b - Back to Main Menu
 q - Quit
@@ -224,7 +224,7 @@ _endsubrightpaneldesc
 ## Rightpanel items in help menus 
 
 _helprightpanel
-r - Reflow Menu
+f - Reflow Menu
 skip
 b - Back to Main Menu
 q - Quit
