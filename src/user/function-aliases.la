@@ -57,14 +57,31 @@ function funct01 {
 	enter_submenu $@ "Sample submenu title"
 }
 
-function funct02 {
-		localhost_ping
+
+# Submenu functions. these will have a similar naming system, except
+# they would be extended by submenu position as well, making it subfunctt###
+# or sunfunct#tabpositionin#mainmenupositionin#submenuposition
+# that is, for e.g. the first tab second menuitem, 3rd submenuitem:
+# subfunct012
+# for the third tab, first submenu, fifth submenuitem
+# subfunct204
+# and so on
+
+function subfunct010 {
+
+	localhost_ping
 
 }
 
-function funct03 {
+function subfunct011 {
 
-	#Here is an example of how to invoke the flag setting submenu
+	example_function
+
+}
+
+function subfunct013 {
+
+    #Here is an example of how to invoke the flag setting submenu
 	#
 	#Call flags_submenu_function with the following arguments:
 	#
@@ -89,6 +106,23 @@ function funct03 {
 	#Note 3: The manual set option can be useful for setting the hostname/any
 	#other argumenrt (in that case just take out the "localhost" bit
 	#from the original function "flagtets_localhostping in this case)
+
+	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+}
+
+
+
+
+
+
+function funct02 {
+		localhost_ping
+
+}
+
+function funct03 {
+
+	
 
 	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 
@@ -173,7 +207,6 @@ function funct50 {
 
 }
 
-
 function funct51 {
 
 	functsetup1
@@ -192,6 +225,10 @@ function funct53 {
 
 }
 
+
+
+
+# Only change these if you want tpo override help or setup functionality!
 
 function functsetup0 {
 
@@ -241,31 +278,11 @@ function functhelp2 {
 
 }
 
+function functhelp_commanbuilder {
 
-
-
-#Submenu functions. these will have a similar naming system, except
-#they would be extended by submenu position as well, making it subfunctt###
-# or sunfunct#tabpositionin#mainmenupositionin#submenuposition
-#that is, for e.g. the first tab second menuitem, 3rd submenuitem:
-# subfunct012
-#for the third tab, first submenu, fifth submenuitem
-# subfunct204
-#and soon
-
-function subfunct010 {
-
-	localhost_ping
+    display_markdown_help "$RES_DIR/command-builder-guide.md"
 
 }
 
-function subfunct011 {
 
-	example_function
 
-}
-
-function subfunct013 {
-
-	dummy_function
-}

@@ -60,7 +60,6 @@ if [[ "$submenu" = "true" ]]; then
 	menulength=${#menuentry[@]}
 
 else
-
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	menuentry=( `cat $menufile | sed -n '/'_menu$tabpos'/{:a;n;/'_endmenu$tabpos'/q;p;ba}'` )
@@ -716,6 +715,7 @@ function pick_menu_item {
 
 		        fi
 	        fi
+
 	        init_menu
 	         ;;
 
@@ -732,6 +732,7 @@ function pick_menu_item {
         "b" | "B")
 		        if [[ "$submenu" = "true" ]]; then
 			        back_to_main_menu
+			        break
 		        fi
 		        ;;
         "e" | "E")
@@ -847,6 +848,7 @@ function pick_help_menu_item {
     'b' | "B")
 		    if [[ "$submenu" = "true" ]]; then
 			    back_to_main_menu
+			    break
 		    fi
 		    ;;
         
@@ -1034,6 +1036,7 @@ function menu_item_picker_subflags	{
 		;;
 	'b' | "B")
 		back_to_main_menu
+		break
 		;;
 
 	esac
@@ -1044,17 +1047,22 @@ function menu_item_picker_subflags	{
 function flags_submenu_function {
 
     
+    menuentry=()
 
-	menuentry=()
+    set_args=""
 
-	if [[ "$submenu" == "true" ]]; then
-		sourcesubmenu="true"
-	else
-		sourcesubmenu="false"
-	fi
 
-	submenu="true"
+
+    if [[ "$submenu" == "true" ]]; then
+	    sourcesubmenu="true"
+    else
+	    sourcesubmenu="false"
+    fi
+    
+    submenu="true"
 	subflagsmenu="true"
+    	
+  
 	subflagsmenutitle="$1"
 	submenucommand="$2"
 	submenucall="${@:3}"
@@ -1062,7 +1070,7 @@ function flags_submenu_function {
 
 	#Have to empty the arguments each time, as set_submenu_function is not an "object", but just a single instance of a function.
 	#Best avoid confusion
-	set_args=""
+	
 
 	clear
 
@@ -1120,13 +1128,27 @@ function reflow_menu {
 
 function display_help {
     
+      
+      
+    if [[ ! $subflagsmenu ]]; then
    
+    	enter_helpmenu
+    	
+    else
     
     
-	enter_helpmenu
+        functhelp_commanbuilder
+    
+        
+        
+
+        reflow_menu
+    
+    fi
+    
 	
 	
-	init_menu
+	
 }
 
 function exit_la_menus {
@@ -1156,47 +1178,33 @@ function exit_la_menus {
 
 function back_to_main_menu {
 
-    if [[ $remaininsubflagsmenu == "true" ]]; then
-    
-        remaininsubflagsmenu="false"
-        flags_submenu_function "$subflagsmenutitle" "$submenucommand" $submenucall
-        
-    
-    else
+    activepanel="left"
+	mainmenupos=0
+	menupos=0
 
-    	subflagsmenu="false"
-
-    	
-    
-	fi
+  
+	
+	subflagsmenu="false"
 	
 
 
     if [[ $remaininsubmenu == "true" ]]; then
     
+    
+      
         remaininsubmenu="false"
         submenutitle="$oldsubmenutitle"
+      
+       
     
     else
-
+      
     	submenu="false"
-    
-	
+     
 	fi
 	
-	
-	
-	activepanel="left"
-	mainmenupos=0
-	menupos=0
-	
 
-	init_menu
-	
-
-
-	break
-
+		
 }
 
 
@@ -1253,7 +1261,7 @@ function sub_menu {
 
 function help_menu {
 
-    submenu="true"
+    #submenu="true"
     subflagsmenu="false"
     read_descriptor $1 $2
     infinite_menu
@@ -1278,9 +1286,12 @@ function init_menu {
 
 	clear
 	
+	
+	
     read_menu_items $1 $2
     read_descriptor $2 $2
-	
+
+
 	read_rightpanel_items
 	draw_menu
 
@@ -1312,6 +1323,7 @@ function enter_submenu {
 	submenutitle="$3"
 	mainmenupos="$menupos"
 	menupos=0
+
 	init_menu $1 $2
 	while true; do
 		sub_menu $1 $2
@@ -1326,24 +1338,41 @@ function enter_helpmenu {
     
         remaininsubflagsmenu="true"
         subflagsmenutitle="Help"
+        
+        if [[ $sourcesubmenu == "true" ]]; then
+        
+        
+            remaininsubmenu="true"
+        
+        else 
+        
+        
+            remaininsubmenu="false"
+        
+        fi
+        
+        
        
     else 
     
         remaininsubflagsmenu="false"
         
-    fi
-
-
-    if [[ $submenu == "true" ]]; then
+        if [[ $submenu == "true" ]]; then
     
-        remaininsubmenu="true"
-        oldsubmenutitle="$submenutitle"
-       
-    else
-    
-        remaininsubmenu="false"
+            remaininsubmenu="true"
+            oldsubmenutitle="$submenutitle"
+           
+        else
+        
+            remaininsubmenu="false"
+            
+        fi
+        
         
     fi
+
+
+    
     
     
 
@@ -1353,6 +1382,8 @@ function enter_helpmenu {
 
 	mainmenupos="$menupos"
 	menupos=0
+	
+	
 	init_help_menu
 	while true; do
 		help_menu
@@ -1372,7 +1403,7 @@ function functright0 {
 
 function functright1 {
 
-	display_help
+   display_help
 
 }
 
@@ -1424,6 +1455,7 @@ function main {
        fi
 
    fi
+
 
 
    init_menu

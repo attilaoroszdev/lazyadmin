@@ -78,7 +78,7 @@ _submenu01
 1 - First submenu item - Ping locahost
 2 - Second item - Run sample function (again...)
 skip
-4 - Fourth submenu item - Noting here yet
+4 - Fourth item - Run command builder (again)
 5 - Fifth submenu item - Noting here yet
 6 - Sixth submenu item - Noting here yet
 7 - Seventh submenu item - Noting here yet
@@ -92,7 +92,7 @@ _descsubmenu01
 This will be the first item in the submenu. I like to ping thngs...
 The second item, obviously. The next one is skipped.
 skip
-The previous item was skipped.
+The prev. item was skipped. Command builder runs from submenu too.
 You can keep on adding items
 Much more then in the main menu
 Up to eight

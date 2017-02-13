@@ -25,7 +25,7 @@
 # PLUGINSDIRPLACEHOLDER
 PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
 
-. "$PLUGINS_DIR/la-extra-functions"
+. "$PLUGINS_DIR/extra-functions.la"
 
 # Set your custom functions here, if any custom script is to be called
 # from the menus

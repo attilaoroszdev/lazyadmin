@@ -68,3 +68,18 @@ function display_markdown_help {
     
     
 }
+
+
+
+function display_subflags_help {
+        
+        clear
+        echo "Command builder usage"
+        echo
+        echo "Lalalalala"
+        echo
+	    echo "Press any key to return" 
+	    echo
+	    read -n 1 -s keypress 
+
+}
