@@ -90,7 +90,7 @@ function check_editor {
             echo "Please type in your preferred editor command, with any parameters applicable BEFORE the editable filename"
             echo
             read -p "> " editorpreference
-            sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+            sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
         
         
         else 
@@ -100,17 +100,17 @@ function check_editor {
             
                 'n')
                     editorpreference="nano"
-                    sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+                    sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
                     
                     ;;
                 'v')
                     editorpreference="vi"
-                    sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+                    sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
                     
                     ;;
                 'e')
                     editorpreference="emacs"
-                    sed -i "s|defaulteditor=\"null\"|defaulteditor=\"$editorpreference\"|" "$RES_DIR/menu-defaults.la"
+                    sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
                     
                     ;;
             

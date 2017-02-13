@@ -310,11 +310,6 @@ else
 fi
 
 
-
-tar xvzC "$userfilesdir" -f $installtarball "user"
-
-
-
 # Store the tarball in case of global install (we might need it later)
 # Needs to be done bfpore injectting values
 

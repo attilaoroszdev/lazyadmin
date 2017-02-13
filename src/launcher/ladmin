@@ -55,7 +55,7 @@ if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
   
     mkdir "$USER_DIR"
     
-    tar -xvzC "$USER_DIR" -f "$INSTALL_DIR/res/user_defaults.tar"
+    tar -xvzC "$USER_DIR" -f "$INSTALL_DIR/res/user_files.tar.gz"
         
   
   fi

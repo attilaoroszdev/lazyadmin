@@ -24,7 +24,7 @@
 
 
 #The title displayed in the main menu
-maintitle="Lazy Admin - v0.9b"
+maintitle="Lazy Admin - Development Version"
 
 # Switch right panel on or off
 rightpanel=true
