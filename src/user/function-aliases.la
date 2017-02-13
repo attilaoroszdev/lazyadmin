@@ -21,14 +21,6 @@
 # Contact: attila.orosz@mail.com
 
 
-# Replace below two lines with
-# PLUGINSDIRPLACEHOLDER
-# USERDIRPLACEHOLDER
-PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
-USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
-
-. "$PLUGINS_DIR/extra-functions.la"
-. "$USER_DIR/user-functions.la"
 
 #Main menu functions in the format of funct#tab#menuitem
 #First tab is 0, first item is 0
@@ -53,14 +45,31 @@ function funct01 {
 	enter_submenu $@ "Sample submenu title"
 }
 
-function funct02 {
-		localhost_ping
+
+# Submenu functions. these will have a similar naming system, except
+# they would be extended by submenu position as well, making it subfunctt###
+# or sunfunct#tabpositionin#mainmenupositionin#submenuposition
+# that is, for e.g. the first tab second menuitem, 3rd submenuitem:
+# subfunct012
+# for the third tab, first submenu, fifth submenuitem
+# subfunct204
+# and so on
+
+function subfunct010 {
+
+	localhost_ping
 
 }
 
-function funct03 {
+function subfunct011 {
 
-	#Here is an example of how to invoke the flag setting submenu
+	example_function
+
+}
+
+function subfunct013 {
+
+    #Here is an example of how to invoke the flag setting submenu
 	#
 	#Call flags_submenu_function with the following arguments:
 	#
@@ -85,6 +94,23 @@ function funct03 {
 	#Note 3: The manual set option can be useful for setting the hostname/any
 	#other argumenrt (in that case just take out the "localhost" bit
 	#from the original function "flagtets_localhostping in this case)
+
+	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+}
+
+
+
+
+
+
+function funct02 {
+		localhost_ping
+
+}
+
+function funct03 {
+
+	
 
 	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 
@@ -163,44 +189,88 @@ function funct40 {
 
 function funct50 {
 
-	editmenu_dummy
+
+	functsetup0
+	
 
 }
 
 function funct51 {
 
-	editdefaults_dummy
+	functsetup1
 
 }
 
 function funct52 {
 
-	profiles_dummy
+    functsetup2
 
 }
 
-#Submenu functions. these will have a similar naming system, except
-#they would be extended by submenu position as well, making it subfunctt###
-# or sunfunct#tabpositionin#mainmenupositionin#submenuposition
-#that is, for e.g. the first tab second menuitem, 3rd submenuitem:
-# subfunct012
-#for the third tab, first submenu, fifth submenuitem
-# subfunct204
-#and soon
+function funct53 {
 
-function subfunct010 {
-
-	localhost_ping
+	functsetup3
 
 }
 
-function subfunct011 {
 
-	example_function
+
+
+# Only change these if you want tpo override help or setup functionality!
+
+function functsetup0 {
+
+    edit_setup_file "$USER_DIR/menu-entries.la"    
+    
+}
+
+
+function functsetup1 {
+
+   	edit_setup_file "$USER_DIR/user-functions.la"
 
 }
 
-function subfunct013 {
 
-	dummy_function
-	}
+function functsetup2 {
+   
+    edit_setup_file "$USER_DIR/function-aliases.la"
+       
+}
+
+
+function functsetup3 {
+
+   	edit_setup_file "$USER_DIR/user-defaults.la"
+
+}
+
+
+
+function functhelp0 {
+
+    display_markdown_help "$RES_DIR/usage-guide.md"
+
+}
+
+function functhelp1 {
+
+    display_markdown_help "$RES_DIR/configuration-guide.md"
+
+}
+
+
+function functhelp2 {
+
+    man la-menus
+
+}
+
+function functhelp_commanbuilder {
+
+    display_markdown_help "$RES_DIR/command-builder-guide.md"
+
+}
+
+
+

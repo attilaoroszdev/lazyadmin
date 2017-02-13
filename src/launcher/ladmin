@@ -19,7 +19,10 @@
 # Contact: attila.orosz@mail.com
 
 
-INCLUDESPLACEHOLDER
+COREDIRPLACEHOLDER
+USER_DIR="$HOME/.config/LazyAdmin"
+
+. "$CORE_DIR/includes.la"
 
 
 if [[ $1 == ""  ]]; then
@@ -41,5 +44,24 @@ else
     arg2=$2
     
 fi
+
+
+
+# In case the user starts ladmin for the first time...
+if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
+
+    
+  if [[ ! -d "$USER_DIR" ]]; then
+  
+    mkdir "$USER_DIR"
+    
+    tar -xvzC "$USER_DIR" -f "$INSTALL_DIR/res/user_defaults.tar"
+        
+  
+  fi
+    
+
+fi
+
 
 main $arg1 $arg2

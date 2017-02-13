@@ -21,7 +21,6 @@
 
 
 
-
 #This file fontains the functions providing basic functionality of the menu system
 #Cusom "user functions" will be stored in ./n-functions
 
@@ -42,6 +41,8 @@ fi
 #This function will read the menu entries from the menu entries file as set in defaults
 function read_menu_items {
 
+
+
 if [[ "$submenu" = "true" ]]; then
 
 	OLDIFS="$IFS"
@@ -52,15 +53,16 @@ if [[ "$submenu" = "true" ]]; then
 	menulength=${#menuentry[@]}
 
 else
-
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	menuentry=( `cat $menufile | sed -n '/'_menu$tabpos'/{:a;n;/'_endmenu$tabpos'/q;p;ba}'` )
-	menuheight=$normalmenuheight
+	menuheight=$normalmenuheight+1
 	IFS="$OLDIFS"
 	menulength=${#menuentry[@]}
 
 fi
+
+
 
 }
 
@@ -84,10 +86,10 @@ function set_flags_submenu_items {
 
 	#Check if entries have already been written, by checking last element
 	lastentry=${menuentry[${#menuentry[@]}-1]}
-	if [[ "$lastentry" != "d - Delete set flags" ]]; then
+	if [[ "$lastentry" != "x - Delete set flags" ]]; then
 		menuentry+=("m - Manually enter flags ")
 		menuentry+=("c - Commit with flags")
-		menuentry+=("d - Delete set flags")
+		menuentry+=("x - Delete set flags")
 	fi
 
 	menulength=${#menuentry[@]}
@@ -108,7 +110,7 @@ function write_flags_descriptor {
 	"c - Commit with flags")
 	echo "Finished entering flags, proceed with command"
 	;;
-	"d - Delete set flags")
+	"x - Delete set flags")
 	echo "Clear list of set flags to start over again"
 	;;
 	*)
@@ -177,21 +179,126 @@ function read_rightpanel_items {
 	rightpanellength=${#rightpanelentry[@]}
 }
 
+
+function read_help_rightpanel_items {
+	OLDIFS="$IFS"
+	IFS=$'\n'
+	
+	rightpanelentry=( `cat $menufile | sed -n '/'_helprightpanel'/{:a;n;/'_endhelprightpanel'/q;p;ba}'` )
+	
+	IFS="$OLDIFS"
+
+	rightpanellength=${#rightpanelentry[@]}
+}
+
+
+
 #Display the menu tabs
 function write_tab_items {
+
+    # Mpodify top line first, draw connectors
+    
+    if [[ $displaylineconnectors == "true" ]]; then
+    
+        horizontalconnectorposition=0
+        
+        tput cup $(( headerheight - 2 )) $horizontalconnectorposition
+        
+	    for (( n=0; n < $tablength; n++ ))
+	    do
+		    if [[ n -eq $tabpos ]]; then
+		
+		        horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[$tabpos]} + 3 ))
+		
+		
+		        tput cup $(( headerheight - 2 )) $horizontalconnectorposition
+		
+		    echo -n "┯"
+
+			
+
+		    else
+		        
+		        horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[n]} + 3 ))
+
+		        tput cup $(( headerheight - 2 )) $horizontalconnectorposition
+		
+		    echo -n "┯"
+
+
+		    fi
+	    done
+    
+    fi
+    
+    # Then write out the tab items, with separators
+
 	tput cup $(( headerheight - 1 )) 1
 	for (( n=0; n <= $tablength; n++ ))
 	do
 		if [[ n -eq $tabpos ]]; then
 
-			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m|"
+			echo -n -e "\e[00;30;47m ${tabentry[$tabpos]} \e[00m"
+			
+			# Do not write separator after last item
+			if [[ n -lt $tablength ]]; then
+			
+			    echo -n "│"
+			
+			fi
 
 		else
 
-			echo -n " ${tabentry[n]} |"
+			echo -n " ${tabentry[n]} "
+			
+			# Do not write separator after last item
+			if [[ n -lt $tablength ]]; then
+			
+			    echo -n "│"
+			
+			fi
+			
+			
 
 		fi
 	done
+	
+
+    if [[ $displaylineconnectors == "true" ]]; then
+
+        # Then draw connectors ont he bottom line
+	    horizontalconnectorposition=0
+        
+        tput cup $(( headerheight )) $horizontalconnectorposition
+        
+	    for (( n=0; n < $tablength; n++ ))
+	    do
+		    if [[ n -eq $tabpos ]]; then
+		
+		        horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[$tabpos]} + 3 ))
+		
+		
+		        tput cup $(( headerheight )) $horizontalconnectorposition
+		
+		    echo -n "┷"
+
+			
+
+		    else
+		        
+		        horizontalconnectorposition=$(( $horizontalconnectorposition + ${#tabentry[n]} + 3 ))
+
+		        tput cup $(( headerheight )) $horizontalconnectorposition
+		
+		    echo -n "┷"
+
+
+		    fi
+	    done
+	    
+	fi
+	
+	
 }
 
 # Populate the drawn menu template with themenuitelms
@@ -224,6 +331,46 @@ tput cup $cursorpos 0
 
 }
 
+
+
+# This is hardcoded for now
+function write_help_menu_items {
+
+    menulength=3
+
+    helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
+    helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
+    helpmenuentry[2]="3 - The Lazy Admin man page (man)"
+    
+    
+
+    for (( n=0; n < $menulength; n++ ))
+do
+	if [[ "${helpmenuentry[n]}" = "skip" ]]; then
+
+	((n++))
+
+	fi
+	if [[ n -eq $menupos ]] && [[ "$activepanel" = "left" ]];then
+		tput cup $(( n + $headerheight + 2 )) 2
+		echo -e "\e[00;30;47m${helpmenuentry[$menupos]}\e[00m"
+	else
+		tput cup $(( n + $headerheight + 2 )) 2
+		echo "${helpmenuentry[n]}"
+
+	fi
+
+done
+
+
+}
+
+
+
+
+
+
+
 # Draw rightpanel items
 function write_rightpanel_items {
 
@@ -254,7 +401,7 @@ function draw_line {
 	#draw line with the length of the screen/window width
 	for (( i=0; i<$menuwidth; i++ ))
 	do
-		echo -n "―"
+		echo -n "━"
 	done
 	#cursor goes to next row
 
@@ -272,12 +419,12 @@ function clear_menu {
 #Draws the outline of the menu, with spaces left out for inclusion of items
 function draw_menu {
 
-	if [[ "$subflagsmenu" = "true" ]]; then
+	if [[ $subflagsmenu == "true" ]]; then
 		let menuheight=$menulength+3
 		headerheight=$subheaderheight;
 		title=$subflagsmenutitle
 
-	elif [[ "$submenu" = "true" ]]; then
+	elif [[ $submenu == "true" ]]; then
 		headerheight=$subheaderheight;
 		title=$submenutitle
 	else
@@ -308,7 +455,7 @@ function draw_menu {
 	draw_line
 	((cursorpos++))
 	tput cup $cursorpos 0
-	echo "|       "
+	#echo "│       "
 	tput cup $cursorpos $(( menuwidth/2 - (${#title}/2) ))
 
 	#title must be set by function for submenus...
@@ -317,8 +464,8 @@ function draw_menu {
 	else
 		echo -e "\e[01m\e[01;31m$title\e[00m"
 	fi
-	tput cup $cursorpos $menuwidth
-	echo "|"
+	#tput cup $cursorpos $menuwidth
+	#echo "│"
 	((cursorpos++))
 	draw_line
 
@@ -327,9 +474,9 @@ function draw_menu {
 	if ! $submenu; then
 		((cursorpos++))
 		tput cup $cursorpos 0
-		echo -n "|"
+		#echo -n "│"
 		tput cup $cursorpos $menuwidth
-		echo "|"
+		#echo "│"
 		((cursorpos++))
 		tput cup $cursorpos 0
 		draw_line
@@ -337,20 +484,42 @@ function draw_menu {
 
 	# If rigth panel is on, draw its separator
 	if $rightpanel; then
-	cursorpos=$(( headerheight+1 ))
+	
+	    cursorpos=$headerheight
+	    
+	    if $rightpanel && [[ $displaylineconnectors == "true" ]]; then
+	    
+	        tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
+	        echo "┯"
+	    
+	    fi
+	
+	    ((cursorpos++))
 
-	for (( i=0; i<menuheight; i++ ))
-	do
-	tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
-	echo "|"
-	((cursorpos++))
-	done
+	    for (( i=0; i<menuheight; i++ ))
+	    do
+	        tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
+	        echo "│"
+        	((cursorpos++))
+	    done
+          
+	    
+	    
 	fi
 
-		cursorpos=$(( $headerheight+$menuheight ))
+	cursorpos=$(( $headerheight+$menuheight ))
 
-		tput cup $cursorpos 0
+	tput cup $cursorpos 0
 	draw_line
+	
+	
+	if $rightpanel && [[ $displaylineconnectors == "true" ]]; then
+	
+	    tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
+	    echo "┷"
+	    
+	fi
+	
 	(( cursorpos+=$(( $descriptorheight+1 )) ))
 
 	tput cup $cursorpos 0
@@ -364,99 +533,40 @@ function write_descriptor {
 	tput cup $cursorpos $menuwidth
 	echo -e "\033[1K"
 	tput cup $cursorpos 2
-	echo "${menudescentry[$menupos]}"
+  	echo "${menudescentry[$menupos]}"
 }
 
+# Simply write a one line descriptor, as read from the menu file
+function write_help_descriptor {
 
-#Draw the outline (separator line) of the additional info area
+    helpmenudescentry[0]="Basic everyday usage"
+    helpmenudescentry[1]="imn depth configuration guide"
+    helpmenudescentry[2]="Display the traditional man paghe"
 
-function draw_add_info_line {
-	cursorpos=$(( $headerheight+$menuheight+$descriptorheight+2 ))
+	cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
 	tput cup $cursorpos $menuwidth
 	echo -e "\033[1K"
-	((cursorpos++))
-	tput cup $cursorpos 0
-	draw_line
-	((cursorpos--))
 	tput cup $cursorpos 2
-}
+    
+    if [[ "$activepanel" = "right" ]]; then
+    
+        echo "${menudescentry[$menupos]}"
+    
+    else
 
-#Clears the additional info area
-
-function clear_add_info {
-
-	cursorpos=$(( $headerheight+$menuheight+$descriptorheight+2 ))
-	tput cup $cursorpos $menuwidth
-	echo -e "\033[1K"
-	((cursorpos++))
-	tput cup $cursorpos $menuwidth
-	echo -e "\033[1K"
-	((cursorpos-=3))
-
-}
-
-# This could also be called for certain menus
-#It writes an additional line of information under the descriptor
-#Output is set in calling argument. This could be plain text , or the result of a function, etc.
-#This is dynamic content as opposd to thje static descriptor line
-
-function write_additional_info {
-
-	if [[ "$1" = "true" ]]; then
-
-		draw_add_info_line
-		echo $2
-
+    	echo "${helpmenudescentry[$menupos]}"
+	
 	fi
 }
 
-#This function will set the additional info line according to the tab position
-#It could depend on any other condition
-
-function set_add_info_line {
-
-	#delete the extra line, we will write only when needed
-	clear_add_info
 
 
 
-	#
-	# ToDo: Make this function also read from the menu file and set info line accordingly
-	# Dynamic oinfo could be set with a keyword,
-	#
-
-
-
-	#if [[ "$submenu" = "false" ]]; then
-#		case $tabpos in
-#		0)
-#			write_additional_info true "This here is the very first tab"
-#			;;
-#		2)
-#			#Set info text into a variable depending on the poutcom of the if statement.
-#			#It could also be from any function, command, etc
-#			if [[ $menupos -gt 1 ]]; then
-#				infotowrite="You are below the second menu item"
-#			else
-#				infotowrite="You are above the third menu item"
-#			fi
-#
-#			write_additional_info true "$infotowrite"
-#			;;
-#		4)
-#		write_additional_info true "This menu is not yet implemented"
-#			;;
-#		esac
-#	else
-#	write_additional_info true "This is the submenu \"$submenutitle\". Press b to return to main menu."
-#
-#	fi
-
-}
 
 
 # Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
 function infinite_menu {
+
 	if [[ "$activepanel" = "right" ]]; then
 		limit=$rightpanellength
 	else
@@ -470,7 +580,6 @@ function infinite_menu {
 	if [[ $menupos -lt 0 ]]; then
 		menupos=$(( $limit-1 ))
 	fi
-
 
 }
 
@@ -498,21 +607,175 @@ function pick_menu_item {
 #The picker sets the position of the highlighter.
 #Arrow keys are 3 character, but want to be able to read single chars too
 
+   read -sN1 key # 1 char (not delimiter), silent
+  read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
+  read -sN1 -t 0.0001 k2
+  read -sN1 -t 0.0001 k3
+  read -sN1 -t 0.0001 k4 # timed reads to check for second third etc characters
+  read -sN1 -t 0.0001 k5
+  read -sN1 -t 0.0001 k6
+  key+=${k1}${k2}${k3}${k4}${k5}${k6}
+
+    case $key in
+
+         $'\e[A'|$'\e0A'|"w"|"W")
+
+	        #Double jump if run on skip
+	        if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
+		        ((menupos--))
+	        fi
+	        #Check for right panel too
+	        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
+		        ((menupos--))
+	        fi
+
+	        ((menupos--))
+	         ;;
+
+         $'\e[B'|$'\e0B'|"s"|"S")
+
+	        #Double jump if running on skip
+	        if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
+		        ((menupos++))
+	        fi
+	        #Chexck for right panel too
+	        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
+		        ((menupos++))
+	        fi
+
+	        ((menupos++))
+	        ;;
+
+         $'\e[D'|$'\e0D'|"a"|"A")
+
+	        if [[ "$submenu" = "false" ]]; then
+		        if [[ $tabpos -gt 0 ]]; then
+			        clear_menu
+			        menupos=0
+			        ((tabpos--))
+		        fi
+	        fi
+	        ;;
+
+         $'\e[C'|$'\e0C'|"d"|"D")
+	        if [[ "$submenu" = "false" ]]; then
+		        if [[ $tabpos -lt $tablength ]]; then
+			        clear_menu
+			        menupos=0
+			        ((tabpos++))
+		        fi
+	        fi
+	        ;;
+	     $'\e[1;5C'|$'\e01;5C'|"r"|"R")
+            if $rightpanel && [[ "$activepanel" = "left" ]]; then
+			    activepanel="right"
+			    menupos=0
+		    fi
+            ;;
+         $'\e[1;5D'|$'\e01;5D'|"l"|"L")
+            if $rightpanel && [[ "$activepanel" = "right" ]]; then
+			    activepanel="left"
+			    menupos=0
+		    fi
+            ;;
+      
+
+         [0-9])
+
+	        # If numeric input is selected
+	        if [[ $key -le $menulength ]] && [[ $key -ge 0 ]]; then
+	        ((key--))
+	        menupos=$key
+	        if [[ "$submenu" = "true" ]]; then
+		        subfunct$tabpos$mainmenupos$key $tabpos $menupos
+	        else
+		        funct$tabpos$key $tabpos $menupos
+	        fi
+
+	        fi
+	         ;;
+
+         '')
+	        # If enter is pressed
+	        if [[ "$activepanel" = "right" ]]; then
+		        functright$menupos
+	        else
+		        if [[ "$submenu" = "true" ]]; then
+			        subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
+		        else
+
+				        funct$tabpos$menupos $tabpos $menupos
+
+		        fi
+	        fi
+
+	        init_menu
+	         ;;
+
+        #right menu items (on keypress)
+         "f" | "F")	#put this into a function so that enter can be used, along with alias
+	        reflow_menu
+	        ;;
+        "h" | "H")
+	        display_help
+	        ;;
+         "q" | "Q") #this handles exit function
+	        functright3
+	        ;;
+        "b" | "B")
+		        if [[ "$submenu" = "true" ]]; then
+			        back_to_main_menu
+			        break
+		        fi
+		        ;;
+        "e" | "E")
+	        if [[ $tabpos = $tablength  ]]; then
+		        functsetup0
+		        init_menu
+	        fi
+	        ;;
+        "u" | "U")
+	        if [[ $tabpos = $tablength  ]]; then
+		        functsetup1
+		        init_menu
+	        fi
+	        ;;
+        "m" | "M")
+	        if [[ $tabpos = $tablength  ]]; then
+		        functsetup2
+		        init_menu
+	        fi
+	        ;;
+        "v" | "V")
+	        if [[ $tabpos = $tablength  ]]; then
+		        functsetup3
+		        init_menu
+	        fi
+	        ;;
+
+
+    esac
+
+}
+
+
+function pick_help_menu_item {
+
   read -sN1 key # 1 char (not delimiter), silent
   read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
   read -sN1 -t 0.0001 k2
   read -sN1 -t 0.0001 k3
-  key+=${k1}${k2}${k3}
+  read -sN1 -t 0.0001 k4 # timed reads to check for second third etc characters
+  read -sN1 -t 0.0001 k5
+  read -sN1 -t 0.0001 k6
+  key+=${k1}${k2}${k3}${k4}${k5}${k6}
+  
+  case $key in
 
-case $key in
+ $'\e[A'|$'\e0A'|"w"|"W")
 
- $'\e[A'|$'\e0A')
-
-	#Double jump if run on skip
-	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
-		((menupos--))
-	fi
-	#Check for right panel too
+	
+	#Check for right panel skip
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
 		((menupos--))
 	fi
@@ -520,140 +783,94 @@ case $key in
 	((menupos--))
 	 ;;
 
- $'\e[B'|$'\e0B')
+ $'\e[B'|$'\e0B'|"s"|"S")
 
-	#Double jump if running on skip
-	if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
-		((menupos++))
-	fi
-	#Chexck for right panel too
+	
+	#Chexck for right panel skip
 	if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
 		((menupos++))
 	fi
 
 	((menupos++))
 	;;
-
- $'\e[D'|$'\e0D')
-
-	if [[ "$submenu" = "false" ]]; then
-		if [[ $tabpos -gt 0 ]]; then
-			clear_menu
-			menupos=0
-			((tabpos--))
-		fi
-	fi
-	;;
-
- $'\e[C'|$'\e0C')
-	if [[ "$submenu" = "false" ]]; then
-		if [[ $tabpos -lt $tablength ]]; then
-			clear_menu
-			menupos=0
-			((tabpos++))
-		fi
-	fi
-	;;
-'t')
-
-	if $rightpanel && [[ "$activepanel" = "left" ]]; then
+ $'\e[1;5C'|$'\e01;5C'|"r"|"R")
+    if $rightpanel && [[ "$activepanel" = "left" ]]; then
 		activepanel="right"
-	elif $rightpanel && [[ "$activepanel" = "right" ]]; then
-		activepanel="left"
+		menupos=0
 	fi
- ;;
-
- [0-9])
+    ;;
+ $'\e[1;5D'|$'\e01;5D'|"l"|"L")
+    if $rightpanel && [[ "$activepanel" = "right" ]]; then
+		activepanel="left"
+		menupos=0
+	fi
+    ;;
+  
+   [0-2])
 
 	# If numeric input is selected
-	if [[ $key -le $menulength ]] && [[ $key -ge 0 ]]; then
-	((key--))
-	menupos=$key
-	if [[ "$submenu" = "true" ]]; then
-		subfunct$tabpos$mainmenupos$key $tabpos $menupos
-	else
-		funct$tabpos$key $tabpos $menupos
-	fi
+	if [[ $key -le 2 ]] && [[ $key -ge 0 ]]; then
+	    ((key--))
+	    menupos=$key
+	    functhelp$key
 
 	fi
-	 ;;
-
- '')
+	;;
+    '')
 	# If enter is pressed
+	
+
+	
 	if [[ "$activepanel" = "right" ]]; then
 		functright$menupos
 	else
-		if [[ "$submenu" = "true" ]]; then
-			subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
-		else
-
-				funct$tabpos$menupos $tabpos $menupos
-
-		fi
+		
+		functhelp$menupos
+		
 	fi
 	init_menu
 	 ;;
 
-#right menu items (on keypress)
- "r")	#put this into a function so that enter can be used, along with alias
-	reflow_menu
-	;;
-"h")
-	display_help
-	;;
- "x") #this handles exit function
-	functright3
-	;;
-'b' | "B")
-		if [[ "$submenu" = "true" ]]; then
-			back_to_main_menu
-		fi
-		;;
-"e" | "E")
-	if [[ $tabpos = $tablength  ]]; then
-		funct50
-		init_menu
-	fi
-	;;
-"p" | "P")
-	if [[ $tabpos = $tablength  ]]; then
-		funct52
-		init_menu
-	fi
-	;;
-"d" | "D")
-	if [[ $tabpos = $tablength  ]]; then
-		funct51
-		init_menu
-	fi
-
-	;;
-
-
-
-esac
-
-	}
+    #right menu items (on keypress)
+     "f" | "F")	#put this into a function so that enter can be used, along with alias
+	    reflow_menu
+	    ;;
+     "q" | "Q") #this handles exit function
+	    functright3
+	    ;;
+    'b' | "B")
+		    if [[ "$submenu" = "true" ]]; then
+			    back_to_main_menu "reflow"
+			    break
+		    fi
+		    ;;
+        
+    
+    esac
+}
 
 function menu_item_picker_subflags	{
 
-	read -sN1 key # 1 char (not delimiter), silent
-		read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
-		read -sN1 -t 0.0001 k2
-		read -sN1 -t 0.0001 k3
-		key+=${k1}${k2}${k3}
+	  read -sN1 key # 1 char (not delimiter), silent
+      read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
+      read -sN1 -t 0.0001 k2
+      read -sN1 -t 0.0001 k3
+      read -sN1 -t 0.0001 k4 # timed reads to check for second third etc characters
+      read -sN1 -t 0.0001 k5
+      read -sN1 -t 0.0001 k6
+      key+=${k1}${k2}${k3}${k4}${k5}${k6}
 
 
 		case $key in
 
-		$'\e[A'|$'\e0A')
+		$'\e[A'|$'\e0A'|"w"|"W")
 			#Double jump if run on skip
 			if [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
 				((menupos--))
 			fi
 			((menupos--))
 			;;
-		$'\e[B'|$'\e0B')
+		$'\e[B'|$'\e0B'|"s"|"S")
 			#Double jump if running on skip
 			if [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
 				((menupos++))
@@ -698,7 +915,7 @@ function menu_item_picker_subflags	{
 			break
 			;;
 
-		'd' | 'D') set_args=''
+		'x' | 'X') set_args=''
 			clear
 			draw_menu
 			;;
@@ -782,27 +999,37 @@ function menu_item_picker_subflags	{
 			;;
 
 	#switch between left and right menus
-	't' |'T')
-			if $rightpanel && [[ "$activepanel" = "left" ]]; then
-				activepanel="right"
-			elif $rightpanel && [[ "$activepanel" = "right" ]]; then
-				activepanel="left"
-			fi
-		;;
+	
+	 $'\e[1;5C'|$'\e01;5C'|"r"|"R")
+        if $rightpanel && [[ "$activepanel" = "left" ]]; then
+			activepanel="right"
+			menupos=0
+		fi
+        ;;
+     $'\e[1;5D'|$'\e01;5D'|"l"|"L")
+        if $rightpanel && [[ "$activepanel" = "right" ]]; then
+			activepanel="left"
+			menupos=0
+		fi
+        ;;
+	
+	
+	
 
 	#right menu items (on keypress)
-	"r" | "R")
+	"f" | "F")
 		reflow_menu
 		;;
 	"h" | "H")
 		display_help
 		;;
-	"x" | "X")
+	"q" | "Q")
 		#this handles exit
 		functright3
 		;;
 	'b' | "B")
 		back_to_main_menu
+		break
 		;;
 
 	esac
@@ -812,23 +1039,38 @@ function menu_item_picker_subflags	{
 
 function flags_submenu_function {
 
-	menuentry=()
+    menuentry=()
 
-	if [[ "$submenu" == "true" ]]; then
-		sourcesubmenu="true"
-	else
-		sourcesubmenu="false"
-	fi
+    set_args=""
+    
+  if [[ $submenu == "true" ]]; then
 
-	submenu="true"
+        remaininsubmenu="true"
+        oldsubmenutitle="$submenutitle"
+        oldtabpos=$tabpos
+        oldmainmenupos=$mainmenupos
+	    
+       
+    else
+    
+        remaininsubmenu="false"
+        
+    fi
+    
+
+      
+    submenu="true"
 	subflagsmenu="true"
+    	
+  
 	subflagsmenutitle="$1"
 	submenucommand="$2"
+	submenucall="${@:3}"
 	menupos=0
 
 	#Have to empty the arguments each time, as set_submenu_function is not an "object", but just a single instance of a function.
 	#Best avoid confusion
-	set_args=""
+	
 
 	clear
 
@@ -867,8 +1109,9 @@ function flags_submenu_function {
 
 
 	done
-	submenu="$sourcesubmenu"
+	#submenu="$sourcesubmenu"
 	subflagsmenu="false"
+	
 }
 
 #Right panel functions
@@ -885,22 +1128,25 @@ function reflow_menu {
 }
 
 function display_help {
-
-	clear
-
-	echo
-	echo "Advice on how to use and customes n-menus will follow"
-	echo
-	echo "To navigate use the Arrow keys, or PageUp, PageDown"
-	echo "To exit, press 'q'"
-	echo
-	echo "Press any key to continue to the help page"
-	echo
-	read -n 1 -s keypress
-
-	cat $helpfile | less
-
-	init_menu
+    
+      
+      
+    if [[ $subflagsmenu == "true" ]]; then
+    
+        functhelp_commanbuilder
+    
+        reflow_menu
+   
+    
+    else
+        
+       	enter_helpmenu
+    
+    fi
+    
+	
+	
+	
 }
 
 function exit_la_menus {
@@ -925,15 +1171,46 @@ function exit_la_menus {
 
 }
 
-function back_to_main_menu {
-	submenu="false"
-	subflagsmenu="false"
-	activepanel="left"
-	mainmenupos=0
-	menupos=0
-	init_menu
-	break
 
+
+
+function back_to_main_menu {
+
+    activepanel="left"
+	#mainmenupos=0
+	menupos=0
+	
+	subflagsmenu="false"
+	
+    helpsubmenu="false"
+	
+
+    if [[ $remaininsubmenu == "true" ]]; then
+
+        submenu="true"      
+        remaininsubmenu="false"
+        submenutitle="$oldsubmenutitle"
+        tabpos=$oldtabpos
+        mainmenupos=$oldmainmenupos
+    
+    else
+      
+    	submenu="false"
+     
+	fi
+	
+	
+    #init_menu
+    clear_menu
+
+    if [[ $1 == "reflow" ]]; then
+
+        reflow_menu
+    
+    fi
+    
+    break
+		
 }
 
 
@@ -958,36 +1235,53 @@ fi
 #Write basic description
 write_descriptor
 
-#Write any additional info, or clear the area, depending on the conditions set in the function
-set_add_info_line
+
 pick_menu_item
 
 }
 
 function sub_menu {
 
-submenu="true"
-subflagsmenu="false"
+    submenu="true"
+    subflagsmenu="false"
 
-read_tab_items
-read_menu_items $1 $2
-read_descriptor $1 $2
-infinite_menu
+    read_tab_items
+    read_menu_items $1 $2
+    read_descriptor $1 $2
+    infinite_menu
 
-write_menu_items
+    write_menu_items
 
-if $rightpanel; then
-	write_rightpanel_items
-fi
+    if $rightpanel; then
+	    write_rightpanel_items
+    fi
 
-#Write basic description
-write_descriptor
+    #Write basic description
+    write_descriptor
 
-#Write any additional info, or clear the area, depending on the conditions set in the function
-set_add_info_line
-pick_menu_item
+
+    pick_menu_item
 
 }
+
+
+function help_menu {
+
+    #submenu="true"
+    subflagsmenu="false"
+    read_descriptor $1 $2
+    infinite_menu
+    write_help_menu_items
+    
+    if $rightpanel; then
+	    write_rightpanel_items
+    fi
+    
+    write_help_descriptor
+    pick_help_menu_item
+
+}
+
 
 function init_menu {
 	if [[ "$(whoami)" != "root" ]]; then
@@ -997,12 +1291,37 @@ function init_menu {
 	fi
 
 	clear
-	read_menu_items $1 $2
-	read_descriptor $2 $2
+	
+	
+	
+    read_menu_items $1 $2
+    read_descriptor $2 $2
+
+
 	read_rightpanel_items
 	draw_menu
 
 }
+
+function init_help_menu {
+
+   
+    if [[ "$(whoami)" != "root" ]]; then
+		root="false"
+	else
+		root="true"
+	fi
+
+	clear
+
+	read_help_rightpanel_items
+	read_descriptor $2 $2
+	draw_menu
+
+
+
+}
+
 
 function enter_submenu {
 
@@ -1010,11 +1329,47 @@ function enter_submenu {
 	submenutitle="$3"
 	mainmenupos="$menupos"
 	menupos=0
+
 	init_menu $1 $2
 	while true; do
 		sub_menu $1 $2
 	done
 }
+
+
+function enter_helpmenu {
+
+    helpsubmenu="true"
+    
+    if [[ $submenu == "true" ]]; then
+
+        remaininsubmenu="true"
+        oldsubmenutitle="$submenutitle"
+        oldtabpos=$tabpos
+        oldmainmenupos=$mainmenupos
+	    
+       
+    else
+    
+        remaininsubmenu="false"
+        
+    fi
+
+    submenu="true"
+	submenutitle="Help"
+
+	mainmenupos="$menupos"
+	menupos=0
+	
+	
+	init_help_menu
+	while true; do
+		help_menu
+	done
+
+}
+
+
 
 #Right panel functions
 
@@ -1026,7 +1381,7 @@ function functright0 {
 
 function functright1 {
 
-	display_help
+   display_help
 
 }
 
@@ -1042,9 +1397,18 @@ function functright3 {
 }
 
 function functright2 {
-
-	back_to_main_menu
-
+    
+    
+    # Need this, to redraw title for some reason...
+    if [[ $helpsubmenu == "true" ]]; then
+    
+        backargument="reflow"
+    
+    fi
+    
+   	back_to_main_menu $backargument
+   	
+   	
 }
 
 function functright4 {
@@ -1080,6 +1444,7 @@ function main {
    fi
 
 
+
    init_menu
 
    while true; do
@@ -1088,3 +1453,4 @@ function main {
 
    done
 }
+

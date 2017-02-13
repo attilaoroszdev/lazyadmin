@@ -78,7 +78,7 @@ _submenu01
 1 - First submenu item - Ping locahost
 2 - Second item - Run sample function (again...)
 skip
-4 - Fourth submenu item - Noting here yet
+4 - Fourth item - Run command builder (again)
 5 - Fifth submenu item - Noting here yet
 6 - Sixth submenu item - Noting here yet
 7 - Seventh submenu item - Noting here yet
@@ -92,7 +92,7 @@ _descsubmenu01
 This will be the first item in the submenu. I like to ping thngs...
 The second item, obviously. The next one is skipped.
 skip
-The previous item was skipped.
+The prev. item was skipped. Command builder runs from submenu too.
 You can keep on adding items
 Much more then in the main menu
 Up to eight
@@ -117,7 +117,7 @@ _endmenu1
 _descmenu1
 This is the first menuitem on the second tab
 skip
-This is the third menuitem on the second tab
+Third menuitem. Previous item was skipped
 This is the fourth meniutem on the second tab
 Last item. You could squeeze one more, but it would be tight.
 _enddescmenu1
@@ -161,14 +161,16 @@ _enddescmenu4
 
 _menu5
 e - Edit menu entries
-d - Edit script defaults
-p - Profiles...
+u - Edit user functions
+m - Bind functions to menus
+v - Edit default values
 _endmenu5
 
 _descmenu5
 Interactively change menu entries
+Add user defined scripts and functions
+Bind scripts and pre-defined functions to menu items
 Edit default menu length, number of tabs, etc.
-Switch, add, modify or remove profiles for the same user
 _enddescmenu5
 
 
@@ -182,38 +184,59 @@ _enddescmenu5
 # This is necessary, for "b -Back to Main Menu" is added in the submenu function
 
 _rightpanel
-r - Reflow Menu
+f - Reflow Menu
 h - Get Help
 skip
-x - Exit
+q - Quit
 _endrightpanel
 
 
 ## Descriptions of menuitems in main menu in the same order as the items above ##
 
 _rightpaneldesc
-Use this option after resizing the terminal window, or changing terminal size
+Redraw the Lazy Admin UI
 Display the detailed help file
 skip
-Exit Lazy Admin, and return to your normal shell... and life...
+Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
 
 ## In the submenus (contains back link)  ##
 
 _subrightpanel
-r - Reflow menu
+f - Reflow menu
 h - Get Help
 b - Back to Main Menu
-x - Exit
+q - Quit
 _endsubrightpanel
 
 
 ## Descriptions of menuitems in submenus in the same order as the items above ##
 
 _subrightpaneldesc
-Use this option after resizing the terminal window, or changing terminal size
+Redraw the Lazy Admin UI
 Display the detailed help file
 Return to main menu
-Exit Lazy Admin, and return to your normal shell... and life...
+Quit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
+
+
+## Rightpanel items in help menus 
+
+_helprightpanel
+f - Reflow Menu
+skip
+b - Back to Main Menu
+q - Quit
+_endhelprightpanel
+
+
+## Descriptions of menuitems in main menu in the same order as the items above ##
+
+_rightpaneldesc
+Redraw the Lazy Admin UI
+skip
+Return to parent menu
+Quit Lazy Admin, and return to your normal shell... and life...
+_endrightpaneldesc
+

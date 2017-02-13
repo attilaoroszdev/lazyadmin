@@ -5,7 +5,7 @@
 #
 # This file is part of Lazy Admin
 #
-# n-menus is free software: you can redistribute it and/or modify
+# Lazy Admin is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -16,14 +16,15 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
 
 
 
-# The following fuinctions are provided as is. No guarantees that theY1ll evven work.
+# The following fuinctions are provided "as is", or, in this case, "are".. 
+# No guarantees that theY1ll evven work.
 # They meant are to allow for opening stuff in new terminal tab, or terminal window.
 # If your favourite terminal emulator uses different key combos, you might need to
 # set those manually
@@ -38,7 +39,7 @@ function enter_root_shell {
     echo
     echo "Gaining privileges..."
     echo
-    sudo la-menus "default" "false"
+    sudo ladmin "default" "false"
 
 }
 

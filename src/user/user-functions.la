@@ -21,11 +21,7 @@
 # Contact: attila.orosz@mail.com
 
 
-# Replace below line with
-# PLUGINSDIRPLACEHOLDER
-PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
 
-. "$PLUGINS_DIR/la-extra-functions"
 
 # Set your custom functions here, if any custom script is to be called
 # from the menus
@@ -115,7 +111,7 @@ done
 	read -n 1 -s keypress 
 	clear
 	
-} #endfunction
+} 
 
 function flagtest_localhostping {
 	
@@ -133,7 +129,7 @@ function flagtest_localhostping {
 	echo
 	read -n 1 -s keypress 
 	
-} #endfunction
+} 
 
 
 #This dummy function is there as a placeholder for empty menus. 
@@ -164,108 +160,6 @@ function localhost_ping {
 	read -n 1 -s keypress 
 	clear
 	
-} #endfunction
-
-#PLaceholder functions for the setup menu. only remove these if you also 
-#remove the setip menu ()ppointless to keep it for now...)
-
-function editmenu_dummy {
-	clear
-	
-	echo
-	echo "Coming soon..."
-	echo
-	echo "Here you will find a function to edit the menu entries interactively."
-	echo "How cool will that be."
-	echo 
-	echo "Now press a key to get back to the menu"
-	read -n 1 -s keypress 
-	clear
-	
-	}
-
-function editdefaults_dummy {
-	clear
-	
-	echo
-	echo "Comnig soon..."
-	echo
-	echo "Here you will find a function to edit the defalt variables like menu"
-	echo "height or total number of tabs, etc. interactively. How cool will that be."
-	echo 
-	echo "Now press a key to get back to the menu"
-	read -n 1 -s keypress 
-	clear
-	
-	}
-	
-function profiles_dummy {
-	clear
-	
-	echo
-	echo "Comnig soon..."
-	echo
-	echo "Here you will find a function to change, add, remove and edit different"
-	echo "profiles for the same user. interactively. How cool will that be."
-	echo 
-	echo "Now press a key to get back to the menu"
-	read -n 1 -s keypress 
-	clear
-	
-	
-	}
-	
-	
-	
-	
-	
-# The following functions are provided as is. No guarantees that theY1ll evven work.
-# They meant are to allow for opening stuff in new terminal tab, or terminal window.
-# If your favourite terminal emulator uses different key combos, you might need to 
-# set those manually	
-#
-# You will need to install xdotool for these.
-
-
-		
-# Usage: run_command_in_new_window "<command>"
-# Can also be used in la-function-aliases, to run your cusotm command in a new tab
-function run_command_in_new_tab {
-
-
-    
-    
-    originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
-    
-
-    WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
-    xdotool windowfocus $WID
-    xdotool key ctrl+shift+t $WID
-
-
-    # This is a workaround, for whne non-us layouts cause xdotool 
-    # to occasionally garble output (non-consistently, even within 
-    # the same session)
-    setxkbmap -layout us   
-
-    sleep 1
-    xdotool type --delay 1 --clearmodifiers "$1"
-    xdotool key Return
-
-
-     # If you find that the beow command does not set_add_info_line
-    # the keyboard layout back correctly, you might manually need to
-    # Set it back to your own preference
-    # get the correct values with
-    # setxkbmap -query 
-    # (You might need to set variant as well as model, etc)
-    setxkbmap -layout $originallayout
-
 }
 
-	
-	
-	
-	
-	
 
