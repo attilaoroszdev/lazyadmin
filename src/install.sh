@@ -40,6 +40,90 @@ function set_symlink_dir {
 	done
 }
 
+function check_for_external_dependencies {
+
+    if hash pandoc 2>/dev/null; then
+    
+        pandocinstalled="true"
+        
+    fi
+    
+    if hash lynx 2>/dev/null; then
+    
+        lynxinstalled="true"
+        
+    fi
+    
+       
+    if hash xdotool 2>/dev/null; then
+    
+        xdotoolinstalled="true"
+        
+    fi
+    
+    if hash setxkbmap 2>/dev/null; then
+    
+        setxkbmapinstalled="true"
+        
+    fi
+    
+    if [[ $pandocinstalled && $lynxinstalled && $xdotoolinstalled && $setxkbmapinstalled ]]; then
+    
+        echo 
+        echo "All dependencies are satisfied, nothing to do..."    
+        
+
+    else
+    
+        echo 
+        echo "Some dependencies are missing:"
+        
+         if [[ ! $pandocinstalled ]]; then
+            
+            echo "  - pandoc"
+            pandocinpackage="pandoc"
+            
+        fi
+        
+        if [[ ! $lynxinstalled ]]; then
+            
+            echo "  - lynx"
+            lynxpackage="lynx"
+            
+        fi
+        
+        
+         if [[ ! $xdotoolinstalled ]]; then
+            
+            echo "  - xdotool"
+            xdotoolpackage="xdotool"
+            
+            
+        fi
+        
+        if [[ ! $setxkbmapinstalled ]]; then
+            
+            echo "  - setxkbmap"
+            setxkbmappackage="x11-xkb-utils"
+            
+        fi
+        echo
+        echo "Want to install them now? (I wil try to use apt)"
+        echo
+        
+        read -p "(y/n) > " -n 1 isitok
+
+        if [[ $isitok == "y" || $isitok == "Y" ]]; then
+        
+             sudo apt-get install $pandocinpackage $lynxpackage $xdotoolpackage $setxkbmappackage
+        
+        fi
+    
+    fi
+
+
+}
+
 
 
 # Start install script
@@ -281,7 +365,7 @@ echo
 
 
 tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
-sed -i "s|COREDIRPLACEHOLDER|\"$installdir\core"|" "$launcherdir/ladmin"
+sed -i "s|COREDIRPLACEHOLDER|\"$installdir\core\"|" "$launcherdir/ladmin"
 
 
 sleep 1
@@ -298,13 +382,7 @@ chmod ug+rwx "$launcherdir/ladmin"
 sleep 1
 echo
 echo "Done (unless you got an error here)."
-echo
-echo "Cleaning up temporary files..."
 
-
-
-echo
-echo "Done."
 
 sleep 1
 if [[ "$symlinking" == "true" ]]; then
@@ -337,13 +415,45 @@ else
 fi
 
 
-
+echo
+echo "Cleaning up temporary files (getting rid of the evidence)..."
 
 # Get rid of the evidence...
 rm $installtarball
 rm ./install.sh
 
 echo
+echo "Done."
+sleep 2
+
+clear
+echo
+echo "After install optional dependency check."
+echo "Some plugins, such as \"Help\",or \"Extra functions\""
+echo "require external programs to be installed. Wanna check for"
+echo "any missing dependencies now?"
+echo
+read -p "(y/n) > " -n 1 isitok
+
+if [[ $isitok == "y" || $isitok == "Y" ]]; then
+    
+    
+    check_for_external_dependencies
+          
+else
+
+   echo 
+   echo "In that case we are all done."
+   
+    
+
+fi
+
+
+
+
+echo
+echo "Installation seems to have finished."
 echo "Now press anything to go back to doing whatever it was you did before..."
 read -n 1 -s keypress
 
