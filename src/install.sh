@@ -452,7 +452,7 @@ echo "Cleaning up temporary files (getting rid of the evidence)..."
 
 # Get rid of the evidence...
 rm $installtarball
-#rm ./install.sh
+rm ./install.sh
 
 echo
 echo "Done."
