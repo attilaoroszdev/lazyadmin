@@ -30,7 +30,7 @@ function check_editor {
     clear
 
 
-    if [[ $defaulteditor == "null" ]]; then
+    if [[ $defaulteditor == "not set" ]]; then
     
         if hash nano 2>/dev/null; then
             

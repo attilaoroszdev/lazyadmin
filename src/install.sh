@@ -1,6 +1,6 @@
 #!/bin/bash
 
-installtarball=./installer-test.tar.gz
+installtarball=./files-v0.9b.tar.gz
 
 
 # Installer function(s)
@@ -180,7 +180,7 @@ while true; do
 done
 
 echo
-echo "You will find your starter file named \"la-menus\" in"
+echo "You will find your starter file named \"ladmin\" in"
 echo
 echo "$installdir"
 echo
@@ -280,31 +280,37 @@ if [[ $installtype = "local" ]]; then
 
    mkdir "$HOME/.LazyAdmin/"
    installdir="$HOME/.LazyAdmin"
+   
+   tar xvzC "$installdir" -f $installtarball "core"
+    tar xvzC "$installdir" -f $installtarball "plugins"
+    tar xvzC "$installdir" -f $installtarball "res"
+
 
 else 
 
-  echo
-  echo "Attempting to access /opt. Need root"
-  echo
-  
-  if [[ -d "/opt/LazyAdmin/" ]]; then
-   
+    echo
+    echo "Attempting to access /opt. Need root"
+    echo
+      
+    if [[ -d "/opt/LazyAdmin/" ]]; then
+       
        sudo rm -rf "/opt/LazyAdmin/"
-   
-   fi
+      
+    fi
+      
+      
+    sudo mkdir "/opt/LazyAdmin/"
+    installdir="/opt/LazyAdmin"
   
-  
-  sudo mkdir "/opt/LazyAdmin/"
-  sudo mkdir "/opt/LazyAdmin/res/"
-  installdir="/opt/LazyAdmin"
+    sudo tar xvzC "$installdir" -f $installtarball "core"
+    sudo tar xvzC "$installdir" -f $installtarball "plugins"
+    sudo tar xvzC "$installdir" -f $installtarball "res"
+
   
 fi
 
 
 
-tar xvzC "$installdir" -f $installtarball "core"
-tar xvzC "$installdir" -f $installtarball "plugins"
-tar xvzC "$installdir" -f $installtarball "res"
 tar xvzC "$userfilesdir" -f $installtarball "user"
 
 
@@ -314,20 +320,22 @@ tar xvzC "$userfilesdir" -f $installtarball "user"
 
 if [[ installtype == "global" ]]; then
 
-    tar -cvf "$installdir/res/user_defaults.tar" "$userfilesdir/user"
+    sudo tar -cvf "$installdir/res/user_defaults.tar" "$userfilesdir/user"
+    
+    sudo sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
+    sudo sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
+    sudo sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
+    
+else 
+   
+    sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
+    sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
+    sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
+    
     
 fi
 
 
-
-sed -i "s|RESDIRPLACEHOLDER|USER_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
-sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
-sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
-
-
-
-
-RESDIRPLACEHOLDER
 
 echo 
 echo "Extracing finished."
@@ -353,20 +361,36 @@ if [[ -f "$launcherdir/ladmin" ]]; then
 	echo
 	echo "Starter file already exists. Removing..."
 
-	rm "$launcherdir/ladmin"
+	if [[ $installtype == "global" ]]; then
+	
+	    sudo rm "$launcherdir/ladmin"
+	
+	else
+	
+		rm "$launcherdir/ladmin"
+		
+	fi
+	
 	sleep 1
 fi
 
 echo
-echo "Creating new starter file:"
-echo "$launcherdir/la-menus"
+echo "Creating new starter file: $launcherdir/ladmin"
 echo
 
 
 
-tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
-sed -i "s|COREDIRPLACEHOLDER|\"$installdir\core\"|" "$launcherdir/ladmin"
+if [[ $installtype = "global" ]]; then
+    
+    sudo tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
+    sudo sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$launcherdir/ladmin"
 
+else 
+
+    tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
+    sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$launcherdir/ladmin"
+
+fi
 
 sleep 1
 
@@ -377,7 +401,15 @@ echo
 echo "Attempting to make la-menus executable."
 echo "(If this step fails, you will need to do this manually)"
 
-chmod ug+rwx "$launcherdir/ladmin"
+if [[ installtype == "gobal" ]]; then
+
+    sudo chmod 0755 "$launcherdir/ladmin"
+
+else 
+    
+    chmod ug+rwx "$launcherdir/ladmin"
+    
+fi
 
 sleep 1
 echo
@@ -400,7 +432,7 @@ if [[ "$symlinking" == "true" ]]; then
     fi
 
 
-	sudo ln -s "$launcherdir/la-menus" "$symlinkdir/ladmin"
+	sudo ln -s "$launcherdir/ladmin" "$symlinkdir/ladmin"
 	sleep 1
 	echo
 	echo "All done!"
@@ -409,7 +441,7 @@ if [[ "$symlinking" == "true" ]]; then
 else
 	echo
 	echo "All done!"
-	echo "You can now start lazy Admin by typing (sh) $launcherdir/la-menus"
+	echo "You can now start lazy Admin by typing (sh) $launcherdir/ladmin"
 	echo "Check help for customizaton info and options."
 
 fi
@@ -420,13 +452,12 @@ echo "Cleaning up temporary files (getting rid of the evidence)..."
 
 # Get rid of the evidence...
 rm $installtarball
-rm ./install.sh
+#rm ./install.sh
 
 echo
 echo "Done."
-sleep 2
+sleep 1
 
-clear
 echo
 echo "After install optional dependency check."
 echo "Some plugins, such as \"Help\",or \"Extra functions\""
@@ -448,8 +479,6 @@ else
     
 
 fi
-
-
 
 
 echo

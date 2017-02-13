@@ -48,7 +48,7 @@ fi
 
 
 # In case the user starts ladmin for the first time...
-if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]
+if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
 
     
   if [[ ! -d "$USER_DIR" ]]; then

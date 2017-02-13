@@ -20,16 +20,13 @@
 #
 # Contact: attila.orosz@mail.com
 
+
 # Replace below four lines with
-# USER_DIR="$HOME/.config/LazyAdmin/user"
-# COREDIRPLACEHOLDER
-# PLUGINSDIRPLACEHOLDER
-# RESDIRPLACEHOLDER
-PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
-RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
-USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
-CORE_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/core
-#
+USER_DIR="$HOME/.config/LazyAdmin/user"
+COREDIRPLACEHOLDER
+PLUGINSDIRPLACEHOLDER
+RESDIRPLACEHOLDER
+
 
 . "$CORE_DIR/core-defaults.la"
 . "$CORE_DIR/menu-functions.la"
@@ -41,4 +38,3 @@ CORE_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/core
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"
 . "$PLUGINS_DIR/display-help.la"
-
