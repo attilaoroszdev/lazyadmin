@@ -21,18 +21,6 @@
 # Contact: attila.orosz@mail.com
 
 
-# Replace below two lines with
-# USER_DIR="$HOME/.config/LazyAdmin/user"
-# PLUGINSDIRPLACEHOLDER
-# RESDIRPLACEHOLDER
-USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
-PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
-RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
-
-. "$PLUGINS_DIR/extra-functions.la"
-. "$PLUGINS_DIR/setup-functions.la"
-. "$PLUGINS_DIR/display-help.la"
-. "$USER_DIR/user-functions.la"
 
 #Main menu functions in the format of funct#tab#menuitem
 #First tab is 0, first item is 0
@@ -253,7 +241,7 @@ function functsetup2 {
 
 function functsetup3 {
 
-   	edit_setup_file "$RES_DIR/menu-defaults.la"
+   	edit_setup_file "$USER_DIR/user-defaults.la"
 
 }
 

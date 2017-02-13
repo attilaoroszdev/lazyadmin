@@ -19,14 +19,7 @@
 #
 # Contact: attila.orosz@mail.com
 
-# Replace below two lines with
-# USER_DIR="$HOME/.config/LazyAdmin/user"
-# RESDIRPLACEHOLDER
-USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
-RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
 
-. $USER_DIR/function-aliases.la
-. $RES_DIR/menu-defaults.la
 
 #This file fontains the functions providing basic functionality of the menu system
 #Cusom "user functions" will be stored in ./n-functions
@@ -63,7 +56,7 @@ else
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	menuentry=( `cat $menufile | sed -n '/'_menu$tabpos'/{:a;n;/'_endmenu$tabpos'/q;p;ba}'` )
-	menuheight=$normalmenuheight
+	menuheight=$normalmenuheight+1
 	IFS="$OLDIFS"
 	menulength=${#menuentry[@]}
 
@@ -847,7 +840,7 @@ function pick_help_menu_item {
 	    ;;
     'b' | "B")
 		    if [[ "$submenu" = "true" ]]; then
-			    back_to_main_menu
+			    back_to_main_menu "reflow"
 			    break
 		    fi
 		    ;;
@@ -1046,19 +1039,26 @@ function menu_item_picker_subflags	{
 
 function flags_submenu_function {
 
-    
     menuentry=()
 
     set_args=""
+    
+  if [[ $submenu == "true" ]]; then
 
-
-
-    if [[ "$submenu" == "true" ]]; then
-	    sourcesubmenu="true"
+        remaininsubmenu="true"
+        oldsubmenutitle="$submenutitle"
+        oldtabpos=$tabpos
+        oldmainmenupos=$mainmenupos
+	    
+       
     else
-	    sourcesubmenu="false"
+    
+        remaininsubmenu="false"
+        
     fi
     
+
+      
     submenu="true"
 	subflagsmenu="true"
     	
@@ -1109,8 +1109,9 @@ function flags_submenu_function {
 
 
 	done
-	submenu="$sourcesubmenu"
+	#submenu="$sourcesubmenu"
 	subflagsmenu="false"
+	
 }
 
 #Right panel functions
@@ -1130,19 +1131,16 @@ function display_help {
     
       
       
-    if [[ ! $subflagsmenu ]]; then
-   
-    	enter_helpmenu
-    	
-    else
-    
+    if [[ $subflagsmenu == "true" ]]; then
     
         functhelp_commanbuilder
     
-        
-        
-
         reflow_menu
+   
+    
+    else
+        
+       	enter_helpmenu
     
     fi
     
@@ -1179,23 +1177,21 @@ function exit_la_menus {
 function back_to_main_menu {
 
     activepanel="left"
-	mainmenupos=0
+	#mainmenupos=0
 	menupos=0
-
-  
 	
 	subflagsmenu="false"
 	
-
+    helpsubmenu="false"
+	
 
     if [[ $remaininsubmenu == "true" ]]; then
-    
-    
-      
+
+        submenu="true"      
         remaininsubmenu="false"
         submenutitle="$oldsubmenutitle"
-      
-       
+        tabpos=$oldtabpos
+        mainmenupos=$oldmainmenupos
     
     else
       
@@ -1203,7 +1199,17 @@ function back_to_main_menu {
      
 	fi
 	
+	
+    #init_menu
+    clear_menu
 
+    if [[ $1 == "reflow" ]]; then
+
+        reflow_menu
+    
+    fi
+    
+    break
 		
 }
 
@@ -1333,49 +1339,21 @@ function enter_submenu {
 
 function enter_helpmenu {
 
+    helpsubmenu="true"
+    
+    if [[ $submenu == "true" ]]; then
 
-    if [[ $subflagsmenu == "true" ]]; then
-    
-        remaininsubflagsmenu="true"
-        subflagsmenutitle="Help"
-        
-        if [[ $sourcesubmenu == "true" ]]; then
-        
-        
-            remaininsubmenu="true"
-        
-        else 
-        
-        
-            remaininsubmenu="false"
-        
-        fi
-        
-        
+        remaininsubmenu="true"
+        oldsubmenutitle="$submenutitle"
+        oldtabpos=$tabpos
+        oldmainmenupos=$mainmenupos
+	    
        
-    else 
+    else
     
-        remaininsubflagsmenu="false"
-        
-        if [[ $submenu == "true" ]]; then
-    
-            remaininsubmenu="true"
-            oldsubmenutitle="$submenutitle"
-           
-        else
-        
-            remaininsubmenu="false"
-            
-        fi
-        
+        remaininsubmenu="false"
         
     fi
-
-
-    
-    
-    
-
 
     submenu="true"
 	submenutitle="Help"
@@ -1419,9 +1397,18 @@ function functright3 {
 }
 
 function functright2 {
-
-	back_to_main_menu
-
+    
+    
+    # Need this, to redraw title for some reason...
+    if [[ $helpsubmenu == "true" ]]; then
+    
+        backargument="reflow"
+    
+    fi
+    
+   	back_to_main_menu $backargument
+   	
+   	
 }
 
 function functright4 {

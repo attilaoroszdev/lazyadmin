@@ -21,11 +21,8 @@
 # Contact: attila.orosz@mail.com
 
 
-# Replace below line with
-# RESDIRPLACEHOLDER
-RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
-
-. $RES_DIR/menu-defaults.la
+# Any functions distrubuted with Lazy Adming, which have external 
+# dependencies (other than sed), will live here
 
 
 function check_editor {

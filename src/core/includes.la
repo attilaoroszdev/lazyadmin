@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Lazy Admin is a simple bash based pseudo UI to easily store
-# and execute bash commands and user functions
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
 #   Copyright (C) 2017  Attila Orosz
 #
 # This file is part of Lazy Admin
@@ -21,36 +20,25 @@
 #
 # Contact: attila.orosz@mail.com
 
-
-# Replace below line with
+# Replace below four lines with
 # USER_DIR="$HOME/.config/LazyAdmin/user"
+# COREDIRPLACEHOLDER
+# PLUGINSDIRPLACEHOLDER
+# RESDIRPLACEHOLDER
+PLUGINS_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/plugins
+RES_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/res
 USER_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/user
+CORE_DIR=/Data/FolderSync/AppDev/Lazy_Admin/Dev/src/core
+#
 
+. "$CORE_DIR/core-defaults.la"
+. "$CORE_DIR/menu-functions.la"
 
-# You can alter these if you like
-# An explanation of what does what will be included in the help entries
-tabpos=0
-menupos=0
-menufile="$USER_DIR/menu-entries.la"
-normalmenuheight=8
-submenuheight=11
-maintitle="Lazy Admin - Development Version"
-roottitle=" -- ROOT Shell"
-rightpanel=true
-bottomseparators=3
-rightpanelwidth=27
-activepanel="left"
-descriptorheight=1
-mainheaderheight=4
-subheaderheight=2
-defaulteditor="nano"
-displaylineconnectors="true"
+. "$USER_DIR/user-defaults.la"
+. "$USER_DIR/user-functions.la"
+. "$USER_DIR/function-aliases.la"
 
+. "$PLUGINS_DIR/extra-functions.la"
+. "$PLUGINS_DIR/setup-functions.la"
+. "$PLUGINS_DIR/display-help.la"
 
-
-# Do not change these. (You have been warned)
-altmenu=false
-submenu="false"
-subflagsmenu="false"
-cursorpos=0
-root="false"

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Lazy Admin is a simple bash based pseudo UI to easily store
+# and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# lazy Admin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+
+
+#The title displayed in the main menu
+maintitle="Lazy Admin - Development Version"
+
+# Switch right panel on or off
+rightpanel=true
+
+# How many elements should the main menu hold 
+# Allow +2 fpor top and bototm padding
+# (normalmenuheight = number_of_items + 2)
+normalmenuheight=7
+
+# How many elements should submenus hold
+# Allow +2 fpor top and bototm padding 
+# (submenuheight = number_of_items + 2)
+submenuheight=11
+
+# Change the size of th roight panel
+rightpanelwidth=27
+
+# This should be habdled by the setup script, 
+# but you can change it to any editor command
+# It will be launched like this:
+# $defaulteditor $filename
+# So make sure all arguments are BEFORE the filename
+defaulteditor="nano"
+
+# You can switch off line connector characters
+# Useful for incompatible terminals (like those on mobiles)
+# Which might render these out of place
+displaylineconnectors="true"
