@@ -1,3 +1,10 @@
+> Copyright (c)  2017 Attila Orosz
+> Permission is granted to copy, distribute and/or modify this document
+> under the terms of the GNU Free Documentation License, Version 1.3
+> or any later version published by the Free Software Foundation;
+> with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+> A copy of the license is included in the section entitled "GNU
+> Free Documentation License".
 
 
 # Lazy Admin Customization and Scripting
@@ -46,7 +53,7 @@ _descmenu0 will correspond with _menu0, holding their descriptors, while
 _descsubmenu21 will hold descriptors of _submenu21
 
 
-The menu entries should be on their own line. the descriptors in the same position. 
+The menu entries should be on their own line. the descriptors in the same position.
 
 There is one reserved word: 'skip'. This will mark  them menu line to b skipped. Nothing will be printed on that line.
 
@@ -146,7 +153,7 @@ Any main menu entry can lead to a sub-menu, but sub-menu entries cannot yet hand
 From your main menu entry function alias, you should call a function called 'enter_submenu',  pass $@ as the first argument (this is important fo it to know where it is), and the title of the sub-menu window as the second argument, like this:
 
 	enter_submenu $@ "Sub-menu Title"
-	
+
 
 Example:
 
@@ -180,7 +187,7 @@ To add a simple command to the Second sub-menu item in your new sub-menu, you wo
     subfunct121 {
 
         ping -c 5 google.com
-     
+
     }
 
 Google will be happy, once again for your efforts... and now you have a working sub-menu. I'm not sure it was worth the effort... but believe me, once you get the hang of it, it will be really easy.
@@ -201,11 +208,11 @@ Flag setting sub-menus can only be called from the, main menu. To access this fu
 For example, to invoke a ping command, with the optional flags of -v -c and -n, you would use:
 
 	flags_submenu_function "Ping with flags" ping -v -c -n
-	
+
 If you were to use some other function that you've written yourself, you would use
-	
+
 	flags_submenu_function "Your function name" my_user_function -f -c- --any_other_arg --yet_another_arg
-	
+
 in the exact same way, you'd declared in the function itself.
 
 Example:
@@ -230,16 +237,15 @@ the above example would give you a menu like:
 	3 - Set flag -f
 	4 - Set flag -n
 	5 - Set flag --help
-	
+
 If you ant to group e.g. -v, -c and -f always to be used together, you could put them in single qutes, when calling the function, like this:
 
 	flags_submenu_function "Ping with flags" ping '-v -c -f' -n --help
-	
+
 This would result in a menu like this:
 
 	1 - Set flag -v -c -f
 	2 - Set flag -n
 	3 - Set flag --help
-	
-I hope this makes sense...
 
+I hope this makes sense...

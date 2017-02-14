@@ -11,164 +11,144 @@
 
 ## **Oveview**
 
-The basic functionality of Lazy Admin is to provide a pseudo graphical UI, one that can be navigated by the arrow keys, or with keyboard shortcuts.
+The basic functionality of Lazy Admin is to provide a pseudo graphical UI, one that can be navigated by the arrow keys, or with keyboard shortcuts, to hold script or command aliases on an easily navigable, tabbed menu-like interface.
 
-The usability might be questionable. If you are a lazy sys admin, who is tired of typing long commands and cannot remember the aliases he set (it must come with age), you might find it handy.
+The usability might be questionable, yet if you are a lazy sys admin, who is tired of typing long commands and cannot remember the aliases he set (it must come with age), you might even find it handy.
 
+The biggest advantage of Lazy Admin over... well, probably over a graphoical interfacce, is that it uses almost no external libraries. The whol thing runs as a `bash` script, occasionally making use of `sed`. There are some functions that sue other packages, but these are carefully separated as plugins, making the core (hopefully) compatible with almost anyhting.
 
+Again, if you are a sysadmin, who does a lot of remote server maintenance, you will find that LazyAdmin runs super fast over SSH. Because there is noting fancy to run, really.
 
 ## **Capacity**
 
+If you have installed Lazy admin with the demo menus, it is already set to have six tabs, five of which yare free to use (or even all six, if you remove the tab, each with five menu entries. That makes the default capacity of the main menu alone 25 commands or functions. (Or 30 if you remove the setup).
 
-By default it is set to have six tabs, five of which are free to use (or even all six, if you remove the demo tab of Setup, as that functionality is not yet implemented), each with five sub-menu entries. That makes the default capacity of the main menu alone 25 commands or functions.
-(Or 30 if you remove the setup).
+You can also use sub-menus, if you like, each could hold up to eight entries with the default settings. This means, with 5 times 5 main menus, each holding 8 sub-menus, theoretically your total number or entries would be 200...
 
-You can also use sub-menus, if you like, each could hold up to eight entries. This means, with 5 times 5 main menus, each holding 8 sub-menus, theoretically your total number or entries would be 200... if that is not enough, you could even increase like main menu height by one or two (adding one row of main menus opens op the possibility of adding 40 more entries in sub-menus)
+If that is not enough, you could increase the main menu height. The maximum capacity of the main menu would be 14 entries on a standrard 24 row terminal (10 rows are taken up by title, tab bar, dividers, padding, etc.), and 16 for sub-menus. You could evena dd more tabs, if you use short enough names, you can probably squeeze 9 or 10 of them.
 
-The maximum number of entries the main menu could could hold is 6, and the sub-menus could fit 9, but that would be a squeeze. Also, if you add more than that, the layout will break. You should adjust the defaults "normalmenuheight" and "submenuheight" in the la-menu-defaults file ($HOME/.config/lazy_admin/la-menu-defaults) to change this.
+Thus a malximum capacity is difficult to estimate, but by guessint 10 tabs of 10 main menu rows and 16 submenu rows, it comes to 10x14x16=2240 entries. Now, each submenu item can hold a command builder, which is technically one command, with a maximum of 9 built in predefined arguments or argument sets, plus the option to manually specify any (see below). That means a minimum of 9 types of combinations of that 2240 commands, making it 20160 (but really unlimited in practice).
 
-Using only sub-menus will have the solo disadvantage of not being able to handle flag-setting sub-menus (or not just yet). more on that later.
+Now, if you have 2240 commands or scripts to start with, you already are having serious issues, but if you really must, and you are on a terminal emulator with variable size, you can make the height (and width) as big as your screem can hold, but then you must promise to go see a doctor.
 
 
 ## **Navigation**
 
 
-Navigation is simple.
+Navigation is simple:
 
-Change tabs by the left or right arrows.
-Navigate the menus by the up and down arrows
-Enter a sub-menu, or execute a command by pressing enter or the numeric key, corresponding to the menu-item's position.
+* Change tabs by the left or right arrows.
+* Navigate the menus by the up and down arrows
+* Enter a sub-menu, or execute a command by pressing enter or the numeric key, corresponding to the menu-item's position.
+* Change to the right panel by pressing Ctrl+right arrow, and back to the left panel by Ctrl + left arrow
 
-If an entry is skipped, its position still counts. E.g. if you have an arrangement of a menu like this (with a gap between the 2nd and 3rd):
+If a menu entry entry is skipped (this can be done by entering skip in its place in the emnu file, can be handy for visual grouping), its position still counts. E.g. if you have an arrangement of a menu like this (with a gap between the 2nd and 3rd):
 
-	First entry
-	Second entry 
+    First entry
+	Second entry
 
 	Third entry
 
 You could select the "Second entry" by navigating there with the arrow keys, or by pressing number 2 on the keyboard.
-To select the "Third entry", you would have to press number 4. That is because that entry has the no. 4 position in the menu (position #3 is empty).
+To select the "Third entry", you would have to press number 4. That is because that entry has the #4 position in the menu (position #3 is empty).
 
-To make navigation easier and more straightforward, it is recommended, that you name oyur menu entries preceded with the shortcut key, like this:
+To make navigation easier and more straightforward, it is recommended, that you name your menu entries preceded with the shortcut key, like this:
 
 	1 - First entry
-	2 - Second entry 
+	2 - Second entry
 
 	4 - Third entry
 
-You can change to the right panel, by pressing 't' or 'T'.
+There is a special option on the right panel, called *Reflow menu*. Selecting this option, or its hotkey (f) will redraw the menu, and all its items. Use this whrn you resize the terminal emulator's window, or when the menu gets distorted for any reason.
 
-Some special keys are reserved, which can access the right panel functionality without having to navigate there:
+**Hotkeys**
 
-- To re-flow the menu, press 'r' or 'R'. This is useful when you resize the window or the terminal changes size, the menu will be resized to fit.
-- To display this message, press 'h' or 'H', that is, if you have not already done so...
-- To return to the main menu (when you are in a sub-menu), press 'b' or 'B'
-- To exit the menus completely, press 'x' or 'X'
+All of the above menitoned actions and all the rightpanel options also have hotkeys assigned. This is to alloow for faster navigation, and to provide an alternative to some keys that might be missing on certain devices (e.g. on a mobile-phone's terminal emulator over ssh).
 
-In the set flags sub-menu, there are other short-keys you can use:
+The preset hotkeys are as follows:
 
-- To manually specify flags, you can press 'm' or 'M', enter your flags, as you would on command line, then press enter.
-- To delete all the flags you've just set and start over, press 'd' or 'D'
-- To commit the command with the flags you've set, press 'x' or 'X'
+    Up -   w
+    Down - s
+    Left - a
+    Right - d
+    Change to right panel - r
+    Change to left panel - l
+    Back to previous level -b
+    Select menu item 1 - 9
+    Reflow menu - f
+    Get help - h
+    Display shortkeys - k
+    Quit LazyAdmin - q
 
-In later versions, I am planning to implement basic Setup functionality (see last tab).
-These  have the following keys already reserved:
+There are some reserved keys for certain setup menu items, so that you can stuillk access them, even if you prefer not to display a Setup tab:
 
-- To edit the menu entries interactively (how cool will that be), press 'e' or 'E'
-- To edit the defaults for menu height, tabs number etc., press 'd' or 'D'
-- To change, add, remove, or edit profiles (for the same user), press 'p' or 'P'
+    Edit menu entries - e
+    Edit user functions - u
+    Bind functions to menus - m
+    Edit default values - v
 
-To recap:
+In the command builder, you have three additional shortkeys, which you can only use inside a command buidler menu:
 
-Working:
-
-	[1-9] - Access sub-menus, or execute command
-	r - Re-flow menus
-	h - Display help
-	b - Back to main menu 
-	x - Exit la-menus
-
-Flags:
-
-	m - Manually enter flags
-	d - Delete all flags and start over
-	c - Commit command with the flags you've set
-
-Reserved:
-
-	e - Edit menus
-	d - Edit defaults
-	p - Access profiles sub-menu
+    Manually specify flags or arguments - m
+    Clear all flags or arguments - x
+    Run the command with the set flags or arguments - c
 
 
-## **Flags**
+## **Command builder**
 
+There is a special, visual command builder function buiklt right into Lazy Admin, called the command builder. You can bind this interface to any menu or submenu item, and it will bring up a spwcial type of submenu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this funtionality, you need to bind `flags_submenu_funtion` with the right arguments to the menu or submenu item you wish to invoke the command builder with.
 
-You can choose the interactively set flags or arguments to any command or function you like, using the flags_submenu_funtion (more on setup later).
+In the command builder menu, you can select an item by navigating to it, or pressing enter, and than the flag or argument bound to that item will be added to the build command.
 
-This could come handy, when you often use a command, with certain arguments, or fixed combinations.
+You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to rubn the built command.
 
-For example if you often use the ping command with -v (verbose) option, you could just put a -v flag as an easily accessible switch.
+Currently the number of preset arguments or argument sets is limited to 9, so as to keep the number-shortkey functionality intect.
 
-The option to manually enter flags could make the command usable (anything that is not preset could be entered here.
-
-If e.g. you want to ping google.com with five patckets and get a verbose output, and you wish to do this 23 times a day, you could set up the -v and -c flags, and manually enter the number of packets like this:
+So if e.g. you want to ping google.com with five patckets and get a verbose output, and you wish to do this 23 times a day, you could set up the `-v` and `-c 5` flags, and manually enter the domain to ping, like this:
 
 Your flags options would be eg:
 
 	-v
-	-c
+    -c
+	-c 5
 	-n
 	--help
 
-You would choose first -v, then -c
+You would choose first `-v`, then `-c 5`
 
-Now press 'm' (or navigate there with the arrows) to manually enter the number of packets (5) and the host (google.com). So after pressing m, you would type:
+Now press `m` (or navigate there with the arrows) to manually enter the domain (google.com). So after pressing m, you would type:
 
-	5 google.com
+	google.com
 
 This would result in the output:
 
 	ping -v -c 5 google.com
 
-I am sure, you will find it very useful to pinging google.com all day...
+I am sure, you will find it very useful, if you love pinging google.com all day, every day...
+
+Notte: Thee manual option is not reserved to the end of the sequence, you can set manual flags any time and continue adding predefined ones. E.g. the previous command could be done this way:
+
+1. select `c`
+2. press `m` and enter `5` <press enter>
+3. select `-v`
+4. press `m` and enter "google.com"
+5. press `c` to commit.
+
+Of course, this may look as if it does not make any sense, and in this case you would be right. On the other hand, there are scenarios, when this could come in handy. Only I cannot think of any, not when I'm busy pinging google anyway.
 
 
-The manual option is not reserver to the end of the sequence, you can set manual flags any time and continue adding predefined ones. E.g. the previous command could be done this way:
+## **Bottom row**
 
-	1. select -c
+At the bottom of the UI, there is a special row, which displays a short one liner description of the currently highlighted menu item. These descriptions must be set at the same tim menu items are set up, and are only available for menu and submenu items, and rightpanel items, but not for the command builder
 
-	2. press 'm' and enter '5' <press enter>
+That is all for now. I hope you find it useless, but fun to use.
 
-	3. select -v
+I do.
 
-	4. press 'm" and enter 'google.com'
-
-	5. press 'c' to commit.
-	
-Of course, this may look as if it does not make any sense, and in this case you would be right. on the other hand, there are scenarios, when this could come in handy. only I cannot think of any, not when pinging google anyway.
-
-
-## **Bottom indicators**
-
-
-There are two sets of indicators at the bottom of the screen. the first one is tied to the menu items and the second one is tied to the tab position.
-In the menu file, the setup of which you will see later), you can specify a one liner description instructions or fortune-cookie quote for each menu and sub-menu item you enter.
-(Flags sub-menus have their descriptors predefined, which is kind of sad)
-
-The tab-bound second descriptor is optional and totally script-able. 
-You can put there a static line, like on the "Demo tab"
-If you put nothing there it will be skipped and not displayed, see "Second tab". 
-If you'd like to put some dynamic value there, you can make up whatever you fancy, see "Third tab".
-
-
-
-That is all for now. I the future i plan to implement some interactive setup, so that the TRULY lazy user can also benefit. I hope you find it useless, but fun to use. 
-
-I do. 
+If you want to know morere about how to set up menus, and bind functions etc, head over to the next item in the help menu.
 
 If you have any suggestions, or know something better, spotted an error, or just want to tell me that I'm an idiot for spending my time like this, just email me at:
 
 attila.orosz@mail.com
 
-Enjoy. :)	
+Enjoy. :)
