@@ -279,8 +279,17 @@ function write_tab_items {
 		
 		
 		        tput cup $(( headerheight )) $horizontalconnectorposition
+	
+	            
+            	if $rightpanel && [[ $horizontalconnectorposition == $(( $menuwidth-$rightpanelwidth )) ]]; then
 		
-		    echo -n "┷"
+        		    echo -n "┿"
+    		    
+    		    else
+    		    
+        		    echo -n "┷"
+        		    
+    		    fi
 
 			
 
@@ -290,7 +299,15 @@ function write_tab_items {
 
 		        tput cup $(( headerheight )) $horizontalconnectorposition
 		
-		    echo -n "┷"
+		        if $rightpanel && [[ $horizontalconnectorposition == $(( $menuwidth-$rightpanelwidth )) ]]; then
+		
+            	    echo -n "┿"
+        		    
+        		else
+        		    
+            	    echo -n "┷"
+            	    
+        		fi
 
 
 		    fi
