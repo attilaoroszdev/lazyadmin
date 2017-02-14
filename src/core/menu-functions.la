@@ -1199,7 +1199,7 @@ function back_to_main_menu {
      
 	fi
 	
-	
+	read_rightpanel_items
     #init_menu
     clear_menu
 
