@@ -1,3 +1,66 @@
-# This is the command builder guide
+<!-- Copyright (c)  2017 Attila Orosz-->
+<!-- Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License". -->
 
-*Oh* **yea**
+# Using the command builder
+
+## **Usage**
+
+*Fill in this void...*
+
+## **How to set up a command buidler submenu**
+
+To access this functionality, you will use the predefined function named `flags_submenu_function`. It will accept a number of arguments, each having their own specific functionality:
+
+| <br />
+
+* **The first argument**, placed inside double quotes, will mark the name of the sub-menu. (It is worth putting the name of the command there, for clarity's sake.)
+* **The second argument** will be the command itself. It can be a bash command, or your own function, that you have defined in n-user-functions, it can also include some preset flags or arguments. If it is more than one word, you'll need to put it in double quotes, again.
+* **From the third to the eleventh arguments** you will basically set the flags for your command, which you want to use as submenu items, to be used with the builder. You can use compound arguments, or multiple flags, anything in double quotes goes on one line. The maximum number of "settable" lines is 9.
+
+For example, to invoke a ping command, with the optional flags `-v -c` and `-n`, you would do:
+
+`flags_submenu_function "Ping with flags" ping -v -c -n`
+
+which would result in a flags submenu offering the options:
+
+| `1 - Set flag -v`
+| `2 - Set flag -c`
+| `3 - Set flag -n`
+
+If you were to use some other function that you've written yourself, you would use
+
+`flags_submenu_function "Your function name" my_user_function -f -c --any_other_arg --yet_another_arg "--compound_arg X Y Z" --last_arg`
+
+in the exact same way, you'd declared in the function itself. This would result in sub-menu options:
+
+| `1 - Set flag -f`
+| `2 - Set flag -c`
+| `3 - Set flag --any_other_arg`
+| `4 - Set flag --yet_another_arg`
+| `5 - Set flag --compound_arg X Y Z`
+| `6 - Set flag --last_arg`
+
+Life-like(?) Example: You want to place a ping command, with the flags `-v -c -f, -n` and `--help` to the second menu-item on the fourth tab. You would use the `funct31` function alias, like this:
+
+| `function funct31 {`
+|
+|    `flags_submenu_function "Ping with flags" ping -v -c -f -n --help`
+|
+| `}`
+
+which would result in a submenu offering to execute `ping` with the below options:
+
+| `1 - Set flag -v`
+| `2 - Set flag -c`
+| `3 - Set flag -f`
+| `4 - Set flag -n`
+| `5 - Set flag --help`
+
+..and that's it. You will also have other functionality, like manually adding flags, automatically added. Numbers for short-keys are also automatically added. Please be aware, that short-keys only work from 1 to 9, so any more than 9 flag entries will simply be ignored.
+
+I hope this makes sense...

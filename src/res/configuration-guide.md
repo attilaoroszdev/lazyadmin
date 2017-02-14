@@ -1,251 +1,277 @@
-> Copyright (c)  2017 Attila Orosz
-> Permission is granted to copy, distribute and/or modify this document
-> under the terms of the GNU Free Documentation License, Version 1.3
-> or any later version published by the Free Software Foundation;
-> with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-> A copy of the license is included in the section entitled "GNU
-> Free Documentation License".
+<!-- Copyright (c)  2017 Attila Orosz-->
+<!-- Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License". -->
 
 
 # Lazy Admin Customization and Scripting
 
-User beware, here there be dragons. You'll have to know some basic bash before you can make modifications. It is worth having a much better idea of bash script than I ever will, so you might as well add some useful modifications (let me know, if you have any).
+User beware, here there be dragons. You'll have to know some basic bash before you can make modifications. It is also worth having a much better idea of bash script than I ever will, so you might as well add some useful modifications (let me know, if you have any).
 
-I have not yet implemented any user-friendly way to change stuff around... Proceed at your own risk, you may brake something that was already of little use to start with...
-
-
-# **Changing menu entries**
+I have not yet implemented any user-friendly way to change stuff. Proceed at your own risk, you may brake something that was already of little use to start with...
 
 
-All the menu-entries will be stored in a file in `$HOME/.config/lazy_admin/la-menuentries`. While the installer only offers a local instll ATM, this might at a later stage change to `/usr/local/share/lazy_admin/la-menuentries` whenever a system-wide install will be available.
+## **Changing menu entries**
 
-For now, just find the above file. I have tried to comment the file extensively, bt this only seems to make it more cluttered. anyway, it will hopefully be self-explanatory for the most.
+All the menu-entries will be stored in the file `$HOME/.configLazyAdmin/user/menu-entries.la`. (As you might have noticed, global installation is also available, in which case each use should have their own set of config files). You find the above file and edit it in any way you like, but for convenience's sake you can also access it from within Lazy Admin. just navigate to the *Setup* tab of the main menu, or press `e` from anywhere on the main menu level. The file itself should have some useful comments abut how to proceed, it will hopefully be self-explanatory for the most.
 
-The menu builder function parses the file looking for an underscore or '_' symbol. This is the delimiter for the start and end of sections.
+To have it all in once place, the structure of the menu file will be explained here as well. The menu builder function parses the file looking for an underscore (`_`) symbol. This is the delimiter for the start and end of sections.
 
 There will be five kinds of sections:
 
+| <br />
 
-* _menutab, which will end with _endmenutab and hold the names of the top-bar tabs, each on its own line
+* `_menutab` ending with `_endmenutab` and hold the names of the top-row tabs, each on its own line
 
-* _menu and _endmenu will be for the main menu entries
+* `_menu` and `_endmenu` are be for the main menu entries
 
-* _submenu and _endsubmenu will hold the submenu entriees
+* `_submenu` and `_endsubmenu` will hold the submenu entries
 
-* _dsescmenu and _enddescmenu mean the beginning and end of th descripor lines of main menu entries
+* `_descmenu` and `_enddescmenu` mean the beginning and end of the one liner descriptor of main menu entries
 
-* _descsubmenu and _enddescsubmenu mark the descriptor lines of sub-menus
+* `_descsubmenu` and `_enddescsubmenu` mark the descriptor lines of sub-menus
 
 
 To know, which menu is which, numbers will be used, starting with zero
 
-- For menu-entries the number will mark the tab position.
+| <br />
 
-- For sub-menu entries two numbers will mark the tab position and the menu position (these ar two single digits written together).
+* For menu-entries the number will mark the tab position. This means that between `_menu0` and _`endmenu0` are all the menu entries of the first tab, `_menu1` and `_endmenu1` mark the second tab, etc. (This is the reason the maximum number of tabs is 9)
 
-This means _menu0 will hold all the menu entries of the first tab, _menu1 means the second tab, etc.
+* For sub-menu entries two numbers will mark the tab position and the menu position (these are two single digits written together. This is the reason the maximum number of menu entries is 9.) For example between `_submenu00` and `_endsubmenu00` you will find submenu entries for the first menuitem on the first tab, while e.g. `_submenu21` and `_endsubmenu21` mark the boundaries for the sub-menu items of the second menuentry on the third tab, etc.
 
-For submenues, you'll find _submenu00 to be the sub-menu of the first menuitem on the first tab, while e.g. _submenu21 means the sub-menu items of the second menuentry on the third tab, etc.
-
-(_endmenu and _endsubmenu will also be numbered, although I question my sound judgment on this already...)
-
-_descmenu0 will correspond with _menu0, holding their descriptors, while
-_descsubmenu21 will hold descriptors of _submenu21
+* Descriptors follow a similar pattern: `_descmenu0` will correspond with `_menu0`, holding their descriptors, while `_descsubmenu21` will hold descriptors of `_submenu21`
 
 
-The menu entries should be on their own line. the descriptors in the same position.
+The menu entries should be on their own line. Each new line means a new menu entry. TO have a descriptor line correspond with a menue ntry, place it on the same position. Consider the following example:
 
-There is one reserved word: 'skip'. This will mark  them menu line to b skipped. Nothing will be printed on that line.
+| `menu3`
+| `First menuitem on the fourth tab`
+| `Second menuitem on the fourth tab`
+| `skip`
+| `Fourth menuitem on the fourth tab`
+| `_endmenu3`
+|
+| `descmenu3`
+| `Descriptor line for first menuitem on the fourth tab`
+| `Descriptor line for second menuitem on the fourth tab`
+| `skip`
+| `Descriptor line for fourth menuitem on the fourth tab`
+| `_enddescmenu3`
 
-The below example might make it clearer. Consider the four menu entries of the third tab, with the second entry skipped. It would look like this:
+There is one reserved word: `skip`. This will mark  them menu line to be skipped. Nothing will be printed on that line. This makes sense if you want to visually separate some items from others. Note that `skip` is not necessary in the descriptors, but it is better to keep it there, just to avoid confusion.
 
-	_menu1
-	1 - First menu item on the second tab
-	skip
-	3 - Third Menu item on the second tab
-	4 - Fourth Menu item on the second tab
-	5 - Fifth Menu item on the second tab
-	_endmenu1
+Similarly, to add a sub-menu, to the second item of the above menu, you would put in the menu file:
 
-The short-key clues are added for clarity's sake.
-the descriptor menus (just underneath) look like this:
+| `_submenu31`
+| `First sub-menu item`
+| `Second sub-menu item`
+| `Third sub-menu item`
+| `_endsubmenu31`
 
-	_descmenu1
-	This is the descriptor of first menu item on the second tab
-	skip
-	This is the descriptor of third menu item on the second tab
-	This is the descriptor of fourth menu item on the second tab
-	This is the descriptor of fifth menu item on the second tab
-	_enddescmenu1
+Here the numbers show tab **and** maim-menu item numbers.
+Sub-menu descriptors corresponding, will look like:
 
-Note that 'skip' is not necessary in the descriptors, but it is better to keep it there
-
-Similarly, to add a sub-menu, to the second item of the menu, you would put in the menu file:
-
-	_submenu11
-	First sub-menu item
-	Second sub-menu item
-	Third sub-menu item
-	_endsubmenu11
-
-Mark, the numbers show tab AND maim-menu item numbers.
-Sub-menu descriptors corresponding:
-
-	_descsubmenu11
-	First sub-menu item description
-	Second sub-menu item description
-	Third sub-menu item description
-	_enddescsubmenu11
+| `_descsubmenu31`
+| `First sub-menu item description`
+| `Second sub-menu item description`
+| `Third sub-menu item description`
+| `_enddescsubmenu31`
 
 
-And that's it. All of it. of course the right panel menu-items are described there too, but you would not be changing this, unless you change right panel functionality. if you can do that, i am sure you can decipher those menus too (It is the same self evident.)
+And that's it. All of it. Of course the right panel menu-items are described there too, but you would not be changing this, unless you change right panel functionality. If you can do that, I am sure you can decipher those menus too, and find your way thrugh the comments. (It is the same self evident.)
 
 
-## **Menu functions**
+## **Adding functionality to your mennu items**
+
+To bind functions to menus, Lazy Admin uses numbered function aliases, where the numbers that are very similar to to the numbers used with of the menu entries. The file `$HOME/.config/LazyAdmin/user/function-aliases.la` will hold all the user's defined aliases. There are two types of function calls (There are more, but for basics, two is enough): `functXX` and `subfunctXXX`.
+
+The `functXX` functions correspond to menu entries on the main menu level. These functions will need two numbers: tab-position and menu-entry-position. Again, the numbering starts with zero, so the first entry of the first tab will be `00`, while the third entry of the second tab will be `12` (as in tab1, entry2).
+
+Some further examples:
+
+| <br />
+
+* `funct00` means the first (main) menu-entry on the first tab (tab0, entry0)
+
+* `funct01` menas the second menu-entry on the first tab (tab0, entry1)
+
+* `funct10` means the first menu-entry on he second tab (tab1, entry0)
+
+* `funct11` means the second menu-entry on the second tab (tab1, entry1)
+
+...and so on.
+
+For sub-menus, there is an additional number for sub-menu entry, making the `subfunctXXX` takes three numbers to be identifiable. The first sub-menu entry on the first menu entry of the first tab will be `subfuncts000` (tab0, menu0, submenu0), while the second submenu entry on the third menu of the second tab would be `subfuncts121` (tab1, meny2, submenu1).
+
+Some examples:
+
+| <br />
 
 
-You will find two files:
+* `subfunct000` means first tab, first menu entry, first sub-menu entry (tab0, menu0, submenu0)
 
-	$HOME/.config/lazy_admin/n-user-functions
+* `subfunct001` means first tab, first menu entry, second sub-menu entry (tab0, menu0, submenu0)
 
-and
+* `subfunct010` means first tab, second menu entry, first sub-menu entry (tab0, menu1, submenu0)
 
-	$HOME/.config/lazy_admin/n-user-function-aliases
+* `subfunct011` means first tab, second menu entry, second sub-menu entry (tab0, menu1, submenu0)
 
+* `subfunct100` means second tab, second menu entry, first sub-menu entry (tab1, menu0, submenu0)
 
-In the first file, you want to define any bash scripts in the form of a 'function', (or in whatever format you fancy, as long as it works), to use with the menus.
+* `subfunct101` means second tab, second menu entry, second sub-menu entry (tab1, menu0, submenu1)
 
-Give them any name, there are very few restrictions (i.e., do not use the same name twice... besides following the usual naming conventions)
+* `subfunct111` means second tab, second menu entry, second sub-menu entry (tab1, menu1, submenu1)
 
-To to tie them to your menus, you should use the 'la-menu-aliases' file
+* `subfunct231` means third tab, fourth menu entry, second sub-menu entry (tab2, menu3, submenu1)
 
-Here you will find functions and “sub-functions,” (by name, that is) these will represent menu and sub-menu entries. Naming these will be similar to the naming of menus.
-
-- funct00 means the first (main) menu-entry on the first tab
-
-- funct01 menas the second menu-entry on the first tab
-
-- funct10 means the first menu-entry on he second tab
-
-- funct11 means the second menu-entry on the second tab.
-
-It is like this funct#tab#menu-entry
-
-For sub-menus, there is an additional number for sub-menu entry:
-
-- subfunct000 means first tab, first menu entry, first sub-menu entry
-
-- subfunct001 means first tab first menu entry, second sub-menu entry
-
-- subfunct213 means third tab, second menu entry, fourth sub-menu entry,
 
 ...and so on
 
-Eexecute your functions within these tabs, or you can place single line commands there.
+So to bind a command to a menu item, you must invoke it from the function corresponding the menu item1s position. For example to put `ping localhost` to ping the hell out of your machine when you select the second tab's third function, you'd do the following
 
+| `function funct12 {`
+|
+|     `ping localhost`
+|
+| `}`
 
+To do the same from the fourth submenu of the fifth menu on the third tab, you'd go like
 
-## **Invoking a sub-menu**
+| `function subfunct243 {`
+|
+|     `ping localhost`
+|
+| `}`
 
+Simple as that.
 
-Any main menu entry can lead to a sub-menu, but sub-menu entries cannot yet handle nested sub-menus. (Theoretically yes, but tracking depth is missing still. the back button would lead to the main menu straight, besides, it is not tested)
+### *Invoking a sub-menu*
 
-From your main menu entry function alias, you should call a function called 'enter_submenu',  pass $@ as the first argument (this is important fo it to know where it is), and the title of the sub-menu window as the second argument, like this:
+Binding commands to submenu items is all very well, but how will Lazy Admin know where to find submenus? It's nice to have function aliases for them, but what if you want to use them later? Or just "park them"? After all, having a function defined does not mean the function will be used. For this (and some more practical) reason(s), you will need to specifically mark a menu item thnat you want to hold a submenu in its fubnction alias. The built-in function to achieve this is called `enter_submenu`. This function will take two arguments. The first one must always be `$@` (basically passing on tab and menu position)`, and the second argument will be the title of the submenu to be displayed. because in latzy Admin, you name your own submenus. oh yeah...
 
-	enter_submenu $@ "Sub-menu Title"
+There is one catch. At the moment, submenus would only (correctly) work, when invoked form the main menu... To do that, you would call
 
+`enter_submenu $@ "Sub-menu Title"`
 
-Example:
+from the function alias corresponding to the main menu item, you want the submenu to be associated with. So for example if you wish to add a sub-menu to the second tab third menu-entry, you would put this code to the function alias:
 
-If you wish to add a sub-menu to the second tab third menu-entry, you would put this code to the alias function:
-
-	function funct12 {
-
-		enter_submenu $@ "My New Sub-menu"
-
-	}
+| `function funct12 {`
+|
+|    `enter_submenu $@ "My New Sub-menu"`
+|
+| `}`
 
 Then you would also need to set up the menu entries for your new sub-menu, in the menu names file (see above), like this:
 
-	_submenu12
-	First sub-menu item
-	Second sub-menu item
-	Third sub-menu item
-	_endsubmenu21
-
-	_descsubmenu12
-	Descriptor for first sub-menu item
-	Descriptor for second sub-menu item
-	Descriptor for third sub-menu item
-	_enddescsubmenu12
-
-
-This would make the sub-menu navigable with the proper names.
-
-To add a simple command to the Second sub-menu item in your new sub-menu, you would use the 'subfunct121' alias function ('121' being second tab, third menu item, second sub-menu item).
-
-    subfunct121 {
-
-        ping -c 5 google.com
-
-    }
-
-Google will be happy, once again for your efforts... and now you have a working sub-menu. I'm not sure it was worth the effort... but believe me, once you get the hang of it, it will be really easy.
+| `_submenu12`
+| `First sub-menu item`
+| `Second sub-menu item`
+| `Third sub-menu item`
+| `_endsubmenu21`
+|
+| `_descsubmenu12`
+| `Descriptor for first sub-menu item`
+| `Descriptor for second sub-menu item`
+| `Descriptor for third sub-menu item`
+| `_enddescsubmenu12`
 
 
+This would make the sub-menu navigable with the proper names. To set up some simple commands for the submenu items, you would have to configure their aliases
 
-## **Setting flags and predefined arguments**
+| `subfunct120 {`
+|
+|     `ping -c 5 google.com`
+|
+| `}`
+|
+| `subfunct121 {`
+|
+|     `ping -c 15 google.com`
+|
+| `}`
+|
+| `subfunct122 {`
+|
+|     `ping -c 25 google.com`
+|
+| `}`
 
+Google would be happy about your efforts... and now you'd also have a working sub-menu. Although I'm not sure it was worth the effort... but believe me, once you get the hang of it, it will be really easy. Still, it1s probably easier to follow through in the config file, with the comments and examples preset there
 
-Now that you've seen it all, comes the difficult part: using he flag setting sub-menu. The good news is, you will not need to define menu-entries for this ne, it is al in the line of invoking function
+## **Using predefined scripts**
 
-Flag setting sub-menus can only be called from the, main menu. To access this functionality, you will use the menu-function named 'flags_submenu_function'. It accept a number of arguments, each having their own specific functionality.
+You will of course want to do more than ust pinging google or localhost (although one can spend a considerable amount of time doing just that... or is that juts me?) You will, most likeély have your scripts written and stored somewhere, and of course you can always just run them form wherever they are. if you do, however feel compulsive about writing new ones just for scripting's sake, and prefer to keep them in one place, you can use the `$HOME/.config/LazyAdmin/user/user-functions.la` configuration file. Any bash function defined there can be referenced in the function aliases. makes life just a little bit easier, dosn1t it?
 
-- The first argument, placed inside double quote will mark the name of the sub-menu. It is worth putting the name of the command there, for clarity's sake.
-- The second argument will be the command itself. it can be a bash command, or your own function, that you have defined in n-user-functions.
-- After the third argument you will basically set the flags for our commands as you would on the command line.
+## **Using the command builder**
 
-For example, to invoke a ping command, with the optional flags of -v -c and -n, you would use:
+Now that you've seen it all, comes the difficult part: using the special sub-menu called command buidler. The good news is, you will not need to define menu-entries for this one, it is all in the line of invoking function. The bad news is, it has its own syntax... To access this functionality, you will use the predefined function named `flags_submenu_function`. It will accept a number of arguments, each having their own specific functionality:
 
-	flags_submenu_function "Ping with flags" ping -v -c -n
+| <br />
+
+* **The first argument**, placed inside double quotes, will mark the name of the sub-menu. (It is worth putting the name of the command there, for clarity's sake.)
+* **The second argument** will be the command itself. It can be a bash command, or your own function, that you have defined in n-user-functions, it can also include some preset flags or arguments. If it is more than one word, you'll need to put it in double quotes, again.
+* **From the third to the eleventh arguments** you will basically set the flags for your command, which you want to use as submenu items, to be used with the builder. You can use compound arguments, or multiple flags, anything in double quotes goes on one line. The maximum number of "settable" lines is 9.
+
+For example, to invoke a ping command, with the optional flags `-v -c` and `-n`, you would do:
+
+`flags_submenu_function "Ping with flags" ping -v -c -n`
+
+which would result in a flags submenu offering the options:
+
+| `1 - Set flag -v`
+| `2 - Set flag -c`
+| `3 - Set flag -n`
 
 If you were to use some other function that you've written yourself, you would use
 
-	flags_submenu_function "Your function name" my_user_function -f -c- --any_other_arg --yet_another_arg
+`flags_submenu_function "Your function name" my_user_function -f -c --any_other_arg --yet_another_arg "--compound_arg X Y Z" --last_arg`
 
-in the exact same way, you'd declared in the function itself.
+in the exact same way, you'd declared in the function itself. This would result in sub-menu options:
 
-Example:
+| `1 - Set flag -f`
+| `2 - Set flag -c`
+| `3 - Set flag --any_other_arg`
+| `4 - Set flag --yet_another_arg`
+| `5 - Set flag --compound_arg X Y Z`
+| `6 - Set flag --last_arg`
 
-You want to place a ping command, with the flags -v -c -f, -n and --help to the second menu-item on the fourth tab. You would use the 'funct31' alias function, like this:
+Life-like(?) Example: You want to place a ping command, with the flags `-v -c -f, -n` and `--help` to the second menu-item on the fourth tab. You would use the `funct31` function alias, like this:
 
-function funct31 {
+| `function funct31 {`
+|
+|    `flags_submenu_function "Ping with flags" ping -v -c -f -n --help`
+|
+| `}`
 
-	flags_submenu_function "Ping with flags" ping -v -c -f -n --help
+which would result in a submenu offering to execute `ping` with the below options:
 
-}
+| `1 - Set flag -v`
+| `2 - Set flag -c`
+| `3 - Set flag -f`
+| `4 - Set flag -n`
+| `5 - Set flag --help`
 
-..and that's it. It will invoke the set sub-menus interface, with the flags set in the exact order you've just specified. You will have all other functionality, like manually adding flags, automatically added. Numbers for short-keys will also be added.
-Please be aware, that shor-keys only work from 1 to 9, so although more than 9 flag entries are possible, the short-keys will not work form 10 and onwards.
-
-It is also possible to place more than one flag on a single line, if they are often used together.
-
-the above example would give you a menu like:
-
-	1 - Set flag -v
-	2 - Set flag -c
-	3 - Set flag -f
-	4 - Set flag -n
-	5 - Set flag --help
-
-If you ant to group e.g. -v, -c and -f always to be used together, you could put them in single qutes, when calling the function, like this:
-
-	flags_submenu_function "Ping with flags" ping '-v -c -f' -n --help
-
-This would result in a menu like this:
-
-	1 - Set flag -v -c -f
-	2 - Set flag -n
-	3 - Set flag --help
+..and that's it. You will also have other functionality, like manually adding flags, automatically added. Numbers for short-keys are also automatically added. Please be aware, that short-keys only work from 1 to 9, so any more than 9 flag entries will simply be ignored.
 
 I hope this makes sense...
+
+## **Defining defaults**
+
+The last file you need to concern yourself about is `$HOME/.config/LazyAdmin/user/user-functions.la`. here you can change some default values used throughout Lazy Admin. Most of the defaults are sort of "OK" to use as they are. menu height is set to 7, this will comfortably hold 5 entries (with top and bottom paddings). Submenu height is set to the maximum (11), line connectors are "on", etc.
+
+In this file you can change the following variables:
+
+| <br />
+
+* `maintitle` - is what it looks like. please use double quotes
+* `normalmenuheight` - is the height of the main menu
+* `submenuheight` - is the height of the sub-menus
+* `rightpanelwidth` - is the width of the right panel (really!). Change this if you change those items
+* `defaulteditor` - this will be automatically set, when you first attempt to edit config files from within Lazy Admin. You can change it manually any time.
+* `displaylineconnectors` - Defaults to true. Other possible value is, you guessed it.... "false". Line connectors are the little characters that make the 90° connections between lines. Turn it off if you experience drawing issues (like on mobile terminal emuélators, or if your emulator does not use fixed width characters, etc.)
+
+That's about it. You can expect more rants to accompany later versions. You can find my email in th3e other file, if you have any questions...

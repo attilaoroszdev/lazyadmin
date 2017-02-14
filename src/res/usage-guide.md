@@ -1,10 +1,10 @@
-> Copyright (c)  2017 Attila Orosz
-> Permission is granted to copy, distribute and/or modify this document
-> under the terms of the GNU Free Documentation License, Version 1.3
-> or any later version published by the Free Software Foundation;
-> with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-> A copy of the license is included in the section entitled "GNU
-> Free Documentation License".
+<!-- Copyright (c)  2017 Attila Orosz-->
+<!-- Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License". -->
 
 
 # Lazy Admnin Usage Guide
@@ -34,8 +34,9 @@ Now, if you have 2240 commands or scripts to start with, you already are having 
 
 ## **Navigation**
 
-
 Navigation is simple:
+
+| <br />
 
 * Change tabs by the left or right arrows.
 * Navigate the menus by the up and down arrows
@@ -44,89 +45,97 @@ Navigation is simple:
 
 If a menu entry entry is skipped (this can be done by entering skip in its place in the emnu file, can be handy for visual grouping), its position still counts. E.g. if you have an arrangement of a menu like this (with a gap between the 2nd and 3rd):
 
-    First entry
-	Second entry
+| `First entry`
+| `Second entry`
+|
+| `Third entry`
 
-	Third entry
 
 You could select the "Second entry" by navigating there with the arrow keys, or by pressing number 2 on the keyboard.
 To select the "Third entry", you would have to press number 4. That is because that entry has the #4 position in the menu (position #3 is empty).
 
 To make navigation easier and more straightforward, it is recommended, that you name your menu entries preceded with the shortcut key, like this:
 
-	1 - First entry
-	2 - Second entry
+| `1 - First entry`
+| `2 - Second entry`
+|
+| `4 - Third entry`
 
-	4 - Third entry
 
-There is a special option on the right panel, called *Reflow menu*. Selecting this option, or its hotkey (f) will redraw the menu, and all its items. Use this whrn you resize the terminal emulator's window, or when the menu gets distorted for any reason.
+There is a special option on the right panel, called *Reflow menu*. Selecting this option, or its hotkey (f) will redraw the menu, and all its items. Use this when you resize the terminal emulator's window, or when the menu gets distorted for any reason.
 
-**Hotkeys**
+## *Hotkeys*
 
-All of the above menitoned actions and all the rightpanel options also have hotkeys assigned. This is to alloow for faster navigation, and to provide an alternative to some keys that might be missing on certain devices (e.g. on a mobile-phone's terminal emulator over ssh).
+All of the above mentioned actions and all the rightpanel options also have hotkeys assigned. This is to allow for faster navigation, and to provide an alternative to some keys that might be missing on certain devices (e.g. on a mobile-phone's terminal emulator over ssh).
 
 The preset hotkeys are as follows:
 
-    Up -   w
-    Down - s
-    Left - a
-    Right - d
-    Change to right panel - r
-    Change to left panel - l
-    Back to previous level -b
-    Select menu item 1 - 9
-    Reflow menu - f
-    Get help - h
-    Display shortkeys - k
-    Quit LazyAdmin - q
+| <br />
+
+* Up -  w
+* Down - s
+* Left - a
+* Right - d
+* Change to right panel - r
+* Change to left panel - l
+* Back to previous level -b
+* Select menu item 1 - 9
+* Reflow menu - f
+* Get help - h
+* Display shortkeys - k
+* Quit LazyAdmin - q
 
 There are some reserved keys for certain setup menu items, so that you can stuillk access them, even if you prefer not to display a Setup tab:
 
-    Edit menu entries - e
-    Edit user functions - u
-    Bind functions to menus - m
-    Edit default values - v
+| <br />
+
+* Edit menu entries - e
+* Edit user functions - u
+* Bind functions to menus - m
+* Edit default values - v
 
 In the command builder, you have three additional shortkeys, which you can only use inside a command buidler menu:
 
-    Manually specify flags or arguments - m
-    Clear all flags or arguments - x
-    Run the command with the set flags or arguments - c
+| <br />
 
+* Manually specify flags or arguments - m
+* Clear all flags or arguments - x
+* Run the command with the set flags or arguments - c
 
 ## **Command builder**
-
 There is a special, visual command builder function buiklt right into Lazy Admin, called the command builder. You can bind this interface to any menu or submenu item, and it will bring up a spwcial type of submenu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this funtionality, you need to bind `flags_submenu_funtion` with the right arguments to the menu or submenu item you wish to invoke the command builder with.
 
 In the command builder menu, you can select an item by navigating to it, or pressing enter, and than the flag or argument bound to that item will be added to the build command.
 
-You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to rubn the built command.
+You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to run the built command.
 
 Currently the number of preset arguments or argument sets is limited to 9, so as to keep the number-shortkey functionality intect.
 
-So if e.g. you want to ping google.com with five patckets and get a verbose output, and you wish to do this 23 times a day, you could set up the `-v` and `-c 5` flags, and manually enter the domain to ping, like this:
+So if e.g. you want to ping google.com with five packets and get a verbose output, and you wish to do this 23 times a day, you could set up the `-v` and `-c 5` flags, and manually enter the domain to ping, like this:
 
 Your flags options would be eg:
 
-	-v
-    -c
-	-c 5
-	-n
-	--help
+| `-v`
+| `-c`
+| `-c 5`
+| `-n`
+| `--help`
 
 You would choose first `-v`, then `-c 5`
 
 Now press `m` (or navigate there with the arrows) to manually enter the domain (google.com). So after pressing m, you would type:
 
-	google.com
+`google.com`
 
 This would result in the output:
 
-	ping -v -c 5 google.com
+`ping -v -c 5 google.com`
 
 I am sure, you will find it very useful, if you love pinging google.com all day, every day...
 
-Notte: Thee manual option is not reserved to the end of the sequence, you can set manual flags any time and continue adding predefined ones. E.g. the previous command could be done this way:
+Note: Thee manual option is not reserved to the end of the sequence, you can set manual flags any time and continue adding predefined ones. E.g. the previous command could be done this way:
+
+| <br />
 
 1. select `c`
 2. press `m` and enter `5` <press enter>
@@ -149,6 +158,6 @@ If you want to know morere about how to set up menus, and bind functions etc, he
 
 If you have any suggestions, or know something better, spotted an error, or just want to tell me that I'm an idiot for spending my time like this, just email me at:
 
-attila.orosz@mail.com
+[attila.orosz@mail.com](mailto:attila.orosz@mail.com)
 
 Enjoy. :)
