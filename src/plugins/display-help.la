@@ -62,7 +62,7 @@ function display_markdown_help {
         echo "Now press any key to display plain text"
         read -n 1 -s keypress 
         
-        less "$1"
+        less "$2"
     
     fi
     

@@ -1307,7 +1307,7 @@ function reflow_menu {
 
 function display_hotkeys {
     
-    display_markdown_help "$RES_DIR/shortkeys.md"
+    display_markdown_help "$RES_DIR/shortkeys.md" "$RES_DIR/shortkeys.txt"
     reflow_menu
 
 
