@@ -35,7 +35,7 @@ There will be five kinds of sections:
 
 To know, which menu is which, numbers will be used, starting with zero
 
-For menu-entries the number will mark the tab position. This means that between  _menu0  and _ endmenu0  are all the menu entries of the first tab,  _menu1  and  _endmenu1  mark the second tab, etc. (This is the reason the maximum number of tabs is 9)
+For menu-entries the number will mark the tab position. This means that between  _menu0  and _ endmenu0  are all the menu entries of the first tab,  _menu1  and  _endmenu1  mark the second tab, etc. (This is the reason the maximum number of tabs is 10)
 
 For sub-menu entries two numbers will mark the tab position and the menu position (these are two single digits written together. This is the reason the maximum number of menu entries is 9.) For example between  _submenu00  and  _endsubmenu00  you will find submenu entries for the first tab, first menuitem ( tab 0 ,  item 0 ), while e.g.  _submenu21  and  _endsubmenu21  mark the boundaries for the sub-menu items of third tab, second menuitem ( tab 2 ,  item 1 ), etc.
 

@@ -45,7 +45,7 @@ To know, which menu is which, numbers will be used, starting with zero
 
 | <br />
 
-* For menu-entries the number will mark the tab position. This means that between `_menu0` and _`endmenu0` are all the menu entries of the first tab, `_menu1` and `_endmenu1` mark the second tab, etc. (This is the reason the maximum number of tabs is 9)
+* For menu-entries the number will mark the tab position. This means that between `_menu0` and _`endmenu0` are all the menu entries of the first tab, `_menu1` and `_endmenu1` mark the second tab, etc. (This is the reason the maximum number of tabs is 10)
 
 | <br />
 

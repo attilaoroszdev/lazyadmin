@@ -3,7 +3,7 @@
 #
 # This file is part of Lazy Admin
 #
-# n-menus is free software: you can redistribute it and/or modify
+# Lazy Admin is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -14,7 +14,7 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
@@ -26,7 +26,7 @@
 #
 # variables in the
 #
-# '/config/lazy/admin/core/la-menu-defaults
+# '$HOME/.config/LazyAdmin/user/user-defaults.la
 #
 # file
 #
@@ -35,8 +35,8 @@
 
 
 
-#The tabs displayed at the top. Change names here as desired
-#The last one should remain setup, unless you with to disable that functionality
+#T he tabs displayed at the top. Change names here as desired
+# The last one should remain setup, unless you with to disable that functionality
 
 _menutab
 Demo Functions
@@ -56,15 +56,6 @@ _menu0
 3 - Ping localhost
 4 - Ping localhost with flags submenu (f)
 5 - Launch a root shell
-6 SIX
-7 SEVEN
-8 EIGHT
-9 NINE
-10 TEN
-11 ELEVEN
-12 TWELVE
-13 THIRTEEN
-14 FOURTEEN
 _endmenu0
 
 
@@ -76,21 +67,12 @@ This menuitem leads to a submenu
 This will ping the localhost 5 times
 Show example of setting flags to a command
 Enter root mode. Be very careful!
-6 SIX
-7 SEVEN
-8 EIGHT
-9 NINE
-10 TEN
-11 ELEVEN
-12 TWELVE
-13 THIRTEEN
-14 FOURTEEN
 _enddescmenu0
 
 
-#Submenuitems for submenu01 - two digit numbers indicate submenus,
-#where the first digit (0) indicates the main menu entry the submenu belongs
-#and the second digit (1) indicates the submenu number
+# Submenuitems for submenu01 - two digit numbers indicate submenus,
+# where the first digit (0) indicates the main menu entry the submenu belongs
+# and the second digit (1) indicates the submenu number
 
 _submenu01
 1 - First submenu item - Ping locahost
