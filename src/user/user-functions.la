@@ -38,77 +38,16 @@ function example_function {
 	echo "You have 40 minutes to finish the test. Good luck..."
 	echo
 	echo "Press any key to start" 
+		
+	read -n 1 -s keypress 
+	
+	echo
+	echo "You fell for it, didn't you. Ha-ha-ha...'"
+	echo
+	echo "Press any key to return to menu. No, really!" 
 	echo
 	read -n 1 -s keypress 
 	
-	while true; do
-	clear
-	echo
-	echo "First question:"
-	echo
-	echo "Do you think this example function is dumb?"
-	echo "Select the number of the right answer"
-	echo
-	echo "1 - Yes"
-	echo "2 - Dunno..."
-	echo "3 - Right answer"
-	echo "4 - Left answer"
-	echo "5 - What?"
-	echo "6 - Cherry cake"
-	echo
-	read -p "> " -n 1 keypress	
-	
-	case $keypress in
-	
-	1) 
-	echo
-	echo
-	echo "Aha... Thanks..."
-	break
-	;;
-	2)
-	echo
-	echo
-	echo "Know what?"
-	break
-	;;
-	3) echo
-	echo
-	echo "Smartass..."
-	break
-	;;
-	4) 
-	echo
-	echo
-	echo "Very funny..."
-	break
-	;;
-	5) 
-	echo
-	echo
-	echo "never mind, go back to sleep, will you?"
-	break
-	;;
-	6) 
-	echo
-	echo
-	echo "Congratulations. You win."
-	break
-	;;
-	*) 
-	echo
-	echo
-	echo "No, you won't get away that easy. Press a key to go again."
-	read -n 1 -s keypress 
-	;;
-	esac
-done
-	echo
-	echo "Well, thanks fo your input. And your time. (It was well wasted.)"
-	echo "Please come agan..."
-	echo
-	echo "Press a key to get back to the menu..."
-	read -n 1 -s keypress 
 	clear
 	
 } 
@@ -148,7 +87,7 @@ function localhost_ping {
 	clear
 
 	echo
-	echo "Will ping localhost 5 times... "
+	echo "Will ping localhost 5 times. How exciting."
 	echo
 	echo "ping -c 5 localhost"
 	echo
