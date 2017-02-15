@@ -506,8 +506,6 @@ function clear_menu {
 #Draws the outline of the menu, with spaces left out for inclusion of items
 function draw_menu {
 
-    tput civis
-
 	if [[ $subflagsmenu == "true" ]]; then
 		
 		let menuheight=$menulength+3
@@ -1611,7 +1609,7 @@ function main {
    restorecursor=$2
 
    #Hide the cursor, we dn't really need it
-
+   tput civis
 
    if [[ $1 != "default"  ]]; then
 
@@ -1633,8 +1631,7 @@ function main {
    init_menu
 
    while true; do
-           
-           
+
            main_menu
 
    done
