@@ -6,7 +6,7 @@
 #
 # This file is part of Lazy Admin
 #
-# lazy Admin is free software: you can redistribute it and/or modify
+# Lazy Admin is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -29,24 +29,20 @@ maintitle="Lazy Admin - Development Version"
 # Switch right panel on or off
 rightpanel=true
 
-# How many elements should the main menu hold 
+# How many elements should the main menu hold
 # Allow +2 fpor top and bototm padding
 # (normalmenuheight = number_of_items + 2)
-# The maximum height is 11 (9 entries)
-# Any value greater than 11 will be ignored
 normalmenuheight=7
 
 # How many elements should submenus hold
-# Allow +2 fpor top and bototm padding 
+# Allow +2 fpor top and bototm padding
 # (submenuheight = number_of_items + 2)
-# The maximum height is 11 (9 entries)
-# Any value greater than 11 will be ignored
 submenuheight=11
 
 # Change the size of th roight panel
 rightpanelwidth=27
 
-# This should be habdled by the setup script, 
+# This should be habdled by the setup script,
 # but you can change it to any editor command
 # It will be launched like this:
 # $defaulteditor $filename

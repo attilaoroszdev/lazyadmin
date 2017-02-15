@@ -26,8 +26,11 @@
 
 
 if [[ -f $menufile ]]; then
+
     echo "Setting menus..."
+    
 else
+
 	clear
 	echo
     echo "Looked for menus in:"
@@ -36,31 +39,42 @@ else
 	echo "Error: Cannot find menuentries file in default location. Exiting..."
     echo
     exit 65
+    
 fi
 
 #This function will read the menu entries from the menu entries file as set in defaults
 function read_menu_items {
 
 
+    if [[ "$submenu" = "true" ]]; then
 
-if [[ "$submenu" = "true" ]]; then
+	    OLDIFS="$IFS"
+	    IFS=$'\n'
+	    menuentry=( `cat $menufile | sed -n '/'_submenu$1$2'/{:a;n;/'_endsubmenu$1$2'/q;p;ba}'` )
+	
+	    if [[ $helpsubmenu == "true" ]]; then
+	
+	        menuheight=$helpsubmenuheight
+	        
+	    else
+	
+        	menuheight=$submenuheight
+        	
+        fi
+        
+        
+	    IFS="$OLDIFS"
+	    menulength=${#menuentry[@]}
 
-	OLDIFS="$IFS"
-	IFS=$'\n'
-	menuentry=( `cat $menufile | sed -n '/'_submenu$1$2'/{:a;n;/'_endsubmenu$1$2'/q;p;ba}'` )
-	menuheight=$submenuheight
-	IFS="$OLDIFS"
-	menulength=${#menuentry[@]}
+    else
+	    OLDIFS="$IFS"
+	    IFS=$'\n'
+	    menuentry=( `cat $menufile | sed -n '/'_menu$tabpos'/{:a;n;/'_endmenu$tabpos'/q;p;ba}'` )
+	    menuheight=$normalmenuheight+1
+	    IFS="$OLDIFS"
+	    menulength=${#menuentry[@]}
 
-else
-	OLDIFS="$IFS"
-	IFS=$'\n'
-	menuentry=( `cat $menufile | sed -n '/'_menu$tabpos'/{:a;n;/'_endmenu$tabpos'/q;p;ba}'` )
-	menuheight=$normalmenuheight+1
-	IFS="$OLDIFS"
-	menulength=${#menuentry[@]}
-
-fi
+    fi
 
 
 
@@ -425,11 +439,15 @@ function draw_line {
 #clear menu area
 function clear_menu {
 
+
 	for (( n=1; n<$menuheight; n++ ))
 	do
 	
 		tput cup $(( n + $headerheight )) $(( $menuwidth-$rightpanelwidth-1 ))
 		echo -e "\033[1K"
+		
+		
+		
 		
 	done
 }
@@ -438,16 +456,33 @@ function clear_menu {
 function draw_menu {
 
 	if [[ $subflagsmenu == "true" ]]; then
+		
 		let menuheight=$menulength+3
 		headerheight=$subheaderheight;
 		title=$subflagsmenutitle
 
 	elif [[ $submenu == "true" ]]; then
-		headerheight=$subheaderheight;
+	
+	
+	    if [[ $helpsubmenu == "true" ]]; then
+	
+	        menuheight=$helpsubmenuheight
+	        
+	    else
+	
+        	menuheight=$submenuheight
+        	
+        fi
+	
+	    headerheight=$subheaderheight;
 		title=$submenutitle
+		
 	else
+
+	    menuheight=$normalmenuheight+1
 		headerheight=$mainheaderheight
 		title=$maintitle
+		
 	fi
 
 	if [[ "$root" == "true" ]]; then
@@ -859,11 +894,11 @@ function pick_help_menu_item {
 	        functright3
 	        ;;
         'b' | "B")
-		        if [[ "$submenu" = "true" ]]; then
-			        back_to_main_menu "reflow"
-			        break
-		        fi
-		        ;;
+	        if [[ "$submenu" = "true" ]]; then
+                back_to_main_menu "reflow" "read"
+		        break
+	        fi
+	        ;;
             
         
     esac
@@ -1245,6 +1280,12 @@ function back_to_main_menu {
       
     	submenu="false"
      
+	fi
+	
+	if [[ $2 == "read" ]]; then
+	
+	  read_menu_items  
+	    
 	fi
 	
 	read_rightpanel_items
