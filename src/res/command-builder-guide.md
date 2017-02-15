@@ -8,6 +8,8 @@ Free Documentation License". -->
 
 # Using the command builder
 
+
+
 ## **Basic Usage**
 
 The command builder let you visually build a command, and then execute it. When you invoke the function, your preset arguments will be automatically added to the menu as menu items (see below), and three extra options will be appended to it, to manually enter arguments, execute the command, or delete the arguments and start again.
@@ -24,12 +26,12 @@ The command builder let you visually build a command, and then execute it. When 
 
 | <br />
 
-* When you select "Delete set flags", or press `x`, the command builder will be reset, and all flags will be removed.
+* When you select "Delete Set arg.s", or press `x`, the command builder will be reset, and all flags will be removed.
 
 
 ## **How to set up a command builder submenu**
 
-To access this functionality, you will use the predefined function named `flags_submenu_function`. It will accept a number of arguments, each having their own specific functionality:
+To access this functionality, you will use the predefined function named `command_builder_function`. It will accept a number of arguments, each having their own specific functionality:
 
 | <br />
 
@@ -37,7 +39,7 @@ To access this functionality, you will use the predefined function named `flags_
 
 | <br />
 
-* **The second argument** will be the command itself. It can be a bash command, or your own function, that you have defined in n-user-functions, it can also include some preset flags or arguments. If it is more than one word, you'll need to put it in double quotes, again.
+* **The second argument** will be the command itself. It can be a bash command, or your own function, that you have defined in n-user-functions, it can also include some preSet arg.s or arguments. If it is more than one word, you'll need to put it in double quotes, again.
 
 | <br />
 
@@ -45,42 +47,42 @@ To access this functionality, you will use the predefined function named `flags_
 
 For example, to invoke a ping command, with the optional flags `-v -c` and `-n`, you would do:
 
-`flags_submenu_function "Ping with flags" ping -v -c -n`
+`command_builder_function "Ping with flags" ping -v -c -n`
 
 which would result in a flags submenu offering the options:
 
-| `1 - Set flag -v`
-| `2 - Set flag -c`
-| `3 - Set flag -n`
+| `1 - Set arg. -v`
+| `2 - Set arg. -c`
+| `3 - Set arg. -n`
 
 If you were to use some other function that you've written yourself, you would use
 
-`flags_submenu_function "Your function name" my_user_function -f -c --any_other_arg --yet_another_arg "--compound_arg X Y Z" --last_arg`
+`command_builder_function "Your function name" my_user_function -f -c --any_other_arg --yet_another_arg "--compound_arg X Y Z" --last_arg`
 
 in the exact same way, you'd declared in the function itself. This would result in sub-menu options:
 
-| `1 - Set flag -f`
-| `2 - Set flag -c`
-| `3 - Set flag --any_other_arg`
-| `4 - Set flag --yet_another_arg`
-| `5 - Set flag --compound_arg X Y Z`
-| `6 - Set flag --last_arg`
+| `1 - Set arg. -f`
+| `2 - Set arg. -c`
+| `3 - Set arg. --any_other_arg`
+| `4 - Set arg. --yet_another_arg`
+| `5 - Set arg. --compound_arg X Y Z`
+| `6 - Set arg. --last_arg`
 
 Life-like(?) Example: You want to place a ping command, with the flags `-v -c -f, -n` and `--help` to the second menu-item on the fourth tab. You would use the `funct31` function alias, like this:
 
 | `function funct31 {`
 |
-|    `flags_submenu_function "Ping with flags" ping -v -c -f -n --help`
+|    `command_builder_function "Ping with flags" ping -v -c -f -n --help`
 |
 | `}`
 
 which would result in a submenu offering to execute `ping` with the below options:
 
-| `1 - Set flag -v`
-| `2 - Set flag -c`
-| `3 - Set flag -f`
-| `4 - Set flag -n`
-| `5 - Set flag --help`
+| `1 - Set arg. -v`
+| `2 - Set arg. -c`
+| `3 - Set arg. -f`
+| `4 - Set arg. -n`
+| `5 - Set arg. --help`
 
 ..and that's it. You will also have other functionality, like manually adding flags, automatically added. Numbers for short-keys are also automatically added. Please be aware, that short-keys only work from 1 to 9, so any more than 9 flag entries will simply be ignored.
 

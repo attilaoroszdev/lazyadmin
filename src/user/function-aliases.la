@@ -69,33 +69,33 @@ function subfunct011 {
 
 function subfunct013 {
 
-    #Here is an example of how to invoke the flag setting submenu
+    # Here is an example of how to invoke the flag setting submenu
 	#
-	#Call flags_submenu_function with the following arguments:
+	# Call command_builder_function with the following arguments:
 	#
-	#$1 - Title of submenu, enclosed in ""
-	#$2 - Function to execute
-	#$3 to $9 - A list of the flags entered literally
+	# $1 - Title of submenu, enclosed in ""
+	# $2 - Function to execute
+	# $3 to $9 - A list of the flags entered literally
 	#
-	#Note 0: You could set 10 or more arguments, but the shortkeys
-	#(i.e. using the keyboard to add the flags) wil only work up to nine
-	#parameters
+	# Note 0: You could set 10 or more arguments, but the shortkeys
+	# (i.e. using the keyboard to add the flags) wil only work up to nine
+	# parameters
 	#
-	#Note 1: You can hard-code items that contain whitespace by placing
-	#them in single or doune quotes. (See '-c 3' here) For flexibility
-	#it might be better to only hardcode the first part and the optional
-	#bit could be entered manually, using the "m - Enter flags manually"
-	#functionality. I.e. You could pass -c as an argument, then set the
-	#number manually, as in the last argument
+	# Note 1: You can hard-code items that contain whitespace by placing
+	# them in single or doune quotes. (See '-c 3' here) For flexibility
+	# it might be better to only hardcode the first part and the optional
+	# bit could be entered manually, using the "m - Enter flags manually"
+	# functionality. I.e. You could pass -c as an argument, then set the
+	# number manually, as in the last argument
 	#
-	#Note 2: You must literally enter all arguments, along with the
-	#adequate number of hyphens (- or --)
+	# Note 2: You must literally enter all arguments, along with the
+	# adequate number of hyphens (- or --)
 	#
-	#Note 3: The manual set option can be useful for setting the hostname/any
-	#other argumenrt (in that case just take out the "localhost" bit
-	#from the original function "flagtets_localhostping in this case)
+	# Note 3: The manual set option can be useful for setting the hostname/any
+	# other argumenrt (in that case just take out the "localhost" bit
+	# from the original function "flagtets_localhostping in this case)
 
-	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+	command_builder_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 }
 
 
@@ -112,7 +112,7 @@ function funct03 {
 
 
 
-	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+	command_builder_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 
 
 }

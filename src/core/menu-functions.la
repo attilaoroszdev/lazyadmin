@@ -131,7 +131,7 @@ function read_menu_items {
 
 }
 
-function set_flags_submenu_items {
+function set_command_builder_items {
 	#Parse the argument list into the array, starting form the 3rd argument
 	arrayoffset=2
 	arraycounter=1
@@ -142,7 +142,7 @@ function set_flags_submenu_items {
 		if [[ $arraycounter -gt $arrayoffset ]] && [[ $arraycounter -le 11 ]]; then
 
 			let currentflagitem=$arraycounter-2
-			menuentry[currentflagitem-1]="$currentflagitem - Set flag $i"
+			menuentry[currentflagitem-1]="$currentflagitem - Set arg. $i"
 
 		fi
 		((arraycounter++))
@@ -432,11 +432,10 @@ tput cup $cursorpos 0
 # Might gonna get its own resource file in a future release
 function write_help_menu_items {
 
-    menulength=3
+    menulength=2
 
     helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
     helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
-    helpmenuentry[2]="3 - The Lazy Admin man page (man)"
 
 
     for (( n=0; n < $menulength; n++ ))
@@ -1206,7 +1205,7 @@ function menu_item_picker_subflags	{
 }
 
 
-# Better known as the "command builder", this fnction will
+# This fnction will
 # construct a submenu from the supplied arguments, from which
 # the user can interactively build a command
 #
@@ -1227,7 +1226,7 @@ function menu_item_picker_subflags	{
 # the second menu entry. Selecting it will apply all the flags to the built chain
 
 
-function flags_submenu_function {
+function command_builder_function {
 
     menuentry=()
 
@@ -1264,13 +1263,13 @@ function flags_submenu_function {
 
 	clear
 
-	set_flags_submenu_items "$@"
+	set_command_builder_items "$@"
 
 	read_rightpanel_items
 	draw_menu
 	while true; do
 
-		set_flags_submenu_items "$@"
+		set_command_builder_items "$@"
 
 		read_rightpanel_items
 		infinite_menu
