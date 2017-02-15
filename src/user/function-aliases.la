@@ -5,7 +5,7 @@
 #
 # This file is part of Lazy Admin
 #
-# n-menus is free software: you can redistribute it and/or modify
+# Lazy Admin is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -16,7 +16,7 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
@@ -110,7 +110,7 @@ function funct02 {
 
 function funct03 {
 
-	
+
 
 	flags_submenu_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 
@@ -191,7 +191,7 @@ function funct50 {
 
 
 	functsetup0
-	
+
 
 }
 
@@ -220,8 +220,8 @@ function funct53 {
 
 function functsetup0 {
 
-    edit_setup_file "$USER_DIR/menu-entries.la"    
-    
+    edit_setup_file "$USER_DIR/menu-entries.la"
+
 }
 
 
@@ -233,9 +233,9 @@ function functsetup1 {
 
 
 function functsetup2 {
-   
+
     edit_setup_file "$USER_DIR/function-aliases.la"
-       
+
 }
 
 
@@ -271,6 +271,3 @@ function functhelp_commanbuilder {
     display_markdown_help "$RES_DIR/command-builder-guide.md" "$RES_DIR/command-builder-guide.txt"
 
 }
-
-
-

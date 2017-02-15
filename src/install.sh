@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# Lazy Admin is a simple bash based pseudo UI to easily store
+# and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# Lazy Admin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
 installtarball=./files-v0.9b.tar.gz
 
 
@@ -43,82 +64,82 @@ function set_symlink_dir {
 function check_for_external_dependencies {
 
     if hash pandoc 2>/dev/null; then
-    
+
         pandocinstalled="true"
-        
+
     fi
-    
+
     if hash lynx 2>/dev/null; then
-    
+
         lynxinstalled="true"
-        
+
     fi
-    
-       
+
+
     if hash xdotool 2>/dev/null; then
-    
+
         xdotoolinstalled="true"
-        
+
     fi
-    
+
     if hash setxkbmap 2>/dev/null; then
-    
+
         setxkbmapinstalled="true"
-        
+
     fi
-    
+
     if [[ $pandocinstalled && $lynxinstalled && $xdotoolinstalled && $setxkbmapinstalled ]]; then
-    
-        echo 
-        echo "All dependencies are satisfied, nothing to do..."    
-        
+
+        echo
+        echo "All dependencies are satisfied, nothing to do..."
+
 
     else
-    
-        echo 
+
+        echo
         echo "Some dependencies are missing:"
-        
+
          if [[ ! $pandocinstalled ]]; then
-            
+
             echo "  - pandoc"
             pandocinpackage="pandoc"
-            
+
         fi
-        
+
         if [[ ! $lynxinstalled ]]; then
-            
+
             echo "  - lynx"
             lynxpackage="lynx"
-            
+
         fi
-        
-        
+
+
          if [[ ! $xdotoolinstalled ]]; then
-            
+
             echo "  - xdotool"
             xdotoolpackage="xdotool"
-            
-            
+
+
         fi
-        
+
         if [[ ! $setxkbmapinstalled ]]; then
-            
+
             echo "  - setxkbmap"
             setxkbmappackage="x11-xkb-utils"
-            
+
         fi
         echo
         echo "Want to install them now? (I wil try to use apt)"
         echo
-        
+
         read -p "(y/n) > " -n 1 isitok
 
         if [[ $isitok == "y" || $isitok == "Y" ]]; then
-        
+
              sudo apt-get install $pandocinpackage $lynxpackage $xdotoolpackage $setxkbmappackage
-        
+
         fi
-    
+
     fi
 
 
@@ -145,8 +166,8 @@ echo "This is the installer for Lazy Admin, a tool for admins who are lazy."
 echo
 echo "By the time you've finished customozing it, you will know why it is bad to be "
 echo "lazy, but for now, please provide some valuable details for installation".
-echo 
-echo "First I need you to tell me, wether you want me to create a user" 
+echo
+echo "First I need you to tell me, wether you want me to create a user"
 echo "specific installation in $HOME/.LazyAdmin/, or install globally"
 echo "in /opt/LazyAdmin/"
 echo
@@ -220,7 +241,7 @@ done
 if [[ "$installdir" == "$HOME" ]]; then
 
     installdir="$HOME/.LazyAdmin"
-    
+
 fi
 
 
@@ -233,7 +254,7 @@ if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
 	echo "A user config directory already exists. Can I purge it?"
     echo "This will delete all your previous configurations, so be careful."
     echo "(If you are upgrading from a previous version, it's probably better to say no...)"
-    echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to" 
+    echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to"
     echo "keep the config files"
     echo
 	read -p "(yes/no) > " isitok
@@ -273,40 +294,40 @@ echo "Extracting files..."
 if [[ $installtype = "local" ]]; then
 
    if [[ -d "$HOME/.LazyAdmin/" ]]; then
-   
+
         rm -rf "$HOME/.LazyAdmin/"
-   
+
    fi
 
    mkdir "$HOME/.LazyAdmin/"
    installdir="$HOME/.LazyAdmin"
-   
+
    tar xvzC "$installdir" -f $installtarball "core"
     tar xvzC "$installdir" -f $installtarball "plugins"
     tar xvzC "$installdir" -f $installtarball "res"
 
 
-else 
+else
 
     echo
     echo "Attempting to access /opt. Need root"
     echo
-      
+
     if [[ -d "/opt/LazyAdmin/" ]]; then
-       
+
        sudo rm -rf "/opt/LazyAdmin/"
-      
+
     fi
-      
-      
+
+
     sudo mkdir "/opt/LazyAdmin/"
     installdir="/opt/LazyAdmin"
-  
+
     sudo tar xvzC "$installdir" -f $installtarball "core"
     sudo tar xvzC "$installdir" -f $installtarball "plugins"
     sudo tar xvzC "$installdir" -f $installtarball "res"
 
-  
+
 fi
 
 
@@ -316,23 +337,23 @@ fi
 if [[ installtype == "global" ]]; then
 
     sudo tar -cvf "$installdir/res/user_defaults.tar" "$userfilesdir/user"
-    
+
     sudo sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
     sudo sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
     sudo sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
-    
-else 
-   
+
+else
+
     sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
     sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
     sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
-    
-    
+
+
 fi
 
 
 
-echo 
+echo
 echo "Extracing finished."
 echo
 
@@ -357,15 +378,15 @@ if [[ -f "$launcherdir/ladmin" ]]; then
 	echo "Starter file already exists. Removing..."
 
 	if [[ $installtype == "global" ]]; then
-	
+
 	    sudo rm "$launcherdir/ladmin"
-	
+
 	else
-	
+
 		rm "$launcherdir/ladmin"
-		
+
 	fi
-	
+
 	sleep 1
 fi
 
@@ -376,11 +397,11 @@ echo
 
 
 if [[ $installtype = "global" ]]; then
-    
+
     sudo tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
     sudo sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$launcherdir/ladmin"
 
-else 
+else
 
     tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
     sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$launcherdir/ladmin"
@@ -400,10 +421,10 @@ if [[ installtype == "gobal" ]]; then
 
     sudo chmod 0755 "$launcherdir/ladmin"
 
-else 
-    
+else
+
     chmod ug+rwx "$launcherdir/ladmin"
-    
+
 fi
 
 sleep 1
@@ -418,12 +439,12 @@ if [[ "$symlinking" == "true" ]]; then
 	echo "It is likely a system directory, so sudo will be used..."
 	echo
 
-    
+
     if [[ -f "$symlinkdir/ladmin" ]]; then
-    
-    
+
+
         sudo rm "$symlinkdir/ladmin"
-    
+
     fi
 
 
@@ -462,16 +483,16 @@ echo
 read -p "(y/n) > " -n 1 isitok
 
 if [[ $isitok == "y" || $isitok == "Y" ]]; then
-    
-    
+
+
     check_for_external_dependencies
-          
+
 else
 
-   echo 
+   echo
    echo "In that case we are all done."
-   
-    
+
+
 
 fi
 
@@ -482,9 +503,3 @@ echo "Now press anything to go back to doing whatever it was you did before..."
 read -n 1 -s keypress
 
 exit 0
-
-
-
-
-
-

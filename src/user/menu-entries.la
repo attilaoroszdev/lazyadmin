@@ -35,7 +35,7 @@
 
 
 
-#T he tabs displayed at the top. Change names here as desired
+# The tabs displayed at the top. Change names here as desired
 # The last one should remain setup, unless you with to disable that functionality
 
 _menutab
@@ -227,7 +227,7 @@ Quit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
 
 
-## Rightpanel items in help menus 
+## Rightpanel items in help menus
 
 _helprightpanel
 f - Reflow Menu
@@ -247,4 +247,3 @@ Display teh different key bindings
 Return to parent menu
 Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
-

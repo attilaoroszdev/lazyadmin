@@ -5,7 +5,7 @@
 #
 # This file is part of Lazy Admin
 #
-# n-menus is free software: you can redistribute it and/or modify
+# Lazy Admin is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
@@ -16,72 +16,68 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with Lazy Admin.  If not, see <http://www.gnu.org/licenses/>.
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
 
-
-
 # Set your custom functions here, if any custom script is to be called
 # from the menus
-
-
 #Function corresponding to choice 1 in the menu, install packages
 function example_function {
 	clear
-	
+
 	echo
 	echo "This is a dummy function to demonstrate how the menu system works"
 	echo
-	echo "You will now be presented with a multiple choice test of 40 questions."	
+	echo "You will now be presented with a multiple choice test of 40 questions."
 	echo "You have 40 minutes to finish the test. Good luck..."
 	echo
-	echo "Press any key to start" 
+	echo "Press any key to start"
+
+	read -n 1 -s keypress
+
 	echo
-	read -n 1 -s keypress 
-	
+	echo "Fell for that, haven't you? Ha-ha-ha..."
 	echo
-	echo "Fell for that, haven't you? Ha-ha-ha...'"
-	echo
-	echo "Press a key to get back to the menu. (No, really!)"
-	read -n 1 -s keypress 
+	echo "Now, press a key to get back to the menu. (No, really!)"
+	read -n 1 -s keypress
 	clear
-	
-} 
+
+}
 
 function flagtest_localhostping {
-	
+
 	clear
-	
+
 	echo
 	echo "Now we will ping localhost with the flags you have specified"
-	echo "The command executed will be:" 
+	echo "The command executed will be:"
 	echo
 	echo "ping $@ localhost"
 	echo
 	ping $@ localhost
 	echo
-	echo "now press a key to return to the menu" 
+	echo "now press a key to return to the menu"
 	echo
-	read -n 1 -s keypress 
-	
-} 
+	read -n 1 -s keypress
+
+}
 
 
-#This dummy function is there as a placeholder for empty menus. 
+#This dummy function is there as a placeholder for empty menus.
 #Only delete it, once all your menus are populated, to avoid error messages
-#Keeping it will allow you to easily fill the void, if/when changes occur, 
+#Keeping it will allow you to easily fill the void, if/when changes occur,
 #or you want to temporarily leave something "broken"
 
 function dummy_function {
-		
+
 		echo "If you can see this text, something is broken"
 
 }
 
 function localhost_ping {
-	
+
 	clear
 
 	echo
@@ -89,14 +85,12 @@ function localhost_ping {
 	echo
 	echo "ping -c 5 localhost"
 	echo
-	
+
 	ping -c 5 localhost
-	
+
 	echo
 	echo "Now press a key to get back to the menu"
-	read -n 1 -s keypress 
+	read -n 1 -s keypress
 	clear
-	
+
 }
-
-
