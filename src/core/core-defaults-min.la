@@ -1,6 +1,8 @@
 #!/bin/bash
-#
-# Copyright (C) 2017  Attila Orosz
+
+# Lazy Admin is a simple bash based pseudo UI to easily store
+# and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
 #
 # This file is part of Lazy Admin
 #
@@ -13,43 +15,27 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
 #
 # Contact: attila.orosz@mail.com
 
-COREDIRPLACEHOLDER
-USER_DIR="$HOME/.config/LazyAdmin"
-
-. "$CORE_DIR/includes.la"
 
 
-if [[ $1 == ""  ]]; then
-    
-    arg1="default"
 
-else
-
-    arg1=$1 
-    
-fi
-
-
-# In case the user starts ladmin for the first time...
-if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
-
-    
-  if [[ ! -d "$USER_DIR" ]]; then
-  
-    mkdir "$USER_DIR"
-    
-    tar -xvzC "$USER_DIR" -f "$INSTALL_DIR/res/user_files.tar.gz"
-        
-  
-  fi
-    
-
-fi
-
-
-main $arg1
+# Do not change these. (You have been warned)
+tabpos=0
+menupos=0
+bottomseparators=3
+descriptorheight=1
+mainheaderheight=4
+subheaderheight=2
+activepanel="left"
+menufile="$USER_DIR/menu-entries-min.la"
+roottitle=" -- ROOT Shell"
+altmenu=false
+submenu="false"
+subflagsmenu="false"
+cursorpos=0
+root="false"

@@ -21,7 +21,7 @@ You can think of Lazy Admin as aliases on steroids. Instead of remembering  and 
 
 ## Screenshots
 
-They say that a picture is worth a thousand words. So here's Lazy Admin in 4000 words:
+They say that a picture is worth a thousand words. So here's Lazy Admin in 6000 words:
 
 ![](/media/lazy-admin-1.png)
 

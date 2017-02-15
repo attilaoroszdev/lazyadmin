@@ -18,10 +18,12 @@
 #
 # Contact: attila.orosz@mail.com
 
-COREDIRPLACEHOLDER
-USER_DIR="$HOME/.config/LazyAdmin"
 
-. "$CORE_DIR/includes.la"
+CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+USER_DIR="$CURRENT_DIR/user"
+CORE_DIR="$CURRENT_DIR/core"
+
+. "$CORE_DIR/includes-port.la"
 
 
 if [[ $1 == ""  ]]; then
@@ -32,23 +34,6 @@ else
 
     arg1=$1 
     
-fi
-
-
-# In case the user starts ladmin for the first time...
-if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
-
-    
-  if [[ ! -d "$USER_DIR" ]]; then
-  
-    mkdir "$USER_DIR"
-    
-    tar -xvzC "$USER_DIR" -f "$INSTALL_DIR/res/user_files.tar.gz"
-        
-  
-  fi
-    
-
 fi
 
 

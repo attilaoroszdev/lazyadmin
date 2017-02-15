@@ -258,16 +258,6 @@ function read_rightpanel_items {
 }
 
 
-function read_help_rightpanel_items {
-	OLDIFS="$IFS"
-	IFS=$'\n'
-
-	rightpanelentry=( `cat $menufile | sed -n '/'_helprightpanel'/{:a;n;/'_endhelprightpanel'/q;p;ba}'` )
-
-	IFS="$OLDIFS"
-
-	rightpanellength=${#rightpanelentry[@]}
-}
 
 
 
@@ -428,37 +418,6 @@ tput cup $cursorpos 0
 
 
 
-# This is hardcoded for now.
-# Might gonna get its own resource file in a future release
-function write_help_menu_items {
-
-    menulength=2
-
-    helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
-    helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
-
-
-    for (( n=0; n < $menulength; n++ ))
-    do
-	    if [[ "${helpmenuentry[n]}" = "skip" ]]; then
-
-	    ((n++))
-
-	    fi
-	    if [[ n -eq $menupos ]] && [[ "$activepanel" = "left" ]];then
-		    tput cup $(( n + $headerheight + 2 )) 2
-		    echo -e "\e[00;30;47m${helpmenuentry[$menupos]}\e[00m"
-	    else
-		    tput cup $(( n + $headerheight + 2 )) 2
-		    echo "${helpmenuentry[n]}"
-
-	    fi
-
-    done
-
-
-}
-
 
 
 # Draw rightpanel items
@@ -508,9 +467,6 @@ function clear_menu {
 
 		tput cup $(( n + $headerheight )) $(( $menuwidth-$rightpanelwidth-1 ))
 		echo -e "\033[1K"
-
-
-
 
 	done
 }
@@ -691,33 +647,6 @@ function write_descriptor {
 
 }
 
-# Simply write a one line descriptor, as read from the menu file
-function write_help_descriptor {
-
-    helpmenudescentry[0]="Basic everyday usage"
-    helpmenudescentry[1]="In-depth configuration guide"
-    helpmenudescentry[2]="Display the traditional man paghe"
-
-	cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
-	tput cup $cursorpos $menuwidth
-	echo -e "\033[1K"
-	tput cup $cursorpos 2
-
-    if [[ "$activepanel" = "right" ]]; then
-
-        echo "${menudescentry[$menupos]}"
-
-    else
-
-    	echo "${helpmenudescentry[$menupos]}"
-
-	fi
-}
-
-
-
-
-
 
 # Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
 function infinite_menu {
@@ -873,14 +802,11 @@ function pick_menu_item {
          "f" | "F")	#put this into a function so that enter can be used, along with alias
 	        reflow_menu
 	        ;;
-        "h" | "H")
-	        display_help
-	        ;;
-	    "k" | "K")
+        "k" | "K")
 	        display_hotkeys
 	        ;;
          "q" | "Q") #this handles exit function
-	        functright4
+	        functright3
 	        ;;
         "b" | "B")
 		        if [[ "$submenu" = "true" ]]; then
@@ -888,128 +814,10 @@ function pick_menu_item {
 			        break
 		        fi
 		        ;;
-        "e" | "E")
-	        if [[ $tabpos = $tablength  ]]; then
-		        functsetup0
-		        init_menu
-	        fi
-	        ;;
-        "u" | "U")
-	        if [[ $tabpos = $tablength  ]]; then
-		        functsetup1
-		        init_menu
-	        fi
-	        ;;
-        "m" | "M")
-	        if [[ $tabpos = $tablength  ]]; then
-		        functsetup2
-		        init_menu
-	        fi
-	        ;;
-        "v" | "V")
-	        if [[ $tabpos = $tablength  ]]; then
-		        functsetup3
-		        init_menu
-	        fi
-	        ;;
-
+        
 
     esac
 
-}
-
-
-function pick_help_menu_item {
-
-    read -sN1 key # 1 char (not delimiter), silent
-    read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
-    read -sN1 -t 0.0001 k2
-    read -sN1 -t 0.0001 k3
-    read -sN1 -t 0.0001 k4 # timed reads to check for second third etc characters
-    read -sN1 -t 0.0001 k5
-    read -sN1 -t 0.0001 k6
-    key+=${k1}${k2}${k3}${k4}${k5}${k6}
-
-    case $key in
-
-    $'\e[A'|$'\e0A'|"w"|"W")
-
-
-	    #Check for right panel skip
-        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
-		    ((menupos--))
-	    fi
-
-	    ((menupos--))
-	     ;;
-
-    $'\e[B'|$'\e0B'|"s"|"S")
-
-
-	    #Chexck for right panel skip
-	    if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
-		    ((menupos++))
-	    fi
-
-	    ((menupos++))
-	    ;;
-    $'\e[1;5C'|$'\e01;5C'|"r"|"R")
-        if $rightpanel && [[ "$activepanel" = "left" ]]; then
-		    activepanel="right"
-		    menupos=0
-	    fi
-        ;;
-    $'\e[1;5D'|$'\e01;5D'|"l"|"L")
-        if $rightpanel && [[ "$activepanel" = "right" ]]; then
-		    activepanel="left"
-		    menupos=0
-	    fi
-        ;;
-
-    [0-2])
-
-	    # If numeric input is selected
-	    if [[ $key -le 2 ]] && [[ $key -ge 0 ]]; then
-	        ((key--))
-	        menupos=$key
-	        functhelp$key
-
-	    fi
-	    ;;
-    '')
-	    # If enter is pressed
-
-
-
-	    if [[ "$activepanel" = "right" ]]; then
-		    functright$menupos
-	    else
-
-		    functhelp$menupos
-
-	    fi
-	    init_menu
-	     ;;
-
-        #right menu items (on keypress)
-         "f" | "F")	#put this into a function so that enter can be used, along with alias
-	        reflow_menu
-	        ;;
-	     "k" | "K")
-	        display_hotkeys
-	        ;;
-         "q" | "Q") #this handles exit function
-	        functright4
-	        ;;
-        'b' | "B")
-	        if [[ "$submenu" = "true" ]]; then
-                back_to_main_menu "reflow" "read"
-		        break
-	        fi
-	        ;;
-
-
-    esac
 }
 
 
@@ -1185,15 +993,12 @@ function menu_item_picker_subflags	{
 	"f" | "F")
 		reflow_menu
 		;;
-	"h" | "H")
-		display_help
-		;;
 	"k" | "K")
         display_hotkeys
         ;;
 	"q" | "Q")
 		#this handles exit
-		functright4
+		functright3
 		;;
 	'b' | "B")
 		back_to_main_menu
@@ -1319,36 +1124,13 @@ function reflow_menu {
 
 function display_hotkeys {
 
-    display_markdown_help "$RES_DIR/shortkeys.md" "$RES_DIR/shortkeys.txt"
+    #TODO
     reflow_menu
 
 
 }
 
 
-# Calls the papproropriate help function, either the help submenu
-# or the single help file, depending on where the user is
-function display_help {
-
-
-
-    if [[ $subflagsmenu == "true" ]]; then
-
-        functhelp_commanbuilder
-
-        reflow_menu
-
-
-    else
-
-       	enter_helpmenu
-
-    fi
-
-
-
-
-}
 
 
 # Quits Lazy Admin, and restores the cursor, but only if
@@ -1375,7 +1157,7 @@ function back_to_main_menu {
     activepanel="left"
 	menupos=0
 	subflagsmenu="false"
-    helpsubmenu="false"
+
 
 
     if [[ $remaininsubmenu == "true" ]]; then
@@ -1467,25 +1249,6 @@ function sub_menu {
 
 }
 
-# As above, only drawing a help menu
-# TODO could be comnsolidated into one function, as above
-function help_menu {
-
-    #submenu="true"
-    subflagsmenu="false"
-    read_descriptor $1 $2
-    infinite_menu
-    write_help_menu_items
-
-    if $rightpanel; then
-	    write_rightpanel_items
-    fi
-
-    write_help_descriptor
-    pick_help_menu_item
-
-}
-
 
 # Initialise a menu, before drawing for the foirst timed
 # Will set menu item and title variable
@@ -1509,29 +1272,6 @@ function init_menu {
 
 }
 
-# Initialises help menu before drawing for the first timed
-# TODO: This could be consolidated into the similar function above
-
-function init_help_menu {
-
-
-    if [[ "$(whoami)" != "root" ]]; then
-		root="false"
-	else
-		root="true"
-	fi
-
-	clear
-
-	read_help_rightpanel_items
-	read_descriptor $2 $2
-	draw_menu
-
-
-
-}
-
-
 # This will be called whrn a submenu is selected
 function enter_submenu {
 
@@ -1547,41 +1287,6 @@ function enter_submenu {
 }
 
 
-# This will be called when help menu is selected
-function enter_helpmenu {
-
-    helpsubmenu="true"
-
-    if [[ $submenu == "true" ]]; then
-
-        remaininsubmenu="true"
-        oldsubmenutitle="$submenutitle"
-        oldtabpos=$tabpos
-        oldmainmenupos=$mainmenupos
-
-
-    else
-
-        remaininsubmenu="false"
-
-    fi
-
-    submenu="true"
-	submenutitle="Help"
-
-	mainmenupos="$menupos"
-	menupos=0
-
-
-	init_help_menu
-	while true; do
-		help_menu
-	done
-
-}
-
-
-
 # Right panel functions. These function aliases are core functionality,
 # so not really a part of the user aliases. This coudl change later
 # so that users can easily alter right panel
@@ -1594,18 +1299,12 @@ function functright0 {
 
 function functright1 {
 
-   display_help
-
-}
-
-function functright2 {
-
    display_hotkeys
 
 }
 
 
-function functright3 {
+function functright2 {
 
 
     # Need this, to redraw title for some reason...
@@ -1621,7 +1320,7 @@ function functright3 {
 }
 
 
-function functright4 {
+function functright3 {
 
 	if [[ "$root" == "true" ]]; then
 		exit_la_menus "Leaving root shell"

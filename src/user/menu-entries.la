@@ -54,7 +54,7 @@ _menu0
 1 - Run sample function
 2 - Show submenu...
 3 - Ping localhost
-4 - Ping localhost with flags submenu (f)
+4 - Ping localhost with command builder
 5 - Launch a root shell
 _endmenu0
 
@@ -65,7 +65,7 @@ _descmenu0
 Will run an example function
 This menuitem leads to a submenu
 This will ping the localhost 5 times
-Show example of setting flags to a command
+Show example of visually setting flags to a command
 Enter root mode. Be very careful!
 _enddescmenu0
 
@@ -198,8 +198,8 @@ _endrightpanel
 
 _rightpaneldesc
 Redraw the Lazy Admin UI
-Display the detailed help file
-Display teh different key bindings
+Display the help menu
+Display the different key bindings
 skip
 Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
@@ -220,8 +220,8 @@ _endsubrightpanel
 
 _subrightpaneldesc
 Redraw the Lazy Admin UI
-Display the detailed help file
-Display teh different key bindings
+Display the help menu
+Display the different key bindings
 Return to main menu
 Quit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
@@ -243,7 +243,7 @@ _endhelprightpanel
 _rightpaneldesc
 Redraw the Lazy Admin UI
 skip
-Display teh different key bindings
+Display the different key bindings
 Return to parent menu
 Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc

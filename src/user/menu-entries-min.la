@@ -1,0 +1,122 @@
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# Lazy Admin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+
+
+# To set the height of each menu (main menu and submenus, modify the
+#
+# $normalmenuheight and $submenuheight
+#
+# variables in the
+#
+# '$HOME/.config/LazyAdmin/user/user-defaults-min.la
+#
+# file
+#
+# This is to ensure that similar menus have similar layouts even though they may have a different number of
+# entries (i.e. they draw the line at the bottom the saame place
+
+
+
+# The tabs displayed at the top. Change names here as desired
+# The last one should remain setup, unless you with to disable that functionality
+
+_menutab
+Tab placeholder
+_endmenutab
+
+
+#Menu for install available
+
+_menu0
+1 - Menu item placeholder
+_endmenu0
+
+
+#Descriptor for each menu item, to be displayed bnelow menu, in order
+
+_descmenu0
+Single placeholder item
+_enddescmenu0
+
+
+# Submenuitems for submenu01 - two digit numbers indicate submenus,
+# where the first digit (0) indicates the main menu entry the submenu belongs
+# and the second digit (0) indicates the submenu number
+
+_submenu00
+1 - Submenu item placeholder
+_endsubmenu00
+
+
+# Descriptor for the submenus
+
+_descsubmenu00
+Single placeholder item
+_enddescsubmenu00
+
+
+
+### Contents of the right panel. Only change this if you alter right panel functionality ###
+
+
+## In the main menus ##
+
+# Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
+# menu positions for the other entries are identical (needed for aliases, when using enter for selection)
+# This is necessary, for "b -Back to Main Menu" is added in the submenu function
+
+_rightpanel
+f - Reflow Menu
+k - Show key bindings
+skip
+q - Quit
+_endrightpanel
+
+
+## Descriptions of menuitems in main menu in the same order as the items above ##
+
+_rightpaneldesc
+Redraw the Lazy Admin UI
+Display teh different key bindings
+skip
+Quit Lazy Admin, and return to your normal shell... and life...
+_endrightpaneldesc
+
+
+## In the submenus (contains back link)  ##
+
+_subrightpanel
+f - Reflow menu
+k - Show key bindings
+b - Back to Main Menu
+q - Quit
+_endsubrightpanel
+
+
+## Descriptions of menuitems in submenus in the same order as the items above ##
+
+_subrightpaneldesc
+Redraw the Lazy Admin UI
+Display teh different key bindings
+Return to main menu
+Quit Lazy Admin, and return to your normal shell... and life...
+_endsubrightpaneldesc
+

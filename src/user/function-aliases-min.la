@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Lazy Admin is a simple bash based pseudo UI to easily store and execute bash commands and user functions
+#   Copyright (C) 2017  Attila Orosz
+#
+# This file is part of Lazy Admin
+#
+# Lazy Admin is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with Lazy Admin. If not, see <http://www.gnu.org/licenses/>.
+#
+# Contact: attila.orosz@mail.com
+
+
+
+# Main menu functions in the format of funct#tab#menuitem
+# First tab is 0, first item is 0
+# E.g.
+# Fist tab first item is: funct00
+# Second tab tird menuitem is: funct12
+#
+# You could implement your functions right here, but it is probably
+# easier and less messy to put them in a separate file, and it will make
+# them easier to reuse or reorganise in the menu
+
+function funct00 {
+
+	echo "Do nothing"
+	
+
+}
+
+# Submenu functions in the format of subfunct#tab#menuitem#tabmenuitem
+# First tab is 0, first item is 0, first submenuitem is 0
+# E.g.
+# Fist tab first item, first subitem is is: subfunct000
+# Second tab tird menuitem fifth submenuitem is: subfunct124
+#
+# You could implement your functions right here, but it is probably
+# easier and less messy to put them in a separate file, and it will make
+# them easier to reuse or reorganise in the menu
+
+
+function subfunct000 {
+
+   	echo "Do nothing"
+
+}
+
+

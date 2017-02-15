@@ -1,0 +1,20 @@
+To install:
+
+    Run install:sh, or install-min.sh (if you have the minimal edition). In case of portable editzion, there is no need for an installer
+
+To run:
+    
+    Run one of the following launcher:
+    
+    - ladmin - for full edition
+    - mladmin - for minimal edition
+    - pladmin - for portable edition
+    - pmladmin - for portable minimal edition
+    
+Any editions wiht an installer should have created symlinks in your directory of choice
+
+To configure:
+
+    - Full editions shoudl have detasiled documentation included. Access the Help menu for details
+    - Running a minimal edition? You are on your own. May the code comments guide your script.
+

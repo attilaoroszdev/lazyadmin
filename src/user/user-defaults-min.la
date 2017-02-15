@@ -24,34 +24,28 @@
 
 
 #The title displayed in the main menu
-maintitle="Lazy Admin - v 1.0"
+maintitle="Lazy Admin - v 1.0 (Minimal Edition)"
 
 # Switch right panel on or off
-rightpanel=true
+# In the minimal install, it is switched off by default
+rightpanel=false
 
 # How many elements should the main menu hold
 # Allow +2 fpor top and bototm padding
 # (normalmenuheight = number_of_items + 2)
-# Minumum height is 7
+# Minumum height is 6
 # Maximum height is 11 (9 items)
-normalmenuheight=7
+normalmenuheight=6
 
 # How many elements should submenus hold
 # Allow +2 fpor top and bototm padding
 # (submenuheight = number_of_items + 3)
-# Minumum height is 8
+# Minumum height is 7
 # Maximum height is 12 (9 items)
 submenuheight=12
 
 # Change the size of th roight panel
 rightpanelwidth=27
-
-# This should be habdled by the setup script,
-# but you can change it to any editor command
-# It will be launched like this:
-# $defaulteditor $filename
-# So make sure all arguments are BEFORE the filename
-defaulteditor="not set"
 
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)
