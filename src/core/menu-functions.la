@@ -1327,17 +1327,17 @@ function display_help {
 function exit_la_menus {
 
 
-    if [[ $restorecursor == "true"  ]]; then
+    #if [[ $restorecursor == "true"  ]]; then
 
         tput cnorm
 
-    fi
+#    fi
 
-    if [[  $rootexitflag == "true" ]]; then
+ #   if [[  $rootexitflag == "true" ]]; then
 
-        tput cnorm
+  #      tput cnorm
 
-    fi
+   # fi
 	clear
 	echo
 	echo "$@"
@@ -1610,7 +1610,7 @@ function functright2 {
 # This is what the launcher calls, basically
 function main {
 
-   restorecursor=$2
+   #restorecursor=$2
 
    #Hide the cursor, we dn't really need it
    #tput civis

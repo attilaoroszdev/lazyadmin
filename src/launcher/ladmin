@@ -35,17 +35,6 @@ else
     
 fi
 
-if [[ $2 == "" ]];  then
-
-    arg2="true"
-    
-else
-
-    arg2=$2
-    
-fi
-
-
 
 # In case the user starts ladmin for the first time...
 if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
@@ -64,4 +53,4 @@ if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
 fi
 
 
-main $arg1 $arg2
+main $arg1
