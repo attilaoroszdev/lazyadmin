@@ -206,6 +206,7 @@ _enddescmenu5
 _rightpanel
 f - Reflow Menu
 h - Get Help
+k - Show key bindings
 skip
 q - Quit
 _endrightpanel
@@ -216,6 +217,7 @@ _endrightpanel
 _rightpaneldesc
 Redraw the Lazy Admin UI
 Display the detailed help file
+Display teh different key bindings
 skip
 Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
@@ -226,6 +228,7 @@ _endrightpaneldesc
 _subrightpanel
 f - Reflow menu
 h - Get Help
+k - Show key bindings
 b - Back to Main Menu
 q - Quit
 _endsubrightpanel
@@ -236,6 +239,7 @@ _endsubrightpanel
 _subrightpaneldesc
 Redraw the Lazy Admin UI
 Display the detailed help file
+Display teh different key bindings
 Return to main menu
 Quit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpaneldesc
@@ -246,6 +250,7 @@ _endsubrightpaneldesc
 _helprightpanel
 f - Reflow Menu
 skip
+k - Show key bindings
 b - Back to Main Menu
 q - Quit
 _endhelprightpanel
@@ -256,6 +261,7 @@ _endhelprightpanel
 _rightpaneldesc
 Redraw the Lazy Admin UI
 skip
+Display teh different key bindings
 Return to parent menu
 Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc

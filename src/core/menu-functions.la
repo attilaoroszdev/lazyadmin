@@ -864,8 +864,11 @@ function pick_menu_item {
         "h" | "H")
 	        display_help
 	        ;;
+	    "k" | "K")
+	        display_hotkeys
+	        ;;
          "q" | "Q") #this handles exit function
-	        functright3
+	        functright4
 	        ;;
         "b" | "B")
 		        if [[ "$submenu" = "true" ]]; then
@@ -980,8 +983,11 @@ function pick_help_menu_item {
          "f" | "F")	#put this into a function so that enter can be used, along with alias
 	        reflow_menu
 	        ;;
+	     "k" | "K")
+	        display_hotkeys
+	        ;;
          "q" | "Q") #this handles exit function
-	        functright3
+	        functright4
 	        ;;
         'b' | "B")
 	        if [[ "$submenu" = "true" ]]; then
@@ -1170,9 +1176,12 @@ function menu_item_picker_subflags	{
 	"h" | "H")
 		display_help
 		;;
+	"k" | "K")
+        display_hotkeys
+        ;;
 	"q" | "Q")
 		#this handles exit
-		functright3
+		functright4
 		;;
 	'b' | "B")
 		back_to_main_menu
@@ -1296,6 +1305,15 @@ function reflow_menu {
 }
 
 
+function display_hotkeys {
+    
+    display_markdown_help "$RES_DIR/shortkeys.md"
+    reflow_menu
+
+
+}
+
+
 # Calls the papproropriate help function, either the help submenu
 # or the single help file, depending on where the user is
 function display_help {
@@ -1326,18 +1344,8 @@ function display_help {
 # (It is possible to run another shell of ladmin form within)
 function exit_la_menus {
 
-
-    #if [[ $restorecursor == "true"  ]]; then
-
-        tput cnorm
-
-#    fi
-
- #   if [[  $rootexitflag == "true" ]]; then
-
-  #      tput cnorm
-
-   # fi
+    tput cnorm
+	clear
 	clear
 	echo
 	echo "$@"
@@ -1578,18 +1586,14 @@ function functright1 {
 
 }
 
-function functright3 {
+function functright2 {
 
-	if [[ "$root" == "true" ]]; then
-		exit_la_menus "Leaving root shell"
-	else
-
-		exit_la_menus "Exiting..."
-	fi
+   display_hotkeys
 
 }
 
-function functright2 {
+
+function functright3 {
     
     
     # Need this, to redraw title for some reason...
@@ -1605,16 +1609,23 @@ function functright2 {
 }
 
 
+function functright4 {
+
+	if [[ "$root" == "true" ]]; then
+		exit_la_menus "Leaving root shell"
+	else
+
+		exit_la_menus "Exiting..."
+	fi
+
+}
+
 
 # Initialises and displays the main menu
 # This is what the launcher calls, basically
 function main {
 
-   #restorecursor=$2
-
-   #Hide the cursor, we dn't really need it
-   #tput civis
-
+ 
    if [[ $1 != "default"  ]]; then
 
        oldmaintitle="$maintitle"
