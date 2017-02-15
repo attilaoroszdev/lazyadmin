@@ -40,6 +40,24 @@ else
     echo
     exit 65
     
+    menuheight=$(( $normalmenuheight+1 ))
+    
+    if [[ $menuheight -gt 11 ]]; then
+	    
+    	  
+	        menuheight=11
+	        
+	fi
+	
+	if [[ $menuheight -lt 7 ]]; then
+	    
+    	  
+	        menuheight=7
+	        
+	fi
+    
+    
+    
 fi
 
 #This function will read the menu entries from the menu entries file as set in defaults
@@ -64,17 +82,50 @@ function read_menu_items {
         
         
 	    IFS="$OLDIFS"
-	    menulength=${#menuentry[@]}
+	    
+	   
 
     else
 	    OLDIFS="$IFS"
 	    IFS=$'\n'
 	    menuentry=( `cat $menufile | sed -n '/'_menu$tabpos'/{:a;n;/'_endmenu$tabpos'/q;p;ba}'` )
-	    menuheight=$normalmenuheight+1
+	    let menuheight=$normalmenuheight+1
 	    IFS="$OLDIFS"
-	    menulength=${#menuentry[@]}
+	    
 
     fi
+    
+    
+    if [[ $menuheight -lt 8 ]]; then
+        menuheight=8
+        
+    fi
+    
+    if [[ $menuheight -gt 12 ]]; then
+        menuheight=12
+        
+    fi
+    
+  
+    
+    menulength=${#menuentry[@]}
+    let maxmenulength=$menuheight-3
+    
+    
+    if [[ $menulength -gt $maxmenulength ]]; then
+    
+        for (( i=$maxmenulength; i<$menulength; i++ )) 
+        do 
+            unset "menuentry[$i]"
+        done
+    
+    fi
+    
+    
+    menulength=${#menuentry[@]}
+    
+    
+    
 
 
 
@@ -166,18 +217,18 @@ function read_descriptor {
 
 # Load the items shown in the tab
 function read_tab_items {
-OLDIFS="$IFS"
-IFS=$'\n'
+    OLDIFS="$IFS"
+    IFS=$'\n'
 
-if $altmenu; then
-	tabentry=( `cat $menufile | sed -n '/'_submenutab$tabpos$menupos'/{:a;n;/'_endsubmenutab$tabpos$menupos'/q;p;ba}'` )
-else
-	tabentry=( `cat $menufile | sed -n '/'_menutab'/{:a;n;/'_endmenutab'/q;p;ba}'` )
-fi
+    if $altmenu; then
+	    tabentry=( `cat $menufile | sed -n '/'_submenutab$tabpos$menupos'/{:a;n;/'_endsubmenutab$tabpos$menupos'/q;p;ba}'` )
+    else
+	    tabentry=( `cat $menufile | sed -n '/'_menutab'/{:a;n;/'_endmenutab'/q;p;ba}'` )
+    fi
 
-IFS="$OLDIFS"
+    IFS="$OLDIFS"
 
-tablength=$(( ${#tabentry[@]} -1 ))
+    tablength=$(( ${#tabentry[@]} -1 ))
 }
 
 function read_rightpanel_items {
@@ -460,31 +511,52 @@ function draw_menu {
 		let menuheight=$menulength+3
 		headerheight=$subheaderheight;
 		title=$subflagsmenutitle
-
-	elif [[ $submenu == "true" ]]; then
-	
-	
-	    if [[ $helpsubmenu == "true" ]]; then
-	
-	        menuheight=$helpsubmenuheight
-	        
-	    else
-	
-        	menuheight=$submenuheight
-        	
-        fi
-	
-	    headerheight=$subheaderheight;
-		title=$submenutitle
 		
+		
+
 	else
-
-	    menuheight=$normalmenuheight+1
-		headerheight=$mainheaderheight
-		title=$maintitle
+	    if [[ $submenu == "true" ]]; then
+	
+	
+	        if [[ $helpsubmenu == "true" ]]; then
+	
+	            menuheight=$helpsubmenuheight
+	            
+	        else
+	
+            	menuheight=$submenuheight
+            	
+            fi
+	
+	        headerheight=$subheaderheight;
+		    title=$submenutitle
 		
-	fi
+	    else
 
+	        menuheight=$(( $normalmenuheight+1 ))
+		    headerheight=$mainheaderheight
+		    title=$maintitle
+		
+	    fi
+	  
+	    
+	    if [[ $menuheight -gt 12 ]]; then
+	    
+    	  
+	        menuheight=12
+	        
+	    fi
+
+	fi
+	
+	
+	if [[ $menuheight -lt 8 ]]; then
+	        
+      
+	        menuheight=8
+	        
+    fi
+    
 	if [[ "$root" == "true" ]]; then
 
 		title=$title$roottitle
@@ -582,6 +654,20 @@ function draw_menu {
 
 # Simply write a one line descriptor, as read from the menu file
 function write_descriptor {
+
+    if [[ $menuheight -lt 8 ]]; then
+    
+        menuheight=8
+    
+    fi
+    
+    
+    if [[ $menuheight -gt 12 ]]; then
+    
+        menuheight=12
+    
+    fi
+        
 
 	cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
 	tput cup $cursorpos $menuwidth

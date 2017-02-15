@@ -56,6 +56,15 @@ _menu0
 3 - Ping localhost
 4 - Ping localhost with flags submenu (f)
 5 - Launch a root shell
+6 SIX
+7 SEVEN
+8 EIGHT
+9 NINE
+10 TEN
+11 ELEVEN
+12 TWELVE
+13 THIRTEEN
+14 FOURTEEN
 _endmenu0
 
 
@@ -67,6 +76,15 @@ This menuitem leads to a submenu
 This will ping the localhost 5 times
 Show example of setting flags to a command
 Enter root mode. Be very careful!
+6 SIX
+7 SEVEN
+8 EIGHT
+9 NINE
+10 TEN
+11 ELEVEN
+12 TWELVE
+13 THIRTEEN
+14 FOURTEEN
 _enddescmenu0
 
 
@@ -83,6 +101,7 @@ skip
 6 - Sixth submenu item - Noting here yet
 7 - Seventh submenu item - Noting here yet
 8 - Eighth submenu item - Noting here yet
+9 - Nineth submenu item - Noting here yet
 _endsubmenu01
 
 
@@ -94,9 +113,10 @@ The second item, obviously. The next one is skipped.
 skip
 The prev. item was skipped. Command builder runs from submenu too.
 You can keep on adding items
-Much more then in the main menu
-Up to eight
-You could squeeze one more, but eight is already plenty
+Much more then in the currenrt main menu
+A lot more
+Much, much more...
+Up to nine
 _enddescsubmenu01
 
 
