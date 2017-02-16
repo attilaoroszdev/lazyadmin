@@ -55,11 +55,11 @@ Lazy admins comes in four flavours:
 
 ### Why portable?
 
-The portable editions have the advantages of not needing installation. You can stick it on a pendrive and it will work on any computer that has a working bash shell and sed. The disadvantage is, your user preferences and preset values will not be transferred to any new version, whereas the full editio n has the option to preserve user data while upgrading.
+The portable editions have the advantages of not needing installation. You can stick it on a pendrive and it will work on any computer that has a working bash shell and `sed`. The disadvantage is, your user preferences and preset values will not be transferred to any new version, whereas the full edition has the option to preserve user data while upgrading.
 
 ### Why minimal?
 
-Minimal edition is free of all the fluff,. If you are already familiar with how it all works, and don't need exrta help and functionality, or are just very-very restricted for space (I mean it1s like 200kb, but still, who know what you are planning to run this on), the minimal edition offers a leaner more manageable experience.
+Minimal edition is free of all the fluff. If you are already familiar with how it all works, and don't need extra help and functionality, or are just very-very restricted for space (I mean it's like 200kb, but still, who knows what you are planning to run this on), the minimal edition offers a leaner, more manageable experience.
 
 ### Why portable minimal?
 
@@ -69,14 +69,16 @@ Combine the above two, and you'll know.
 
 ## Installing Lazy Admin
 
-Installation is pretty straightforward. Download the latest release, and unpack the tarball. It should either contain an `install.sh` script, or a launcher, ready to go (in the portable variety). If you go the installer way the should also be another tarball, corresponding to the release's version number. Keep these in the same directory and run the script. There are a few options, to choose form, but these will be explained as you go along.
+Installation is pretty straightforward. Download the latest release, and unpack the tarball. It should either contain an `install.sh` script, or a launcher, ready to go (in the portable variety). If you go the installer way, there should also be another tarball, corresponding to the release's version number. Keep these in the same directory and run the script. There are a few options to choose form, but these will be explained as you go along.
 
 ### Upgrading from a previous version
 
-If you already have Lazy Admin installed, and want to upgrade, you can just run the installer as you normally would. It will ask you if you want to purge your previous user configurations. If you say no, you will keep them and the new version will automatically use your defined menus and functions. if you say yes, it will still keep the old configs, in case you'd change your mind.
+If you already have Lazy Admin installed, and want to upgrade, you can just run the installer as you normally would. It will ask you if you want to purge your previous user configurations. If you say no, you will keep them and the new version will automatically use your defined menus and functions. If you say yes, it will still keep the old configs, in case you'd change your mind.
 
 ## So how can I configure it?
 
-For a detailed guide of configuration and usage, you can refer to the help files within the package, accessible directly via the help menu in either MarkDown or plain text format. (Unless you choose the minimal install. in that case, you are on your own, only having the code comments for company... )
+For a detailed guide of configuration and usage, you can refer to the help files within the package, accessible directly via the help menu in either MarkDown or plain text format. (Unless you choose the minimal install. In that case, you are on your own, only having the code comments for company... )
 
 To access the help menu, either  navigate to the right panel by pressing 'r' or Ctrl + ➜, and select *Get Help*, or just press 'h' from anywhere inside Lazy Admin.
+
+And that is all for now. I hope you'll enjoy this little project. Any feedback, bug reports, pull requests are most welcome. :)
