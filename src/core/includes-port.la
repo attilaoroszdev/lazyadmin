@@ -22,10 +22,10 @@
 
 
 CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-USER_DIR="$CURRENT_DIR/user"
-CORE_DIR="$CURRENT_DIR/core"
-PLUGINS_DIR="$CURRENT_DIR/plugins"
-RES_DIR="$CURRENT_DIR/res"
+USER_DIR="$(dirname "$CURRENT_DIR")/user"
+CORE_DIR="$(dirname "$CURRENT_DIR")/core"
+PLUGINS_DIR="$(dirname "$CURRENT_DIR")/plugins"
+RES_DIR="$(dirname "$CURRENT_DIR")/res"
 
 
 . "$CORE_DIR/core-defaults.la"

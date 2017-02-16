@@ -18,10 +18,10 @@
 #
 # Contact: attila.orosz@mail.com
 
-COREDIRPLACEHOLDER
+INSTALLDIRPLACEHOLDER
 USER_DIR="$HOME/.config/LazyAdmin"
 
-. "$CORE_DIR/includes.la"
+. "$INSTALL_DIR/core/includes.la"
 
 
 if [[ $1 == ""  ]]; then
@@ -36,7 +36,7 @@ fi
 
 
 # In case the user starts ladmin for the first time...
-if [[ "$CORE_DIR" != "$HOME/.LazyAdmin" ]]; then
+if [[ "$INSTALL_DIR" != "$HOME/.LazyAdmin" ]]; then
 
     
   if [[ ! -d "$USER_DIR" ]]; then

@@ -21,7 +21,7 @@
 # Contact: attila.orosz@mail.com
 
 
-USER_DIR="$HOME/.config/LazyAdmin/user"
+USER_DIR="$HOME/.config/LazyAdmin_Minimal/user"
 COREDIRPLACEHOLDER
 
 
