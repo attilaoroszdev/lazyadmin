@@ -31,6 +31,10 @@ They say that a picture is worth a thousand words. So here's Lazy Admin in 6000 
 
 ![](/media/lazy-admin-4.png)
 
+![](/media/lazy-admin-5.png)
+
+![](/media/lazy-admin-6.png)
+
 
 ### Yeak ok, but why *Lazy* Admin?
 
