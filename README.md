@@ -40,6 +40,29 @@ Because it's meant for sysadmins, who are lazy. Lazy to type, lazy to remember, 
 
 Probably not a lot, but it's fun. Although if you have mundane and/or repetative tasks to run on remote servers via SSH, it can be rather helpful.
 
+## What are the different "editions"?
+
+Lazy admins comes in four flavours:
+
+* Full - The whole package, complete with sample data and an installer script
+* Minimal - A leaned down version: No bulky help files, no plugins with external dependencies, no sample data
+* Portable - Same as the full version, only without an installer... or the need to install.
+* Portable Minimal - You can probably guess from the above...
+
+### Why portable?
+
+The portable editions have the advantages of not needing installation. You can stick it on a pendrive and it will work on any computer that has a working bash shell and sed. The disadvantage is, your user preferences and preset values will not be transferred to any new version, whereas the full editio n has the option to preserve user data while upgrading.
+
+### Why minimal?
+
+Minimal edition is free of all the fluff,. If you are already familiar with how it all works, and don't need exrta help and functionality, or are just very-very restricted for space (I mean it1s like 200kb, but still, who know what you are planning to run this on), the minimal edition offers a leaner more manageable experience.
+
+### Why portable minimal?
+
+Combine the above two, and you'll know.
+
+
+
 ## Installing Lazy Admin
 
 Installation is pretty straightforward. Download the latest release, and unpack the tarball. It should either contain an `install.sh` script, or a launcher, ready to go (in the portable variety). If you go the installer way the should also be another tarball, corresponding to the release's version number. Keep these in the same directory and run the script. There are a few options, to choose form, but these will be explained as you go along.
