@@ -22,7 +22,7 @@
 
 
 
-CURRENT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 USER_DIR="$(dirname "$CURRENT_DIR")/user"
 CORE_DIR="$(dirname "$CURRENT_DIR")/core"
 PLUGINS_DIR="$(dirname "$CURRENT_DIR")/plugins"
