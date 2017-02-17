@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 
 
-installtarball=./files-v0.9b.tar.gz
+installtarball=./files-v2.0b.tar.gz
 
 
 # Installer function(s)
