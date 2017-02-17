@@ -1,20 +1,29 @@
-To install:
+To install
+----------
 
-    Run install:sh, or install-min.sh (if you have the minimal edition). In case of portable editzion, there is no need for an installer
+Run ./install.sh, or ./install-min.sh (if you have the minimal edition). In case of portable edition, there is no installer, (or the need for one), just run ./pladmin, or ./pmladmin from Lazy Admin's root fir.
 
-To run:
+
+To run
+------
     
-    Run one of the following launcher:
-    
-    - ladmin - for full edition
-    - mladmin - for minimal edition
-    - pladmin - for portable edition
-    - pmladmin - for portable minimal edition
-    
-Any editions wiht an installer should have created symlinks in your directory of choice
+Run one of the following launchers:
 
-To configure:
+- 'ladmin' - for full edition 
+- 'mladmin' - for minimal edition
+    
+One of these will be placed in etheir $HOME or /opt/Lazy_Admin/, depending on the type of your install. If you agreed to symlink to /src/local/bin, you can also run it as a command
 
-    - Full editions shoudl have detasiled documentation included. Access the Help menu for details
-    - Running a minimal edition? You are on your own. May the code comments guide your script.
+- 'pladmin' - for portable edition
+- 'pmladmin' - for portable minimal edition
+
+One of these will be int the Lazy Admin directory, which you have extracetd from the release tarball. You could also symlink it, but then it would oloose its "portable-ness" wouldn't it?
+
+
+
+To configure
+------------
+
+- Full editions should have detailed documentation included. Access the Help menu for details
+- Running a minimal edition? You are on your own. May the code comments guide your script.
 

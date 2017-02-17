@@ -28,18 +28,7 @@
 if [[ -f $menufile ]]; then
 
     echo "Setting menus..."
-
-else
-
-	clear
-	echo
-    echo "Looked for menus in:"
-    echo $menufile
-    echo
-	echo "Error: Cannot find menuentries file in default location. Exiting..."
-    echo
-    exit 65
-
+    
     menuheight=$(( $normalmenuheight+1 ))
 
     if [[ $menuheight -gt 11 ]]; then
@@ -56,9 +45,21 @@ else
 
 	fi
 
+else
 
+	clear
+	echo
+    echo "Looked for menus in:"
+    echo $menufile
+    echo
+	echo "Error: Cannot find menuentries file in default location. Exiting..."
+    echo
+    exit 65
+
+    
 
 fi
+
 
 #This function will read the menu entries from the menu entries file as set in defaults
 function read_menu_items {
