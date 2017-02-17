@@ -1,12 +1,3 @@
-<!-- Copyright (c)  2017 Attila Orosz-->
-<!-- Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.3
-or any later version published by the Free Software Foundation;
-with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-A copy of the license is included in the section entitled "GNU
-Free Documentation License". -->
-
-
 # Lazy Admin Customization and Scripting
 
 User beware, here there be dragons. You'll have to know some basic bash before you can make modifications. It is also worth having a much better idea of bash script than I ever will, so you might as well add some useful modifications (let me know, if you have any). I have not yet implemented any user-friendly way to change stuff. Proceed at your own risk, you may brake something that was already of little use to start with...
