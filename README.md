@@ -1,6 +1,6 @@
 # Lazy Admin - a bash cli menu system.
 
-**Note: The last releases (1.0 and 2.0) are currently incompatible with bash 4.4. the dev branch already has he fixes, but until the next release, you can just update the flies `menu-function.la.` or `menu-functions-min.la` from the dev branch to "unbreak" things quickly**
+**Note: The last releases (1.0 and 2.0) are currently incompatible with bash 4.4. A fix is already in the sources, so until the next release, you can just update the flies `menu-function.la.` or `menu-functions-min.la`to "unbreak" things quickly**
 
 
 Lazy Admin will draw a pseudo graphical menu on your terminal, or terminal emulator, using nothing but `bash`, and `sed`.
@@ -82,6 +82,6 @@ If you already have Lazy Admin installed, and want to upgrade, you can just run 
 
 For a detailed guide of configuration and usage, you can refer to the help files within the package, accessible directly via the help menu in either MarkDown or plain text format. (Unless you choose the minimal install. In that case, you are on your own, only having the code comments for company... )
 
-To access the help menu, either  navigate to the right panel by pressing 'r' or Ctrl + ➜, and select *Get Help*, or just press 'h' from anywhere inside Lazy Admin.
+To access the help menu, either  navigate to the right panel by pressing <kbd>r</kbd> or <kbd>Ctrl</kbd> + <kbd>➜</kbd>, and select *Get Help*, or just press <kbd>h</kbd> from anywhere inside Lazy Admin.
 
 And that is all for now. I hope you'll enjoy this little project. Any feedback, bug reports, pull requests are most welcome. :)
