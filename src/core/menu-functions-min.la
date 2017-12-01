@@ -66,7 +66,7 @@ fi
 function read_menu_items {
 
 
-    if [[ "$submenu" = "true" ]]; then
+    if [[ "$submenu" == "true" ]]; then
 
 	    OLDIFS="$IFS"
 	    IFS=$'\n'
@@ -191,11 +191,11 @@ function write_flags_descriptor {
 # read descriptor lines for menu items
 function read_descriptor {
 
-	if [[ "$submenu" = "true" ]]; then
+	if [[ "$submenu" == "true" ]]; then
 
 	OLDIFS="$IFS"
 	IFS=$'\n'
-	if [[ "$activepanel" = "right" ]]; then
+	if [[ "$activepanel" == "right" ]]; then
 		menudescentry=( `cat $menufile | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'` )
 	else
 		menudescentry=( `cat $menufile | sed -n '/'_descsubmenu$1$2'/{:a;n;/'_enddescsubmenu$1$2'/q;p;ba}'` )
@@ -206,7 +206,7 @@ function read_descriptor {
 
 	OLDIFS="$IFS"
 	IFS=$'\n'
-	if [[ "$activepanel" = "right" ]]; then
+	if [[ "$activepanel" == "right" ]]; then
 		menudescentry=( `cat $menufile | sed -n '/'_rightpaneldesc'/{:a;n;/'_endrightpaneldesc'/q;p;ba}'` )
 	else
 		menudescentry=( `cat $menufile | sed -n '/'_descmenu$tabpos'/{:a;n;/'_enddescmenu$tabpos'/q;p;ba}'` )
@@ -249,7 +249,7 @@ function read_tab_items {
 function read_rightpanel_items {
 	OLDIFS="$IFS"
 	IFS=$'\n'
-	if [[ "$submenu" = "true" ]]; then
+	if [[ "$submenu" == "true" ]]; then
 		rightpanelentry=( `cat $menufile | sed -n '/'_subrightpanel'/{:a;n;/'_endsubrightpanel'/q;p;ba}'` )
 	else
 		rightpanelentry=( `cat $menufile | sed -n '/'_rightpanel'/{:a;n;/'_endrightpanel'/q;p;ba}'` )
@@ -397,12 +397,12 @@ function write_menu_items {
 
 for (( n=0; n < $menulength; n++ ))
 do
-	if [[ "${menuentry[n]}" = "skip" ]]; then
+	if [[ "${menuentry[n]}" == "skip" ]]; then
 
 	((n++))
 
 	fi
-	if [[ n -eq $menupos ]] && [[ "$activepanel" = "left" ]];then
+	if [[ n -eq $menupos ]] && [[ "$activepanel" == "left" ]];then
 		tput cup $(( n + $headerheight + 2 )) 2
 		echo -e "\e[00;30;47m${menuentry[$menupos]}\e[00m"
 	else
@@ -427,12 +427,12 @@ function write_rightpanel_items {
 
     for (( n=0; n < $rightpanellength; n++ ))
     do
-	    if [[ "${rightpanelentry[n]}" = "skip" ]]; then
+	    if [[ "${rightpanelentry[n]}" == "skip" ]]; then
 
 	    ((n++))
 
 	    fi
-	    if [[ n -eq $menupos ]] && [[ "$activepanel" = "right" ]]; then
+	    if [[ n -eq $menupos ]] && [[ "$activepanel" == "right" ]]; then
 		    tput cup $(( n + $headerheight + 2 )) $(( $menuwidth-$rightpanelwidth+3 ))
 		    echo -e "\e[00;30;47m${rightpanelentry[$menupos]}\e[00m"
 	    else
@@ -653,7 +653,7 @@ function write_descriptor {
 # Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
 function infinite_menu {
 
-	if [[ "$activepanel" = "right" ]]; then
+	if [[ "$activepanel" == "right" ]]; then
 		limit=$rightpanellength
 	else
 		limit=$menulength
@@ -707,11 +707,11 @@ function pick_menu_item {
          $'\e[A'|$'\e0A'|"w"|"W")
 
 	        #Double jump if run on skip
-	        if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
+	        if [[ "$activepanel" == "left" ]] && [[ "${menuentry[$menupos-1]}" == "skip" ]]; then
 		        ((menupos--))
 	        fi
 	        #Check for right panel too
-	        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos-1]}" = "skip" ]]; then
+	        if [[ "$activepanel" == "right" ]] && [[ "${rightpanelentry[$menupos-1]}" == "skip" ]]; then
 		        ((menupos--))
 	        fi
 
@@ -721,11 +721,11 @@ function pick_menu_item {
          $'\e[B'|$'\e0B'|"s"|"S")
 
 	        #Double jump if running on skip
-	        if [[ "$activepanel" = "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
+	        if [[ "$activepanel" == "left" ]] && [[ "${menuentry[$menupos+1]}" == "skip" ]]; then
 		        ((menupos++))
 	        fi
 	        #Chexck for right panel too
-	        if [[ "$activepanel" = "right" ]] && [[ "${rightpanelentry[$menupos+1]}" = "skip" ]]; then
+	        if [[ "$activepanel" == "right" ]] && [[ "${rightpanelentry[$menupos+1]}" == "skip" ]]; then
 		        ((menupos++))
 	        fi
 
@@ -734,7 +734,7 @@ function pick_menu_item {
 
          $'\e[D'|$'\e0D'|"a"|"A")
 
-	        if [[ "$submenu" = "false" ]]; then
+	        if [[ "$submenu" == "false" ]]; then
 		        if [[ $tabpos -gt 0 ]]; then
 			        clear_menu
 			        menupos=0
@@ -744,7 +744,7 @@ function pick_menu_item {
 	        ;;
 
          $'\e[C'|$'\e0C'|"d"|"D")
-	        if [[ "$submenu" = "false" ]]; then
+	        if [[ "$submenu" == "false" ]]; then
 		        if [[ $tabpos -lt $tablength ]]; then
 			        clear_menu
 			        menupos=0
@@ -753,13 +753,13 @@ function pick_menu_item {
 	        fi
 	        ;;
 	     $'\e[1;5C'|$'\e01;5C'|"r"|"R")
-            if $rightpanel && [[ "$activepanel" = "left" ]]; then
+            if $rightpanel && [[ "$activepanel" == "left" ]]; then
 			    activepanel="right"
 			    menupos=0
 		    fi
             ;;
          $'\e[1;5D'|$'\e01;5D'|"l"|"L")
-            if $rightpanel && [[ "$activepanel" = "right" ]]; then
+            if $rightpanel && [[ "$activepanel" == "right" ]]; then
 			    activepanel="left"
 			    menupos=0
 		    fi
@@ -772,7 +772,7 @@ function pick_menu_item {
 	        if [[ $key -le $menulength ]] && [[ $key -ge 0 ]]; then
 	        ((key--))
 	        menupos=$key
-	        if [[ "$submenu" = "true" ]]; then
+	        if [[ "$submenu" == "true" ]]; then
 		        subfunct$tabpos$mainmenupos$key $tabpos $menupos
 	        else
 		        funct$tabpos$key $tabpos $menupos
@@ -783,12 +783,12 @@ function pick_menu_item {
 	        init_menu
 	         ;;
 
-         '')
+          $'\x0a' | '')
 	        # If enter is pressed
-	        if [[ "$activepanel" = "right" ]]; then
+	        if [[ "$activepanel" == "right" ]]; then
 		        functright$menupos
 	        else
-		        if [[ "$submenu" = "true" ]]; then
+		        if [[ "$submenu" == "true" ]]; then
 			        subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
 		        else
 
@@ -811,7 +811,7 @@ function pick_menu_item {
 	        functright3
 	        ;;
         "b" | "B")
-		        if [[ "$submenu" = "true" ]]; then
+		        if [[ "$submenu" == "true" ]]; then
 			        back_to_main_menu
 			        break
 		        fi
@@ -840,14 +840,14 @@ function menu_item_picker_subflags	{
 
 		$'\e[A'|$'\e0A'|"w"|"W")
 			#Double jump if run on skip
-			if [[ "${menuentry[$menupos-1]}" = "skip" ]]; then
+			if [[ "${menuentry[$menupos-1]}" == "skip" ]]; then
 				((menupos--))
 			fi
 			((menupos--))
 			;;
 		$'\e[B'|$'\e0B'|"s"|"S")
 			#Double jump if running on skip
-			if [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
+			if [[ "${menuentry[$menupos+1]}" == "skip" ]]; then
 				((menupos++))
 			fi
 			((menupos++))
@@ -896,9 +896,9 @@ function menu_item_picker_subflags	{
 			;;
 
 
-		'')
+		$'\x0a' | '')
 			# If enter is pressed
-			if [[ "$activepanel" = "right" ]]; then
+			if [[ "$activepanel" == "right" ]]; then
 
 				functright$menupos
 
@@ -976,13 +976,13 @@ function menu_item_picker_subflags	{
 	 #switch between left and right menus
 
 	 $'\e[1;5C'|$'\e01;5C'|"r"|"R")
-        if $rightpanel && [[ "$activepanel" = "left" ]]; then
+        if $rightpanel && [[ "$activepanel" == "left" ]]; then
 			activepanel="right"
 			menupos=0
 		fi
         ;;
      $'\e[1;5D'|$'\e01;5D'|"l"|"L")
-        if $rightpanel && [[ "$activepanel" = "right" ]]; then
+        if $rightpanel && [[ "$activepanel" == "right" ]]; then
 			activepanel="left"
 			menupos=0
 		fi
@@ -1319,8 +1319,8 @@ function enter_submenu {
 	menupos=0
 
 	init_menu $1 $2
-	while true; do
-		sub_menu $1 $2
+	while [[ $submenu == "true" ]]; do
+        sub_menu $1 $2
 	done
 }
 

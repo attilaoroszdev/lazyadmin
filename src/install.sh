@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 
 
-installtarball=./files-v2.0b.tar.gz
+installtarball=./files-v2.0.tar.gz
 
 
 # Installer function(s)
@@ -291,7 +291,7 @@ userfilesdir="$HOME/.config/LazyAdmin"
 echo
 echo "Extracting files..."
 
-
+tar xvzC "$userfilesdir" -f $installtarball "user"
 
 if [[ $installtype = "local" ]]; then
 
@@ -304,7 +304,7 @@ if [[ $installtype = "local" ]]; then
    mkdir "$HOME/.LazyAdmin/"
    installdir="$HOME/.LazyAdmin"
 
-   tar xvzC "$installdir" -f $installtarball "core"
+    tar xvzC "$installdir" -f $installtarball "core"
     tar xvzC "$installdir" -f $installtarball "plugins"
     tar xvzC "$installdir" -f $installtarball "res"
 
@@ -338,7 +338,6 @@ fi
 
 if [[ installtype == "global" ]]; then
 
-    sudo tar -cvf "$installdir/res/user_defaults.tar" "$userfilesdir/user"
 
     sudo sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
     sudo sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
@@ -359,19 +358,19 @@ echo
 echo "Extracing finished."
 echo
 
-if [[ $installtype="local" ]]; then
+if [[ $installtype == "local" ]]; then
 
     launcherdir="$HOME"
 
 else
 
-    launcherdir=$"installdir"
+    launcherdir="$installdir"
 
 
 fi
 
 
-echo "I will put the starter file in $installdir"
+echo "I will put the starter file in $launcherdir"
 sleep 1
 
 
@@ -398,15 +397,15 @@ echo
 
 
 
-if [[ $installtype = "global" ]]; then
+if [[ $installtype == "global" ]]; then
 
     sudo tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
-    sudo sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$launcherdir/ladmin"
+    sudo sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=\"$installdir\"|" "$launcherdir/ladmin"
 
 else
 
     tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
-    sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$launcherdir/ladmin"
+    sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=\"$installdir\"|" "$launcherdir/ladmin"
 
 fi
 
@@ -464,13 +463,6 @@ else
 
 fi
 
-
-echo
-echo "Cleaning up temporary files (getting rid of the evidence)..."
-
-# Get rid of the evidence...
-rm $installtarball
-rm ./install.sh
 
 echo
 echo "Done."
