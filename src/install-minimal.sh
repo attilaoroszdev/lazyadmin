@@ -206,9 +206,9 @@ userfilesdir="$HOME/.config/LazyAdmin_Minimal"
 echo
 echo "Extracting files..."
 
+tar xvzC "$userfilesdir" -f $installtarball "user"
 
-
-if [[ $installtype = "local" ]]; then
+if [[ $installtype == "local" ]]; then
 
 if [[ -d "$HOME/.LazyAdmin_Minimal/" ]]; then
 
@@ -265,19 +265,19 @@ echo
 echo "Extracing finished."
 echo
 
-if [[ $installtype="local" ]]; then
+if [[ $installtype == "local" ]]; then
 
     launcherdir="$HOME"
 
 else
 
-    launcherdir=$"installdir"
+    launcherdir="$installdir"
 
 
 fi
 
 
-echo "I will put the starter file in $installdir"
+echo "I will put the starter file in $launcherdir"
 sleep 1
 
 
@@ -370,16 +370,6 @@ else
 
 fi
 
-
-echo
-echo "Cleaning up temporary files (getting rid of the evidence)..."
-
-# Get rid of the evidence...
-rm $installtarball
-rm ./install-min.sh
-
-echo
-echo "Done."
 sleep 1
 echo
 echo "Installation seems to have finished."
