@@ -1,6 +1,6 @@
-# Lazy Admin
+#!/bin/bash
 #
-# Copyright © 2017, Attila Orosz (attlia@wayoflinux.com)
+# Copyright © 2017, Attila Orosz, http://wayoflinux.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -813,7 +813,7 @@ function pick_menu_item {
         "b" | "B")
 		        if [[ "$submenu" == "true" ]]; then
 			        back_to_main_menu
-			        break
+			        return
 		        fi
 		        ;;
 
@@ -887,7 +887,8 @@ function menu_item_picker_subflags	{
 			echo
 			echo "Now press a key to get back to the menu"
 			read -n 1 -s keypress
-			break
+			subflagsmenu=false
+		        back_to_main_menu
 			;;
 
 		'x' | 'X') set_args=''
@@ -959,7 +960,8 @@ function menu_item_picker_subflags	{
 						echo
 						echo "Now press a key to get back to the menu"
 						read -n 1 -s keypress
-						break
+						subflagsmenu=false
+                            			back_to_main_menu
 						;;
 
 					$delete_flags) set_args=''
@@ -1004,7 +1006,8 @@ function menu_item_picker_subflags	{
 		;;
 	'b' | "B")
 		back_to_main_menu
-		break
+		subflagsmenu=false
+	        back_to_main_menu
 		;;
 
 	esac
@@ -1074,7 +1077,7 @@ function command_builder_function {
 
 	read_rightpanel_items
 	draw_menu
-	while true; do
+	while $subflagsmenu; do
 
 		set_command_builder_items "$@"
 
@@ -1343,6 +1346,8 @@ function functright1 {
 
 
 function functright2 {
+
+    subflagsmenu=false
 
 
     # Need this, to redraw title for some reason...
