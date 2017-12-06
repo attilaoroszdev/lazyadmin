@@ -35,5 +35,6 @@ roottitle=" -- ROOT Shell"
 altmenu=false
 submenu="false"
 subflagsmenu="false"
+helpsubmenu=false
 cursorpos=0
 root="false"
