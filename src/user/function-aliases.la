@@ -261,7 +261,7 @@ function functhelp1 {
 
 function functhelp2 {
 
-    man la-menus
+    functhelp_commanbuilder
 
 }
 

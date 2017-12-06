@@ -384,10 +384,13 @@ function write_menu_items {
 # Might gonna get its own resource file in a future release
 function write_help_menu_items {
 
-    menulength=2
+    menulength=3
 
     helpmenuentry[0]="1 - Basic usage guide (MarkDown)"
     helpmenuentry[1]="2 - Configuration and scripting guide (MarkDown)"
+    helpmenuentry[2]="3 - Command builder usage guide"
+
+
 
     for (( n=0; n < $menulength; n++ ))
     do
@@ -633,7 +636,7 @@ function write_help_descriptor {
 
     helpmenudescentry[0]="Basic everyday usage"
     helpmenudescentry[1]="In-depth configuration guide"
-    helpmenudescentry[2]="Display the traditional man paghe"
+    helpmenudescentry[2]="How to use the command-builder submenu"
 
     cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
     tput cup $cursorpos $menuwidth
