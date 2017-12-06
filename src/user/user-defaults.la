@@ -22,26 +22,26 @@
 
 
 #The title displayed in the main menu
-maintitle="Lazy Admin - v2.0"
+maintitle="WL Admin - v1.0"
 
 # Switch right panel on or off
 rightpanel=true
 
 # How many elements should the main menu hold
-# Allow +2 fpor top and bototm padding
+# Allow +2 for top and bottom padding
 # (normalmenuheight = number_of_items + 2)
-# Minumum height is 7
-# Maximum height is 11 (9 items)
-normalmenuheight=7
+# Minumum height is 7 (5 items max.)
+# Maximum height is 11 (9 items max.)
+normalmenuheight=8
 
 # How many elements should submenus hold
-# Allow +2 fpor top and bototm padding
+# Allow +3 for top and bottom padding
 # (submenuheight = number_of_items + 3)
-# Minumum height is 8
-# Maximum height is 12 (9 items)
-submenuheight=12
+# Minumum height is 8 (5 items  max.)
+# Maximum height is 12 (9 items max.)
+submenuheight=9
 
-# Change the size of th roight panel
+# Change the size of the right panel
 rightpanelwidth=27
 
 # This should be habdled by the setup script,
