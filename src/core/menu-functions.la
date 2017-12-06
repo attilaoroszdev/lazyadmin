@@ -865,37 +865,47 @@ function pick_help_menu_item {
 
     case $key in
 
-        $'\e[A'|$'\e0A'|"w"|"W")
+     $'\e[A'|$'\e0A'|"w"|"W")
+
+         #Double jump if run on skip
+         if [[ "$activepanel" == "left" ]] && [[ "${helpmenuentry[$menupos-1]}" == "skip" ]]; then
+             ((menupos--))
+         fi
 
         #Check for right panel skip
         if [[ "$activepanel" == "right" ]] && [[ "${rightpanelentry[$menupos-1]}" == "skip" ]]; then
           ((menupos--))
-      fi
+        fi
 
-      ((menupos--))
-      ;;
+        ((menupos--))
+        ;;
 
-      $'\e[B'|$'\e0B'|"s"|"S")
+     $'\e[B'|$'\e0B'|"s"|"S")
+
+        #Double jump if running on skip
+        if [[ "$activepanel" == "left" ]] && [[ "${helpmenuentry[$menupos+1]}" = "skip" ]]; then
+          ((menupos++))
+        fi
 
         #Chexck for right panel skip
         if [[ "$activepanel" == "right" ]] && [[ "${rightpanelentry[$menupos+1]}" == "skip" ]]; then
           ((menupos++))
-      fi
+        fi
 
-      ((menupos++))
-      ;;
-      $'\e[1;5C'|$'\e01;5C'|"r"|"R")
-    if $rightpanel && [[ "$activepanel" == "left" ]]; then
-    activepanel="right"
-    menupos=0
-    fi
-    ;;
+        ((menupos++))
+        ;;
+    $'\e[1;5C'|$'\e01;5C'|"r"|"R")
+    	if $rightpanel && [[ "$activepanel" == "left" ]]; then
+    	activepanel="right"
+    	menupos=0
+    	fi
+    	;;
     $'\e[1;5D'|$'\e01;5D'|"l"|"L")
-    if $rightpanel && [[ "$activepanel" == "right" ]]; then
-    activepanel="left"
-    menupos=0
-    fi
-    ;;
+    	if $rightpanel && [[ "$activepanel" == "right" ]]; then
+    	activepanel="left"
+	menupos=0
+	fi
+    	;;
 
     [0-2])
 
@@ -1218,8 +1228,17 @@ function reflow_menu {
     clear
     draw_menu
     infinite_menu
-    write_menu_items
-    write_descriptor
+    if $helpsubmenu; then
+       
+       write_help_menu_items
+       write_help_descriptor
+       
+    else
+       
+       write_menu_items
+       write_descriptor
+
+    fi
 
 }
 
