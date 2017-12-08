@@ -1380,20 +1380,33 @@ function functright3 {
 function main {
 
 
-   if [[ $1 != "default"  ]]; then
+    for (( i=1; i<=$#; i++)); do
 
-       oldmaintitle="$maintitle"
-       maintitle="$1"
+      j=$((i+1))
 
-   else
+      case "${!i}" in
+        
+        # Can be extended with any number of arguments later, possibly to change defaults on the fly
+        
+        "--join-lines")
+            
+            if [[ "${!j}" == "off" ]]; then
 
-       if [[ "$oldmaintitle" != "" ]]; then
+              displaylineconnectors="false"
 
-               maintitle="$oldmaintitle"
+            elif [[ "${!j}" == "on" ]]; then
 
-       fi
+              displaylineconnectors="true"
 
-   fi
+            fi
+          ;;
+        *)
+          #Do nothing
+          ;;
+      
+      esac   
+
+    done
 
 
 

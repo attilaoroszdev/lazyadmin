@@ -26,17 +26,6 @@ USER_DIR="$HOME/.config/LazyAdmin"
 . "$INSTALL_DIR/core/includes.la"
 
 
-if [[ $1 == ""  ]]; then
-
-    arg1="default"
-
-else
-
-    arg1=$1
-
-fi
-
-
 # In case the user starts ladmin for the first time...
 if [[ "$INSTALL_DIR" != "$HOME/.LazyAdmin" ]]; then
 
@@ -54,4 +43,4 @@ if [[ "$INSTALL_DIR" != "$HOME/.LazyAdmin" ]]; then
 fi
 
 
-main $arg1
+main "$@"

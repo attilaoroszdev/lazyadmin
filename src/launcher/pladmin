@@ -26,16 +26,4 @@ CORE_DIR="$CURRENT_DIR/core"
 
 . "$CORE_DIR/includes-port.la"
 
-
-if [[ $1 == ""  ]]; then
-
-    arg1="default"
-
-else
-
-    arg1=$1
-
-fi
-
-
-main $arg1
+main "$@"

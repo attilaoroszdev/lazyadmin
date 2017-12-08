@@ -25,16 +25,4 @@ USER_DIR="$HOME/.config/LazyAdmin"
 
 . "$CORE_DIR/includes-min.la"
 
-
-if [[ $1 == ""  ]]; then
-
-    arg1="default"
-
-else
-
-    arg1=$1
-
-fi
-
-
-main $arg1
+main "$@"
