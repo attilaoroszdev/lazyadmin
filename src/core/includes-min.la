@@ -22,7 +22,7 @@
 
 
 
-USER_DIR="$HOME/.config/LazyAdmin_Minimal/user"
+USER_DIR="$HOME/.config/LazyAdmin_Minimal/$userprofile"
 COREDIRPLACEHOLDER
 
 
