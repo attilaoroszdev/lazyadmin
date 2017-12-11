@@ -34,6 +34,7 @@ RES_DIR="$(dirname "$CURRENT_DIR")/res"
 . "$USER_DIR/user-defaults.la"
 . "$USER_DIR/user-functions.la"
 . "$USER_DIR/function-aliases.la"
+. "$USER_DIR/menu-entries.la"
 
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"
