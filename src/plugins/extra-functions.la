@@ -1,6 +1,6 @@
-# Lazy Admin
+#!/bin/bash
 #
-# Copyright © 2017, Attila Orosz (attlia@wayoflinux.com)
+# Copyright © 2017, Attila Orosz, http://wayoflinux.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +21,159 @@
 # THE SOFTWARE.
 
 
-
-
 # The following fuinctions are provided "as is", or, in this case, "are"..
 # No guarantees that theY1ll evven work.
 # They meant are to allow for opening stuff in new terminal tab, or terminal window.
 # If your favourite terminal emulator uses different key combos, you might need to
 # set those manually
+
+
+# Run some function or script or command or anythign as root,
+# either with or without sudo
+function run_as_root {
+
+    if [[ "$(whoami)" != "root" ]]; then
+
+
+        if [[ -z $preferredrootcommand ]]; then
+            echo
+            echo "Will need root privileges to run this command, but your preference had not yet been set."
+            echo "How do you like to become root"
+            echo
+            echo "1 - su"
+            echo "2 - sudo"
+            echo "3 - I'm not sure..."
+            echo "4 - I imagine I'm a plant"
+            echo
+            read -p "Pick one > " -n 1 usesudo
+            echo " "
+            while true; do
+
+                case $usesudo in
+
+                "1")
+                    preferredrootcommand="su"
+                    echo '
+
+# This will be used by WL Admin to execute stuff as root
+preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
+                    echo
+                    echo "su saved as your preferred command"
+                    echo "I will now become root with su." 
+                    echo "Please provide the root password."
+                    echo
+                    su -c "$1; exit"
+                    break
+                    ;;
+                   
+                "2")
+                    preferredrootcommand="sudo"
+                    echo '
+
+# This will be used by WL Admin to execute stuff as root
+preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
+                    echo
+                    echo "sudo saved as your preferred command"
+                    echo "I will now run the command with sudo."
+                    echo "Please provide user password when prompted."
+                    echo
+                    if [[ $2 == "external" ]]; then
+                        sudo $1
+                    else
+                        sudo -- sh -c "$1"
+                    fi
+                    break
+                    ;;
+                "3")
+                    if groups "$(whoami)" | grep &>/dev/null '\bsudo\b'; then
+                         preferredrootcommand="sudo"
+                        echo '
+
+# This will be used by WL Admin to execute stuff as root
+preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
+                        echo
+                        echo "Your user can use sudo, thus sudo saved as your preferred command"
+                        echo "I will now run the command with sudo."
+                        echo "Please provide user password when prompted."
+                        echo
+                        if [[ $2 == "external" ]]; then
+                            sudo $1
+                        else
+                            sudo -- sh -c "$1"
+                        fi
+                    else
+                        preferredrootcommand="su"
+                        echo '
+
+# This will be used by WL Admin to execute stuff as root
+preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
+                        echo
+                        echo "Your user cannot use sudo so, su was saved as your preferred command"
+                        echo "I will now become root with su." 
+                        echo "Please provide the root password."
+                        echo
+                        su -c "$1; exit"
+                    fi
+                    break
+                    ;;
+                "4")
+                    echo
+                    echo "Ha-ha-ha, very funny."
+                    echo "Now pick one for real."
+                    echo
+                    read -p "(1, 2, or 3) > " -n 1 usesudo
+                    ;;
+                *)
+                    echo
+                    echo "Please go again. Pick 1 - 4:"
+                    echo
+                    read -p "(1, 2, 3, or 4...) > " -n 1 usesudo
+                    ;;
+
+                esac
+            done
+        else
+
+
+            commandsuffix=""
+
+            if [[ $preferredrootcommand == "su" ]]; then
+
+                echo
+                echo "Running command as root."
+                echo "Plase provide root paswordf/when prompted"
+                echo
+                
+                su -c "$1; exit"
+
+            else 
+                echo 
+                echo "Running command as root"
+                echo "Please provide sudo password if/when prompted"
+                echo
+
+                 if [[ $2 == "external" ]]; then
+                        sudo $1
+                    else
+                        sudo -- sh -c "$1"
+
+                    fi
+
+            fi
+
+
+        fi
+
+    else
+        echo
+        echo "We are already root! Will run command then then..."
+        echo
+        $1
+
+    fi
+
+}
+
 
 
 # Use this at your own risk-...
