@@ -1,8 +1,5 @@
 # Lazy Admin - a bash cli menu system.
 
-**Note: The last releases (1.0 and 2.0) are currently incompatible with bash 4.4. A fix is already in the sources, so until the next release, you can just update the flies `menu-function.la.` or `menu-functions-min.la`to "unbreak" things quickly**
-
-
 Lazy Admin will draw a pseudo graphical menu on your terminal, or terminal emulator, using nothing but `bash`, and `sed`.
 
 ## Why Lazy Admin?
