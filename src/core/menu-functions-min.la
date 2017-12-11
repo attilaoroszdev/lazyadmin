@@ -669,6 +669,24 @@ function infinite_menu {
 
 }
 
+function infinite_tab {
+   limit=$(( $tablength + 1 ))
+
+
+    if [[ $tabpos -eq $limit ]]; then
+      tabpos=0
+      read_menu_items
+      read_descriptor
+    fi
+    if [[ $tabpos -lt 0 ]]; then
+      tabpos=$(( $limit -1 ))
+      read_menu_items
+      read_descriptor
+    fi
+
+}
+
+
 # This function will invoke a submenu where you can set flags/arguments/parameters for the spcified command or function
 # Call with parameters (args), like this:
 #
@@ -1120,6 +1138,7 @@ function reflow_menu {
 
 	clear
 	draw_menu
+	infinite_tab
 	infinite_menu
 	write_menu_items
 	write_descriptor
@@ -1242,11 +1261,11 @@ function main_menu {
     submenu="false"
     subflagsmenu="false"
 
-    read_tab_items
+  read_tab_items
     read_menu_items
     read_descriptor
     infinite_menu
-
+    infinite_tab
     write_tab_items
     write_menu_items
 
