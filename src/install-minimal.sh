@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-installtarball=./files-v2.0-min.tar.gz
+installtarball=./files-v2.0.1-min.tar.gz
 
 
 # Installer function(s)
@@ -183,6 +183,12 @@ if [[ -d "$HOME/.config/LazyAdmin_Minimal/" ]]; then
 		echo
 		echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later'"
 		sleep 1
+		userfilesdir="$HOME/.config/LazyAdmin_Minimal"
+
+		echo
+		echo "Extracting files..."
+
+		tar xvzC "$userfilesdir" -f $installtarball "user"
 	else
 		echo
 		echo
@@ -199,14 +205,15 @@ else
 	echo
 	echo "Done."
 	sleep 1
+	userfilesdir="$HOME/.config/LazyAdmin_Minimal"
+
+	echo
+	echo "Extracting files..."
+
+	tar xvzC "$userfilesdir" -f $installtarball "user"
 fi
 
-userfilesdir="$HOME/.config/LazyAdmin_Minimal"
 
-echo
-echo "Extracting files..."
-
-tar xvzC "$userfilesdir" -f $installtarball "user"
 
 if [[ $installtype == "local" ]]; then
 

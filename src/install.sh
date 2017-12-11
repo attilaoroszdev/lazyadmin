@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 
 
-installtarball=./files-v2.0.tar.gz
+installtarball=./files-v2.0.1.tar.gz
 
 
 # Installer function(s)
@@ -268,6 +268,12 @@ if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
 		echo
 		echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later'"
 		sleep 1
+		userfilesdir="$HOME/.config/LazyAdmin"
+
+		echo
+		echo "Extracting files..."
+
+		tar xvzC "$userfilesdir" -f $installtarball "user"
 	else
 		echo
 		echo
@@ -284,14 +290,15 @@ else
 	echo
 	echo "Done."
 	sleep 1
+	userfilesdir="$HOME/.config/LazyAdmin"
+
+	echo
+	echo "Extracting files..."
+
+	tar xvzC "$userfilesdir" -f $installtarball "user"
 fi
 
-userfilesdir="$HOME/.config/LazyAdmin"
 
-echo
-echo "Extracting files..."
-
-tar xvzC "$userfilesdir" -f $installtarball "user"
 
 if [[ $installtype = "local" ]]; then
 

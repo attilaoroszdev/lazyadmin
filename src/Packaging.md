@@ -66,7 +66,7 @@ This is the version that has it **all**
 
 A reduced version, with no full. This is th absolute minimum Lazy Admin runs on
 
-/Lazy_Admin_vX.Y_Minimal/── install.sh
+/Lazy_Admin_vX.Y_Minimal/── install-minimal.sh
                         │
                         ├── LICENSE
                         │
