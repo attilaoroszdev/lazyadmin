@@ -54,6 +54,18 @@ else
 
 fi
 
+
+function find_menu_type {
+
+   OLDIFS="$IFS"
+   IFS=$'\n'
+   menutype=( `cat $menufile | sed -n '/'_menutype'/{:a;n;/'_endmenutype'/q;p;ba}'` )
+   IFS="$OLDIFS"
+
+
+}
+
+
 #This function will read the menu entries from the menu entries file as set in defaults
 function read_menu_items {
 
@@ -172,7 +184,7 @@ function write_flags_descriptor {
 # read descriptor lines for menu items
 function read_descriptor {
 
-  if [[ -z $menutype || $menutype == "1" ]]; then
+  if [[ -z $menutype || $menutype == "old" ]]; then
 
     if [[ "$submenu" == "true" ]]; then
 
@@ -200,19 +212,49 @@ function read_descriptor {
   
   else
 
-      for (( n=0; n < $menulength; n++ )); do
+       if [[ "$activepanel" == "right" ]]; then
 
-        eval $(echo ${menuentry[n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
-        menuentry[n]="$(echo $V1)"
-        menudescentry[n]="$(echo $V2)"
+          for (( n=0; n < $menulength; n++ )); do
 
-      done
+            eval $(echo ${menuentry[n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
+            menuentry[n]="$(echo $V1)"
 
+          done
+
+          OLDIFS="$IFS"
+          IFS=$'\n'
+
+          if [[ "$submenu" == "true" ]]; then
+              menudescentry=( `cat $menufile | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'` )
+
+
+          else
+             menudescentry=( `cat $menufile | sed -n '/'_rightpaneldesc'/{:a;n;/'_endrightpaneldesc'/q;p;ba}'` )
+
+
+          fi
+
+          IFS="$OLDIFS"
+
+      
+
+       else 
+          for (( n=0; n < $menulength; n++ )); do
+
+            eval $(echo ${menuentry[n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
+            menuentry[n]="$(echo $V1)"
+            menudescentry[n]="$(echo $V2)"
+
+          done
+
+
+           
+
+        fi
 
   fi
 
 }
-
 # Load the items shown in the tab
 function read_tab_items {
     OLDIFS="$IFS"
@@ -1453,6 +1495,8 @@ function init_menu {
     fi
 
     clear
+
+    find_menu_type
 
     read_menu_items $1 $2
     read_descriptor $2 $2

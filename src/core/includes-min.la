@@ -30,5 +30,3 @@ COREDIRPLACEHOLDER
 . "$USER_DIR/user-defaults-min.la"
 . "$USER_DIR/user-functions-min.la"
 . "$USER_DIR/function-aliases-min.la"
-. "$USER_DIR/menu-entries-min.la"
-
