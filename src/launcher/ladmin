@@ -22,6 +22,7 @@
 
 INSTALLDIRPLACEHOLDER
 USER_DIR_BASE="$HOME/.config/LazyAdmin"
+userprofile="user"
 
 # In case the user starts ladmin for the first time...
 if [[ "$INSTALL_DIR" != "$HOME/.LazyAdmin" ]]; then

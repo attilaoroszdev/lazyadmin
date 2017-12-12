@@ -23,6 +23,6 @@
 COREDIRPLACEHOLDER
 USER_DIR="$HOME/.config/LazyAdmin"
 
-. "$CORE_DIR/includes-min.la"
+. "$CORE_DIR/includes.la"
 
 main "$@"

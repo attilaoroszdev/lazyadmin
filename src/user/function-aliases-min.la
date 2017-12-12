@@ -21,35 +21,61 @@
 # THE SOFTWARE.
 
 
+functionstyle="simple"
+
+# fucntionstyle="simple" (default)
+# Main menu functions in the format of tab$item$
+# First tab is 1, first item is 1
+# E.g.
+# Fist tab first item is: tab1item1
+# Second tab third menuitem is: tab2item3
+#
+# Backward compat:
+# functionstyle="old"
 # Main menu functions in the format of funct#tab#menuitem
 # First tab is 0, first item is 0
 # E.g.
 # Fist tab first item is: funct00
 # Second tab tird menuitem is: funct12
-#
+
+
+ 
 # You could implement your functions right here, but it is probably
 # easier and less messy to put them in a separate file, and it will make
 # them easier to reuse or reorganise in the menu
 
-function funct00 {
+function tab1item1 {
 
 	echo "Do nothing"
 	
 
 }
 
-# Submenu functions in the format of subfunct#tab#menuitem#tabmenuitem
-# First tab is 0, first item is 0, first submenuitem is 0
-# E.g.
-# Fist tab first item, first subitem is is: subfunct000
-# Second tab tird menuitem fifth submenuitem is: subfunct124
+# Submenu functions. These will have a similar naming system, except
+# they would be extended by submenu position as well,
 #
-# You could implement your functions right here, but it is probably
-# easier and less messy to put them in a separate file, and it will make
-# them easier to reuse or reorganise in the menu
+# fucntionstyle="simple" (default)
+# 
+# Tab and menuitem are marked (in which submenu we are), 
+# then sub-item number follows, starting from 1 like so:
+# tab$item$sub$
+# E.g.
+# First tab, first menu item, first submenuu-item: tab1item1sub1
+# Third tab, fourth menu item, second submenu item: tab3item4sub2
+#
+# Backward compat:
+# functionstyle="old"
+#
+# Similar to main menus, only one digit more, starting from 0, like
+# subfunct$$$
+# or sunfunct$(tabposition)$(mainmenuposition)$(submenuposition)
+#E.g. F
+# First tab first menuitem, first submenuitem: subfunct000
+# Third tab, fourth menuitem, second submenuitem: subfunct231
+# and so on
 
 
-function subfunct000 {
+function tab1item1sub1 {
 
 	echo "Do nothing"
 

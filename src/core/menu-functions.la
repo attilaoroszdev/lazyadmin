@@ -460,13 +460,12 @@ function write_menu_items {
 # Might gonna get its own resource file in a future release
 function write_help_menu_items {
 
-    menulength=5
+    menulength=3
 
-    helpmenuentry[0]="1 - WLAdmin user guide"
-    helpmenuentry[1]="skip"
-    helpmenuentry[2]="3 - Original Lazy Admin usage guide"
-    helpmenuentry[3]="4 - Configuration and scripting guide"
-    helpmenuentry[4]="5 - Command builder usage guide"
+    
+    helpmenuentry[0]="1 - Original Lazy Admin usage guide"
+    helpmenuentry[1]="2 - Configuration and scripting guide"
+    helpmenuentry[2]="3 - Command builder usage guide"
 
     for (( n=0; n < $menulength; n++ ))
     do
@@ -710,13 +709,10 @@ function write_descriptor {
 #Simply write a one line descriptor, as read from the menu file
 function write_help_descriptor {
 
-    
-    helpmenudescentry[0]="WLAdmin's various menus and options"
-    helpmenudescentry[1]=""
-    helpmenudescentry[2]="Basic setup guide to Lazy Admin"
-    helpmenudescentry[3]="In-depth configuration guide"
-    helpmenudescentry[4]="How to use the command-builder submenu"
-
+     
+    helpmenudescentry[0]="Basic setup guide to Lazy Admin"
+    helpmenudescentry[1]="In-depth configuration guide"
+    helpmenudescentry[2]="How to use the command-builder submenu"
 
     cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
     tput cup $cursorpos $menuwidth

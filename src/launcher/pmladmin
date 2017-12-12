@@ -24,7 +24,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 USER_DIR="$CURRENT_DIR/user"
 CORE_DIR="$CURRENT_DIR/core"
 
-. "$CORE_DIR/includes-port-min.la"
+. "$CORE_DIR/includes-port.la"
 
 
 main "$@"

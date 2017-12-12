@@ -20,53 +20,79 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+functionstyle="simple"
 
-#Main menu functions in the format of funct#tab#menuitem
-#First tab is 0, first item is 0
-#E.g.
-#Fist tab first item is: funct00
-#Second tab tird menuitem is: funct12
+# fucntionstyle="simple" (default)
+# Main menu functions in the format of tab$item$
+# First tab is 1, first item is 1
+# E.g.
+# Fist tab first item is: tab1item1
+# Second tab third menuitem is: tab2item3
 #
-#You could implement your functions right here, but it is probably
-#easier and less messy to put them in a separate file, and it will make
-#them easier to reuse or reorganise in the menu
+# Backward compat:
+# functionstyle="old"
+# Main menu functions in the format of funct#tab#menuitem
+# First tab is 0, first item is 0
+# E.g.
+# Fist tab first item is: funct00
+# Second tab tird menuitem is: funct12
 
-function funct00 {
+
+ 
+# You could implement your functions right here, but it is probably
+# easier and less messy to put them in a separate file, and it will make
+# them easier to reuse or reorganise in the menu
+
+function tab1item1 {
 
 	#call the built in, fantastic function example. o yeah
 	example_function
 
 }
 
-function funct01 {
+function tab1item2 {
 
 	#To invoke a submenu, you can use the enter_submenu function, as defined in n-menu-functions. give the menu title as a first argument, enclosd in ""
 	enter_submenu $@ "Sample submenu title"
 }
 
 
-# Submenu functions. these will have a similar naming system, except
-# they would be extended by submenu position as well, making it subfunctt###
-# or sunfunct#tabpositionin#mainmenupositionin#submenuposition
-# that is, for e.g. the first tab second menuitem, 3rd submenuitem:
-# subfunct012
-# for the third tab, first submenu, fifth submenuitem
-# subfunct204
+# Submenu functions. These will have a similar naming system, except
+# they would be extended by submenu position as well,
+#
+# fucntionstyle="simple" (default)
+# 
+# Tab and menuitem are marked (in which submenu we are), 
+# then sub-item number follows, starting from 1 like so:
+# tab$item$sub$
+# E.g.
+# First tab, first menu item, first submenuu-item: tab1item1sub1
+# Third tab, fourth menu item, second submenu item: tab3item4sub2
+#
+# Backward compat:
+# functionstyle="old"
+#
+# Similar to main menus, only one digit more, starting from 0, like
+# subfunct$$$
+# or sunfunct$(tabposition)$(mainmenuposition)$(submenuposition)
+#E.g. F
+# First tab first menuitem, first submenuitem: subfunct000
+# Third tab, fourth menuitem, second submenuitem: subfunct231
 # and so on
 
-function subfunct010 {
+function tab1item2sub1 {
 
 	localhost_ping
 
 }
 
-function subfunct011 {
+function tab1item2sub2 {
 
 	example_function
 
 }
 
-function subfunct013 {
+function tab1item2sub4 {
 
     # Here is an example of how to invoke the flag setting submenu
 	#
@@ -97,116 +123,118 @@ function subfunct013 {
 	command_builder_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 }
 
+function tab1item2sub5 {
 
+	dummy_function
 
+}
+function tab1item2sub6 {
 
+	dummy_function
 
+}
 
-function funct02 {
+function tab1item3 {
+
 		localhost_ping
 
 }
 
-function funct03 {
-
-
+function tab1item4 {
 
 	command_builder_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
 
-
 }
 
-function funct04 {
+function tab1item5 {
 
     enter_root_shell
 
 }
 
-function funct10 {
+function tab2item1 {
 
 dummy_function
 
 }
 
-function funct12 {
+function tab2item3 {
 	dummy_function
 
 }
 
-function funct13 {
+function tab2item4 {
 	dummy_function
 
 
 }
 
-function funct14 {
+function tab2item5 {
 	dummy_function
 
 }
 
-function funct20 {
-
-	dummy_function
-
-}
-
-function funct21 {
+function tab3item1 {
 
 	dummy_function
 
 }
 
-function funct22 {
+function tab3item2 {
 
 	dummy_function
 
 }
 
-function funct23 {
+function tab3item3 {
 
 	dummy_function
 
 }
 
-function funct24 {
+function tab3item4 {
 
 	dummy_function
 
 }
 
-function funct30 {
+function tab3item5 {
 
 	dummy_function
 
 }
 
-function funct40 {
+function tab4item1 {
 
 	dummy_function
 
 }
 
-function funct50 {
+function tab5item1 {
 
+	dummy_function
+
+}
+
+function tab6item1 {
 
 	functsetup0
 
-
 }
 
-function funct51 {
+function tab6item2 {
 
 	functsetup1
 
 }
 
-function funct52 {
+function tab6item3 {
 
     functsetup2
 
 }
 
-function funct53 {
+function tab6item4 {
 
 	functsetup3
 

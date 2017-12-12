@@ -21,12 +21,12 @@
 # THE SOFTWARE.
 
 
-USER_DIR="$HOME/.config/LazyAdmin_Minimal/user"
+USER_DIR="$HOME/.config/LazyAdmin/user"
 COREDIRPLACEHOLDER
 
-. "$CORE_DIR/core-defaults-min.la"
-. "$CORE_DIR/menu-functions-min.la"
+. "$CORE_DIR/core-defaults.la"
+. "$CORE_DIR/menu-functions.la"
 
-. "$USER_DIR/user-defaults-min.la"
-. "$USER_DIR/user-functions-min.la"
-. "$USER_DIR/function-aliases-min.la"
+. "$USER_DIR/user-defaults.la"
+. "$USER_DIR/user-functions.la"
+. "$USER_DIR/function-aliases.la"
