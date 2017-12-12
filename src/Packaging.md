@@ -71,7 +71,7 @@ Include the -min.la files wherever ,marked, but rename them so that thyy no long
 'menu-functions-min.la' becomes 'menu-functions.la'
 etc.
 
-/Lazy_Admin_vX.Y_Minimal/── install.sh
+/Lazy_Admin_vX.Y_Minimal/── install-minimal.sh
                         │
                         ├── LICENSE
                         │

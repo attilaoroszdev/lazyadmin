@@ -23,6 +23,7 @@
 
 
 #The title displayed in the main menu
+
 maintitle="Lazy Admin - v 2.1 (Minimal Edition)"
 
 # Switch right panel on or off
