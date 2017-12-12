@@ -24,13 +24,13 @@ The first argument  , placed inside double quotes, will mark the name of the sub
 
 The second argument   will be the command itself. It can be a bash command, or your own function, that you have defined in n-user-functions, it can also include some preset flags or arguments. If it is more than one word, you'll need to put it in double quotes, again.
 
-From the third to the eleventh arguments   you will basically set the flags for your command, which you want to use as submenu items, to be used with the builder. You can use compound arguments, or multiple flags, anything in double quotes goes on one line. The maximum number of "settable" lines is 9.
+From the third to the eleventh arguments   you will basically set the flags for your command, which you want to use as sub-menu items, to be used with the builder. You can use compound arguments, or multiple flags, anything in double quotes goes on one line. The maximum number of "settable" lines is 9.
 
 For example, to invoke a ping command, with the optional flags  -v -c  and  -n , you would do:
 
    command_builder_function "Ping with flags" ping -v -c -n
 
-which would result in a flags submenu offering the options:
+which would result in a flags sub-menu offering the options:
 
    1 - Set arg. -v
    2 - Set arg. -c
@@ -57,7 +57,7 @@ Life-like(?) Example: You want to place a ping command, with the flags  -v -c -f
 
    }
 
-which would result in a submenu offering to execute  ping  with the below options:
+which would result in a sub-menu offering to execute  ping  with the below options:
 
    1 - Set arg. -v
    2 - Set arg. -c

@@ -64,7 +64,12 @@ This is the version that has it **all**
 
 ## Minimal edxition - install tarball structure
 
-A reduced version, with no full. This is th absolute minimum Lazy Admin runs on
+A reduced version, with no full. This is the absolute minimum Lazy Admin runs on
+
+Include the -min.la files wherever ,marked, but rename them so that thyy no longer have "-min" in the filename, such as 
+'includes-min.la' becomes 'includes.la'
+'menu-functions-min.la' becomes 'menu-functions.la'
+etc.
 
 /Lazy_Admin_vX.Y_Minimal/── install-minimal.sh
                         │
@@ -74,23 +79,23 @@ A reduced version, with no full. This is th absolute minimum Lazy Admin runs on
                         │
                         ├── Packaging.md
                         │
-                        └── files-vX.Y-min.tar.gz/──/core/─── core-defaults-min.la
+                        └── files-vX.Y-min.tar.gz/──/core/─── core-defaults(-min).la
                                                  |       |
-                                                 |       ├─── includes-min.la
+                                                 |       ├─── includes(-min).la
                                                  |       |
-                                                 |       └─── menu-functions-min.la
+                                                 |       └─── menu-functions.la
                                                  |
                                                  |
                                                  ├──/launcher/─── mladmin
                                                  |
                                                  |
-                                                 └──/user/─── function-aliases-min.la
+                                                 └──/user/─── function-aliases(-min).la
                                                          |
-                                                         ├─── menu-entries-min.la
+                                                         ├─── menu-entries(-min).la
                                                          |
-                                                         ├─── user-defaults-min.la
+                                                         ├─── user-defaults(-min).la
                                                          |
-                                                         └─── user-functions-min.la
+                                                         └─── user-functions(-min).la
 
 
 ## Portable edition - folder and file structure
@@ -151,6 +156,11 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
 
 Same as portable, but reduced, without fluff
 
+Include the -min.la files wherever ,marked, but rename them so that thyy no longer have "-min" in the filename, such as 
+'includes-min.la' becomes 'includes.la'
+'menu-functions-min.la' becomes 'menu-functions.la'
+etc.
+
 /Lazy_Admin_vX.Y_Port_Min/── pmladmin
                          │
                          ├── LICENSE
@@ -159,18 +169,18 @@ Same as portable, but reduced, without fluff
                          │
                          ├── Packaging.md
                          │
-                         ├──/core/─── core-defaults-min.la
+                         ├──/core/─── core-defaults(-min).la
                          |       |
-                         |       ├─── includes-port-min.la
+                         |       ├─── includes-port(-min).la
                          |       |
-                         |       └─── menu-functions-min.la
+                         |       └─── menu-functions.la
                          |
-                         └──/user/─── function-aliases-min.la
+                         └──/user/─── function-aliases(-min).la
                                  |
-                                 ├─── menu-entries-min.la
+                                 ├─── menu-entries(-min).la
                                  |
-                                 ├─── user-defaults-min.la
+                                 ├─── user-defaults(-min).la
                                  |
-                                 └─── user-functions-min.la
+                                 └─── user-functions(-min).la
 
 A later version of this document will give detailed explanations of instalélation structure, and the actual relations between included files, besides instructions and best practices about how to integrate Lazy Admin in your existing infrastructure, or how to build it into your own projects. until such time, you might as well figure it out for yourself-. :)

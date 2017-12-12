@@ -6,8 +6,8 @@
 | `  Down - ↓  or 's'`
 | `  Left (change tab) - ←  or 'a'`
 | `  Right (change tab) - →  or 'd'`
-| `  Change to right panel - Ctrl+→  or 'r'`
-| `  Change to left panel - Ctrl+→  or 'l'`
+| `  Change to right panel - Ctrl + →  or 'r'`
+| `  Change to left panel - Ctrl + →  or 'l'`
 | `  Back to previous level - 'b'`
 | `  Select menu item - '1' to '9' or <Enter>`
 

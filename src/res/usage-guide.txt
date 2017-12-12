@@ -20,16 +20,40 @@ You can also use sub-menus, if you like, each could hold up to nine entries with
 
 If that is not enough, you could increase the main menu height. The maximum capacity of the main menu would be 9 entries for both menus and sub-menus. You could also add up to nine tabs, if you use short enough names. This limitation is due to how Lazy Admin handles menu function aliases (single digits are only accepted at the moment)
 
-Thus, the maximum capacity assuming 10 tabs, each with nine menus that hold nine submenus, is 10x9x9=810 entries. Now, each submenu item can hold a command builder (more on that later), which is technically one command, with a maximum of 9 built in predefined arguments or argument sets, plus the option to manually specify any (see below). That means a minimum of 9 types of combinations of that 810 commands, making the possible variations total to 7290, and then we still disregarded manual entries...
+Thus, the maximum capacity assuming 10 tabs, each with nine menus that hold nine sub-menus, is 10x9x9=810 entries. Now, each sub-menu item can hold a command builder (more on that later), which is technically one command, with a maximum of 9 built-in predefined arguments or argument sets, plus the option to manually specify any (see below). That means a minimum of 9 types of combinations of that 810 commands, making the possible variations total to 7290, and then we still disregarded manual entries...
 
 Now, if you have 810 (or 7290) commands or scripts to start with, you already are having serious issues...
 
+
+Command line arguments
+----------------------
+
+Lazy Admin can be started by either typing "ladmin" as a command, or for the portable version by navigating to its folder and launching it with either "bash pladmin" or "./pladmin".
+
+The full installation and the full portable version take two command line arguments:
+
+- ""--join-lines" and
+- "--load-profile"
+
+join-lines
+``````````
+
+"--join-lines" can override the default setting of the "$displaylineconnectors" variable. This is useful when accessing Lazy Admin via e.g. SSH, and the device used does not display Lazy Admin correctly. This can happen when using a terminal emulator for Android, which often do not use proper monospace font.
+
+- "ladmin --join-lines off" will start Lazy Admin without drawing line-jonits, so that non-monospace 
+- "ladmin --join-lines on" will force drawing line-jonits, even when Lazy Admin is set not to draw them
+
+load-profile
+```````````
+
+"--load profile" can be used to load a custom user profile. This profile must be a directory, named anything, but with contents identical to the "user" folder located either in "~/.config/LazyAdmin/", or the portable version's root folder. 
+
+Run "ladmin --load-profile profilefolder" (obviously replacing "profilefolder" with the folder name containing the custom profile) to load different default (user) settings, different menus and user functions, etc.
 
 Navigation
 ----------
 
 Navigation is simple:
-
 
  - Change tabs by the left or right arrows.
 
@@ -39,7 +63,7 @@ Navigation is simple:
 
  - Change to the right panel by pressing Ctrl + right arrow, and back to the left panel by Ctrl + left arrow
 
-If a menu entry entry is skipped (this can be done by entering  skip  in its place in the menu file, can be handy for visual grouping), its position still counts. E.g. if you have an arrangement of a menu like this (with a gap between the 2nd and 3rd):
+If a menu entry is skipped (this can be done by entering  skip  in its place in the menu file, can be handy for visual grouping), its position still counts. E.g. if you have an arrangement of a menu like this (with a gap between the 2nd and 3rd):
 
    First entry
    Second entry
@@ -78,7 +102,7 @@ The preset hotkeys are as follows:
   Display shortkeys - k
   Quit LazyAdmin - q
 
-There are some reserved keys for certain setup menu items, so that you can stuillk access them, even if you prefer not to display a Setup tab:
+There are some reserved keys for certain setup menu items, so that you can still access them, even if you prefer not to display a Setup tab:
 
   Edit menu entries - e
   Edit user functions - u
@@ -94,9 +118,9 @@ In the command builder, you have three additional shortkeys, which you can only 
 Command builder
 ---------------
 
-There is a special, visual command builder function built right into Lazy Admin, called the command builder. You can bind this interface to any menu or submenu item, and it will bring up a spcial type of submenu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this funtcionality, you need to bind  flags_submenu_funtion  with the right arguments to the menu or submenu item you wish to invoke the command builder with.
+There is a special, visual command builder function built right into Lazy Admin, called the command builder. You can bind this interface to any menu or sub-menu item, and it will bring up a special type of sub-menu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this functionality, you need to bind  flags_submenu_funtion  with the right arguments to the menu or sub-menu item you wish to invoke the command builder with.
 
-In the command builder menu, you can select an item by navigating to it, or pressing enter, and than the flag or argument bound to that item will be added to the build command. You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to run the built command. Currently the number of preset arguments or argument sets is limited to 9, so as to keep the number-shortkey functionality intact. The height of the command builder menu will dynamically change according to the number of preset arguments passed to it.
+In the command builder menu, you can select an item by navigating to it, or pressing enter, and then the flag or argument bound to that item will be added to the build command. You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to run the built command. Currently the number of preset arguments or argument sets is limited to 9, so as to keep the number-shortkey functionality intact. The height of the command builder menu will dynamically change according to the number of preset arguments passed to it.
 
 So if e.g. you want to ping  google.com  with five packets and get a verbose output, and you wish to do this 23 times a day, you could set up the  -v  and  -c 5  flags, and manually enter the domain to ping, like this:
 
@@ -134,7 +158,7 @@ Of course, this may look as if it does not make any sense, and in this case you 
 Bottom row
 ----------
 
-At the bottom of the UI, there is a special row, which displays a short one liner description of the currently highlighted menu item. These descriptions must be set at the same time menu items are set up, and are only available for menu and submenu items, and right panel items, but not for the command builder
+At the bottom of the UI, there is a special row, which displays a short one liner description of the currently highlighted menu item. These descriptions must be set at the same time menu items are set up, and are only available for menu and sub-menu items, and right panel items, but not for the command builder
 
 That is all for now. I hope you find it useless, but fun to use.
 

@@ -24,18 +24,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 USER_DIR="$CURRENT_DIR/user"
 CORE_DIR="$CURRENT_DIR/core"
 
-. "$CORE_DIR/includes-port-min.la"
+. "$CORE_DIR/includes-port.la"
 
 
-if [[ $1 == ""  ]]; then
-
-    arg1="default"
-
-else
-
-    arg1=$1
-
-fi
-
-
-main $arg1
+main "$@"
