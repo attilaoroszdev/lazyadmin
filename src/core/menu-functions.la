@@ -463,7 +463,7 @@ function write_help_menu_items {
     menulength=3
 
     
-    helpmenuentry[0]="1 - Original Lazy Admin usage guide"
+    helpmenuentry[0]="1 - Lazy Admin usage guide"
     helpmenuentry[1]="2 - Configuration and scripting guide"
     helpmenuentry[2]="3 - Command builder usage guide"
 
@@ -710,7 +710,7 @@ function write_descriptor {
 function write_help_descriptor {
 
      
-    helpmenudescentry[0]="Basic setup guide to Lazy Admin"
+    helpmenudescentry[0]="Basic setup and usage guide to Lazy Admin"
     helpmenudescentry[1]="In-depth configuration guide"
     helpmenudescentry[2]="How to use the command-builder submenu"
 
