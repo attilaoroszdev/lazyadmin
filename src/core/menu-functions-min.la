@@ -1050,7 +1050,7 @@ function pick_help_menu_item {
 
        fi
        ;;
-       $'\x0a' | '')
+     $'\x0a' | '')
         # If enter is pressed
 
         if [[ "$activepanel" == "right" ]]; then
@@ -1074,10 +1074,7 @@ function pick_help_menu_item {
       functright4
       ;;
     'b' | "B")
-      if [[ "$submenu" == "true" ]]; then
-      back_to_main_menu "reflow" "read"
-
-      fi
+        back_to_main_menu "read" "reflow"
       ;;
 
     esac
@@ -1257,7 +1254,7 @@ function menu_item_picker_subflags	{
         	;;
         'b' | "B")
             subflagsmenu=false
-            back_to_main_menu
+            back_to_main_menu "read"
             ;;
 
     esac
@@ -1441,9 +1438,10 @@ function back_to_main_menu {
 
     fi
 
-    if [[ $2 == "read" ]]; then
+    if [[ $1 == "read" ]]; then
 
         read_menu_items
+        read_descriptor
 
     fi
 
@@ -1451,7 +1449,7 @@ function back_to_main_menu {
 
     clear_menu
 
-    if [[ $1 == "reflow" ]]; then
+    if [[ $2 == "reflow" ]]; then
 
         reflow_menu
 
@@ -1646,16 +1644,11 @@ function functright2 {
 
 function functright3 {
 
-    subflagsmenu=false
-
-    # Need this, to redraw title for some reason...
-    if [[ $helpsubmenu == "true" ]]; then
-
-        backargument="reflow"
-
+    if [[ $subflagsmenu ]]; then
+      subflagsmenu=false
     fi
-
-    back_to_main_menu $backargument
+ 
+    back_to_main_menu "read"
 
 }
 
