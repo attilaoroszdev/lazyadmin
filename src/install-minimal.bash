@@ -469,6 +469,11 @@ sleep 1
 
 echo
 echo "Installation seems to have finished."
+echo "You can start LazyAdmin by typing"
+echo
+echo "ladmin"
+echo
+echo "as a command."
 echo "Now press anything to go back to doing whatever it was you did before..."
 read -n 1 -s keypress
 
