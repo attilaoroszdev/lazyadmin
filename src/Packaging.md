@@ -1,4 +1,4 @@
-# Packaging Instructions
+# Packaging Instructions v2.1
 
 There are currently four (4) "officially" packaged versions, all using different portions of this source code. While you are free to mix and match any files, in any way your project needs, this document is meant to help you identify the different parts and how they are all connected, to better understand the logic behind all this mess. Or the mess behind all this logic. It's up to you which one you see first.
 
