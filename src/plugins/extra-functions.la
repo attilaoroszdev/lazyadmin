@@ -180,12 +180,11 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
 function enter_root_shell {
 
      rootexitflag="true"
-    # TODO check if sudo is installed AND user has sudo rights. if not, do it with su
     clear
     echo
     echo "Gaining privileges..."
     echo
-    sudo ladmin "default" "false"
+    run_as_root "ladmin"
 
 }
 

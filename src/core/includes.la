@@ -27,11 +27,11 @@ RESDIRPLACEHOLDER
 
 
 . "$CORE_DIR/core-defaults.la"
-. "$CORE_DIR/menu-functions.la"
+. "$CORE_DIR/main-functions.la"
 
 . "$USER_DIR/user-defaults.la"
 . "$USER_DIR/user-functions.la"
-. "$USER_DIR/function-aliases.la"
+. "$USER_DIR/menu-bindings.la"
 
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"

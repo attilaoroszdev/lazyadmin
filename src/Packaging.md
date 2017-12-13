@@ -3,7 +3,7 @@
 There are currently four (4) "officially" packaged versions, all using different portions of this source code. While you are free to mix and match any files, in any way your project needs, this document is meant to help you identify the different parts and how they are all connected, to better understand the logic behind all this mess. Or the mess behind all this logic. It's up to you which one you see first.
 
 
-## "Full" edition - install tarball sructure
+## "Full" edition - install tarball structure
 
 This is the version that has it **all**
 
@@ -62,11 +62,11 @@ This is the version that has it **all**
 
 
 
-## Minimal edxition - install tarball structure
+## Minimal edition - install tarball structure
 
 A reduced version, with no full. This is the absolute minimum Lazy Admin runs on
 
-Include the -min.la files wherever ,marked, but rename them so that thyy no longer have "-min" in the filename, such as 
+Include the -min.la files wherever ,marked, but rename them so that they no longer have "-min" in the filename, such as 
 'includes-min.la' becomes 'includes.la'
 'menu-functions-min.la' becomes 'menu-functions.la'
 etc.
@@ -83,10 +83,10 @@ etc.
                                                  |       |
                                                  |       ├─── includes(-min).la
                                                  |       |
-                                                 |       └─── menu-functions.la
+                                                 |       └─── menu-functions(-min).la
                                                  |
                                                  |
-                                                 ├──/launcher/─── mladmin
+                                                 ├──/launcher/─── ladmin (rename from mladmin)
                                                  |
                                                  |
                                                  └──/user/─── function-aliases(-min).la
@@ -100,7 +100,7 @@ etc.
 
 ## Portable edition - folder and file structure
 
-Ready to go, no installation needed. Everything is dynamically linked, so it's useable form anywhere, any time
+Ready to go, no installation needed. Everything is dynamically linked, so it's useable from anywhere, any time
 
 /Lazy_Admin_vX.Y_Portable/── pladmin
                          │
@@ -156,12 +156,12 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
 
 Same as portable, but reduced, without fluff
 
-Include the -min.la files wherever ,marked, but rename them so that thyy no longer have "-min" in the filename, such as 
+Include the -min.la files wherever ,marked, but rename them so that they no longer have "-min" in the filename, such as 
 'includes-min.la' becomes 'includes.la'
 'menu-functions-min.la' becomes 'menu-functions.la'
 etc.
 
-/Lazy_Admin_vX.Y_Port_Min/── pmladmin
+/Lazy_Admin_vX.Y_Port_Min/── pladmin (rename from pmladmin)
                          │
                          ├── LICENSE
                          │
@@ -173,7 +173,7 @@ etc.
                          |       |
                          |       ├─── includes-port(-min).la
                          |       |
-                         |       └─── menu-functions.la
+                         |       └─── menu-functions(-min).la
                          |
                          └──/user/─── function-aliases(-min).la
                                  |
@@ -183,4 +183,4 @@ etc.
                                  |
                                  └─── user-functions(-min).la
 
-A later version of this document will give detailed explanations of instalélation structure, and the actual relations between included files, besides instructions and best practices about how to integrate Lazy Admin in your existing infrastructure, or how to build it into your own projects. until such time, you might as well figure it out for yourself-. :)
+A later version of this document will give detailed explanations of installation structure, and the actual relations between included files, besides instructions and best practices about how to integrate Lazy Admin in your existing infrastructure, or how to build it into your own projects. until such time, you might as well figure it out for yourself-. :)

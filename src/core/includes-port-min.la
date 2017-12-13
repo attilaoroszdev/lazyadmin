@@ -27,9 +27,9 @@ CORE_DIR="$CURRENT_DIR"
 
 
 . "$CORE_DIR/core-defaults.la"
-. "$CORE_DIR/menu-functions.la"
+. "$CORE_DIR/main-functions.la"
 
 . "$USER_DIR/user-defaults.la"
 . "$USER_DIR/user-functions.la"
-. "$USER_DIR/function-aliases.la"
+. "$USER_DIR/menu-bindings.la"
 
