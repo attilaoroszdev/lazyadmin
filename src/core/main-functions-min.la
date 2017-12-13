@@ -935,7 +935,7 @@ function pick_menu_item {
             ;;
         
          "q" | "Q") #this handles exit function
-            functright4
+            functright2
             ;;
          "b" | "B")
             if [[ "$submenu" == "true" ]]; then
@@ -1058,7 +1058,7 @@ function pick_help_menu_item {
       display_hotkeys
       ;;
     "q" | "Q") #this handles exit function
-      functright4
+      functright2
       ;;
     'b' | "B")
         back_to_main_menu "read" "reflow"
@@ -1232,7 +1232,7 @@ function menu_item_picker_subflags  {
         
         "q" | "Q")
           #this handles exit
-          functright4
+          functright2
           ;;
         'b' | "B")
             subflagsmenu=false

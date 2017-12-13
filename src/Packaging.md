@@ -20,7 +20,7 @@ This is the version that has it **all**
                                      |       |
                                      |       ├─── includes.la
                                      |       |
-                                     |       └─── menu-functions.la
+                                     |       └─── main-functions.la
                                      |
                                      |
                                      ├──/launcher/─── ladmin
@@ -52,7 +52,7 @@ This is the version that has it **all**
                                      |      └─── user_files.tar.gz
                                      |
                                      |
-                                     └──/user/─── function-aliases.la
+                                     └──/user/─── menu-bindings.la
                                              |
                                              ├─── menu-entries.la
                                              |
@@ -83,13 +83,13 @@ etc.
                                                  |       |
                                                  |       ├─── includes(-min).la
                                                  |       |
-                                                 |       └─── menu-functions(-min).la
+                                                 |       └─── main-functions(-min).la
                                                  |
                                                  |
                                                  ├──/launcher/─── ladmin (rename from mladmin)
                                                  |
                                                  |
-                                                 └──/user/─── function-aliases(-min).la
+                                                 └──/user/─── menu-bindings(-min).la
                                                          |
                                                          ├─── menu-entries(-min).la
                                                          |
@@ -114,7 +114,7 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |       |
                          |       ├─── includes-port.la
                          |       |
-                         |       └─── menu-functions.la
+                         |       └─── main-functions.la
                          |
                          │
                          ├──/plugins/─── display-help.la
@@ -143,7 +143,7 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |      └─── user_files.tar.gz
                          |
                          |
-                         └──/user/─── function-aliases.la
+                         └──/user/─── menu-bindings.la
                                  |
                                  ├─── menu-entries.la
                                  |
@@ -173,9 +173,9 @@ etc.
                          |       |
                          |       ├─── includes-port(-min).la
                          |       |
-                         |       └─── menu-functions(-min).la
+                         |       └─── main-functions(-min).la
                          |
-                         └──/user/─── function-aliases(-min).la
+                         └──/user/─── menu-bindings(-min).la
                                  |
                                  ├─── menu-entries(-min).la
                                  |
