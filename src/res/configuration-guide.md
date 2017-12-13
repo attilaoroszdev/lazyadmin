@@ -164,11 +164,11 @@ And that's it. All of it. Of course the right panel menu-items are described the
 
 **Note: Starting with v2.1, a new, more human readable, and hopefully user-friendly alias system will be the default. the old notation will still be available, for backward compatibility"
 
-To bind functions to menus, Lazy Admin uses numbered function aliases, where the numbers that are very similar to the numbers used with of the menu entries. The file `$HOME/.config/LazyAdmin/user/function-aliases.la` will hold all the user's defined aliases. 
+To bind functions to menus, Lazy Admin uses numbered function aliases, where the numbers that are very similar to the numbers used with of the menu entries. The file `$HOME/.config/LazyAdmin/user/menu-bindings.la` will hold all the user's defined aliases. 
 
 ### Simple aliases
 
-To use the simple alias notation, your `function-aliases.la` file must contain the following line:
+To use the simple alias notation, your `menu-bindings.la` file must contain the following line:
 
  | `functionstyle="simple"`
 
@@ -204,7 +204,7 @@ Simple as that.
 
 ### Old-style aliases
 
-To use the old style aliases, your `function-aliases.la` file should either contain the line
+To use the old style aliases, your `menu-bindings.la` file should either contain the line
 
 | `functionstyle="old"`
 
