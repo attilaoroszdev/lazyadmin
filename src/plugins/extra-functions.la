@@ -277,3 +277,11 @@ function run_command_in_new_window {
 
 
 }
+
+function drop_to_shell {}
+    clear
+    tput cnorm
+    bash
+    tput civis
+    
+}
