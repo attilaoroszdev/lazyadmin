@@ -2,9 +2,14 @@
 
 Lazy Admin will draw a pseudo graphical menu on your terminal, or terminal emulator, using nothing but `bash`, and `sed`.
 
+
+
 ## Why Lazy Admin?
 
-You can think of Lazy Admin as aliases on steroids. Instead of remembering  and typing out long commands, weird script names, and all their parameters, you can store the on a conveniently navigable tabbed menu-like interface.
+**You can think of Lazy Admin as aliases on steroids. Instead of remembering  and typing out long commands, weird script 
+
+
+names, and all their parameters, you can store the on a conveniently navigable tabbed menu-like interface.
 
 ## What does it do?
 
