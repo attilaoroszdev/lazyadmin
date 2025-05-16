@@ -42,88 +42,87 @@ fi
 # either with or without sudo
 function run_as_root {
 
+    if [[ -z $preferredrootcommand ]]; then
+        echo
+        echo "Will need root privileges to run some parts."
+        echo "How do you like to become root"
+        echo
+        echo "1 - su"
+        echo "2 - sudo"
+        echo "3 - I'm not sure..."
+        echo
+        read -p "Pick one > " -n 1 usesudo
+        echo " "
 
-        if [[ -z $preferredrootcommand ]]; then
-            echo
-            echo "Will need root privileges to run some parts."
-            echo "How do you like to become root"
-            echo
-            echo "1 - su"
-            echo "2 - sudo"
-            echo "3 - I'm not sure..."
-            echo
-            read -p "Pick one > " -n 1 usesudo
-            echo " "
-            while true; do
+        while true; do
 
-                case $usesudo in
+            case $usesudo in
 
-                "1")
-                    preferredrootcommand="su"
-                   
-                    break
-                    ;;
-                   
-                "2")
+            "1")
+                preferredrootcommand="su"
+                
+                break
+                ;;
+                
+            "2")
+                preferredrootcommand="sudo"
+                
+                break
+                ;;
+            "3")
+                if groups "$(whoami)" | grep &>/dev/null '\bsudo\b'; then
+                    
+                    echo
+                    echo "Your user can use sudo, setting it as preference..."
+                    echo
+
                     preferredrootcommand="sudo"
-                   
-                    break
-                    ;;
-                "3")
-                    if groups "$(whoami)" | grep &>/dev/null '\bsudo\b'; then
-                        
-                        echo
-                        echo "Your user can use sudo, setting it as preference..."
-                        echo
 
-                        preferredrootcommand="sudo"
+                else
 
-                    else
-
-                        echo
-                        echo "Your user can't use sudo, setting 'su' as preference..."
-                        echo
-
-                        preferredrootcommand="su"
-
-                    fi   
-                    break
-
-                    ;;
-                
-                *)
                     echo
-                    echo "Please go again. Pick 1 - 3:"
+                    echo "Your user can't use sudo, setting 'su' as preference..."
                     echo
-                    read -p "(1, 2, or 3) > " -n 1 usesudo
-                    ;;
 
-                esac
-            done
-        fi
+                    preferredrootcommand="su"
+
+                fi   
+                break
+
+                ;;
+            
+            *)
+                echo
+                echo "Please go again. Pick 1 - 3:"
+                echo
+                read -p "(1, 2, or 3) > " -n 1 usesudo
+                ;;
+
+            esac
+        done
+    fi
+    
+    commandsuffix=""
+
+    echo
+    echo "I need to become root now."
+
+    if [[ $preferredrootcommand == "su" ]]; then
         
+        echo "Plase provide root pasword when prompted"
+        echo
+        
+        su -c "$1; exit"
 
-            commandsuffix=""
+    else 
+        
+        echo "Please provide sudo password if prompted"
+        echo
+        
+        sudo -- sh -c "$1"                
 
-            echo
-            echo "I need to become root now."
+    fi
 
-            if [[ $preferredrootcommand == "su" ]]; then
-               
-                echo "Plase provide root pasword when prompted"
-                echo
-                
-                su -c "$1; exit"
-
-            else 
-                
-                echo "Please provide sudo password if prompted"
-                echo
-                
-                sudo -- sh -c "$1"                
-
-            fi
-   
 }
 
 
@@ -178,7 +177,7 @@ fi
 
 
 echo
-echo "This is the installer for WL Admin. (Learn more at http://wayoflinux.com)"
+echo "This is the installer for Lazy Admin."
 echo
 echo "First I need you to tell me, wether you want me to create a user"
 echo "specific installation in $HOME/.LazyAdmin/, or install globally"

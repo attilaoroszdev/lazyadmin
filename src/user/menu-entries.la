@@ -55,9 +55,9 @@ _endmenutab
 _menu1
 1 - Run sample function :: Will run an example function
 2 - Show submenu... :: This menuitem leads to a submenu
-3 - Ping localhost :: This will ping the localhost 5 times
+3 - Drop to CMD :: Drop to a command prompt. Type 'exit' to return to menu
 4 - Ping localhost with command builder :: Show example of visually setting flags to a command
-5 - Launch a root shell :: Enter root mode. Be very careful, this is real!
+5 - Launch in root mode :: Enter root mode. Be very careful, this is real!
 _endmenu1
 
 # Submenu itmems for first tab, second menu item

@@ -136,7 +136,7 @@ function tab1item2sub6 {
 
 function tab1item3 {
 
-		localhost_ping
+		drop_to_shell
 
 }
 
@@ -261,7 +261,7 @@ function functsetup1 {
 
 function functsetup2 {
 
-    edit_setup_file "$USER_DIR/function-aliases.la"
+    edit_setup_file "$USER_DIR/menu-bindings.la"
 
 }
 
