@@ -50,4 +50,4 @@ rightpanelwidth=27
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)
 # Which might render these out of place
-displaylineconnectors="true"
+displaylineconnectors=true

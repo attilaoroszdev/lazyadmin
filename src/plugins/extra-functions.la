@@ -179,7 +179,7 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
 # Use this at your own risk-...
 function enter_root_shell {
 
-     rootexitflag="true"
+     rootexitflag=true
     clear
     echo
     echo "Gaining privileges..."

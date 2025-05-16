@@ -25,13 +25,13 @@ function display_markdown_help {
 
     if hash pandoc 2>/dev/null; then
 
-        pandocinstalled="true"
+        pandocinstalled=true
 
     fi
 
     if hash lynx 2>/dev/null; then
 
-        lynxinstalled="true"
+        lynxinstalled=true
 
     fi
 

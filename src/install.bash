@@ -137,7 +137,7 @@ function set_symlink_dir {
     read -p "> " symlinkdir
     while true; do
         if [[ "$symlinkdir" == "none" ]]; then
-            symlinking="false"
+            symlinking=false
             echo
             echo "No symbolic link will be created."
             sleep 1
@@ -148,7 +148,7 @@ function set_symlink_dir {
                 echo "A symbolic link will be created in"
                 echo
                 echo "$symlinkdir"
-                symlinking="true"
+                symlinking=true
                 sleep 1
                 break
             else
@@ -166,26 +166,26 @@ function check_for_external_dependencies {
 
     if hash pandoc 2>/dev/null; then
 
-        pandocinstalled="true"
+        pandocinstalled=true
 
     fi
 
     if hash lynx 2>/dev/null; then
 
-        lynxinstalled="true"
+        lynxinstalled=true
 
     fi
 
 
     if hash xdotool 2>/dev/null; then
 
-        xdotoolinstalled="true"
+        xdotoolinstalled=true
 
     fi
 
     if hash setxkbmap 2>/dev/null; then
 
-        setxkbmapinstalled="true"
+        setxkbmapinstalled=true
 
     fi
 
@@ -316,7 +316,7 @@ while true; do
         echo
         echo "A symlink will be created in /usr/local/bin"
         echo
-        symlinking="true"
+        symlinking=true
         symlinkdir="/usr/local/bin"
         break
         ;;
@@ -402,7 +402,7 @@ if [[ "$(whoami)" != "root" ]]; then
 fi
 
 
-if [[ $installtype = "local" ]]; then
+if [[ $installtype == "local" ]]; then
 
    if [[ -d "$HOME/.LazyAdmin/" ]]; then
 
@@ -424,9 +424,9 @@ if [[ $installtype = "local" ]]; then
    
 else
 
-    needroot = false
+    needroot=false
     if [["$(stat -c "%U" "/opt")" == "root"]] || ["$(stat -c "%G" "/opt")" == "root"]; then
-        needroot = true
+        needroot=true
     fi
 
     if $needroot; then
@@ -547,9 +547,9 @@ if $symlinking; then
     echo
 
     if [["$(stat -c "%U" "$symlinkdir")" == "root"]] || ["$(stat -c "%G" "$symlinkdir")" == "root"]; then
-        needroot = true
+        needroot=true
     else
-        needroot = false
+        needroot=false
 
     if [[ -f "$symlinkdir/ladmin" ]]; then
         if $needroot; then

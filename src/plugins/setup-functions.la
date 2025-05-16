@@ -33,19 +33,19 @@ function check_editor {
 
         if hash nano 2>/dev/null; then
 
-            hasnano="true"
+            hasnano=true
 
         fi
 
         if hash vi 2>/dev/null; then
 
-            hasvi="true"
+            hasvi=true
 
         fi
 
         if hash emacs 2>/dev/null; then
 
-            hasemacs="true"
+            hasemacs=true
 
         fi
 

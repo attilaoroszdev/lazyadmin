@@ -83,13 +83,13 @@ function read_menu_items {
 
     menuentry=""
 
-    if [[ "$submenu" == "true" ]]; then
+    if submenu; then
 
        OLDIFS="$IFS"
        IFS=$'\n'
        menuentry=( `cat $menufile | sed -n '/'_submenu$subparent$subitem'/{:a;n;/'_endsubmenu$subparent$subitem'/q;p;ba}'` )
 
-       if [[ $helpsubmenu == "true" ]]; then
+       if helpsubmenu; then
 
            menuheight=$helpsubmenuheight
 
@@ -198,7 +198,7 @@ function read_descriptor {
 
   if [[ -z $menutype || $menutype == "old" ]]; then
 
-    if [[ "$submenu" == "true" ]]; then
+    if submenu; then
 
        OLDIFS="$IFS"
        IFS=$'\n'
@@ -236,7 +236,7 @@ function read_descriptor {
           OLDIFS="$IFS"
           IFS=$'\n'
 
-          if [[ "$submenu" == "true" ]]; then
+          if submenu; then
               menudescentry=( `cat $menufile | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'` )
 
 
@@ -301,7 +301,7 @@ function read_tab_items {
 function read_rightpanel_items {
     OLDIFS="$IFS"
     IFS=$'\n'
-    if [[ "$submenu" == "true" ]]; then
+    if submenu; then
     	rightpanelentry=( `cat $menufile | sed -n '/'_subrightpanel'/{:a;n;/'_endsubrightpanel'/q;p;ba}'` )
     else
     	rightpanelentry=( `cat $menufile | sed -n '/'_rightpanel'/{:a;n;/'_endrightpanel'/q;p;ba}'` )
@@ -327,7 +327,7 @@ function write_tab_items {
 
     # Mpodify top line first, draw connectors
 
-    if [[ $displaylineconnectors == "true" ]]; then
+    if displaylineconnectors; then
 
         horizontalconnectorposition=0
 
@@ -380,7 +380,7 @@ function write_tab_items {
      fi
     done
 
-    if [[ $displaylineconnectors == "true" ]]; then
+    if displaylineconnectors; then
 
         # Then draw connectors ont he bottom line
         horizontalconnectorposition=0
@@ -545,16 +545,16 @@ function draw_menu {
 
     tput civis
 
-    if [[ $subflagsmenu == "true" ]]; then
+    if subflagsmenu; then
 
       let menuheight=$menulength+3
       headerheight=$subheaderheight;
       title=$subflagsmenutitle
 
     else
-    if [[ $submenu == "true" ]]; then
+    if submenu; then
 
-       if [[ $helpsubmenu == "true" ]]; then
+       if helpsubmenu; then
 
            menuheight=$helpsubmenuheight
 
@@ -589,7 +589,7 @@ function draw_menu {
 
     fi
 
-    if [[ "$root" == "true" ]]; then
+    if root; then
 
     title=$title$roottitle
     fi
@@ -628,7 +628,7 @@ function draw_menu {
 
     #Draw top and bottom border of menu tabs
     #Skip this for submenus
-    if [[ $submenu == "false" ]]; then
+    if ! submenu; then
 
     	((cursorpos++))
     	tput cup $cursorpos 0
@@ -646,7 +646,7 @@ function draw_menu {
 
        cursorpos=$headerheight
 
-       if $rightpanel && [[ $displaylineconnectors == "true" ]]; then
+       if $rightpanel && $displaylineconnectors; then
 
            tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
            echo "┯"
@@ -669,7 +669,7 @@ function draw_menu {
     tput cup $cursorpos 0
     draw_line
 
-    if $rightpanel && [[ $displaylineconnectors == "true" ]]; then
+    if $rightpanel && $displaylineconnectors; then
 
        tput cup $cursorpos $(( $menuwidth-$rightpanelwidth ))
        echo "┷"
@@ -816,7 +816,7 @@ function pick_menu_item {
           $'\e[B'|$'\e0B'|"s"|"S")
 
             #Double jump if running on skip
-            if [[ "$activepanel" == "left" ]] && [[ "${menuentry[$menupos+1]}" = "skip" ]]; then
+            if [[ "$activepanel" == "left" ]] && [[ "${menuentry[$menupos+1]}" == "skip" ]]; then
               ((menupos++))
             fi
             #Chexck for right panel too
@@ -829,7 +829,7 @@ function pick_menu_item {
 
           $'\e[D'|$'\e0D'|"a"|"A")
 
-            if [[ "$submenu" == "false" ]]; then
+            if ! submenu; then
               # if [[ $tabpos -gt 0 ]]; then
                  clear_menu
                  menupos=0
@@ -839,7 +839,7 @@ function pick_menu_item {
             ;;
 
          $'\e[C'|$'\e0C'|"d"|"D")
-            if [[ "$submenu" == "false" ]]; then
+            if ! submenu; then
            #   if [[ $tabpos -lt $tablength ]]; then
                  clear_menu
                  menupos=0
@@ -869,7 +869,7 @@ function pick_menu_item {
                 
                if [[ -z $functionstyle || $functionstyle == "old" ]]; then
 
-                 if [[ "$submenu" == "true" ]]; then
+                 if submenu; then
                     subfunct$tabpos$mainmenupos$key $tabpos $menupos
                  else
                     funct$tabpos$key $tabpos $menupos
@@ -878,7 +878,7 @@ function pick_menu_item {
                elif [[ $functionstyle == "simple" ]]; then
 
 
-                 if [[ "$submenu" == "true" ]]; then
+                 if submenu; then
                     tab$(( $tabpos+1 ))item$(( $mainmenupos+1 ))sub$(( $key+1 )) $tabpos $menupos
                  else
                     tab$(( $tabpos+1 ))item$(( $key+1 )) $tabpos $menupos
@@ -905,7 +905,7 @@ function pick_menu_item {
 
               if [[ -z $functionstyle || $functionstyle == "old" ]]; then          
 
-                 if [[ "$submenu" == "true" ]]; then
+                 if submenu; then
                   
                      subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
                  
@@ -918,7 +918,7 @@ function pick_menu_item {
               elif [[ $functionstyle == "simple" ]]; then
 
 
-                 if [[ "$submenu" == "true" ]]; then
+                 if submenu; then
                     tab$(( $tabpos+1 ))item$(( $mainmenupos+1 ))sub$(( $menupos+1 )) $tabpos $menupos
                  else
                     tab$(( $tabpos+1 ))item$(( $menupos+1 )) $tabpos $menupos
@@ -947,7 +947,7 @@ function pick_menu_item {
             functright4
             ;;
          "b" | "B")
-            if [[ "$submenu" == "true" ]]; then
+            if submenu; then
                back_to_main_menu
                return
             fi
@@ -1012,7 +1012,7 @@ function pick_help_menu_item {
       $'\e[B'|$'\e0B'|"s"|"S")
 
         #Double jump if running on skip
-        if [[ "$activepanel" == "left" ]] && [[ "${helpmenuentry[$menupos+1]}" = "skip" ]]; then
+        if [[ "$activepanel" == "left" ]] && [[ "${helpmenuentry[$menupos+1]}" == "skip" ]]; then
           ((menupos++))
         fi
 
@@ -1282,21 +1282,21 @@ function command_builder_function {
 
     set_args=""
 
-    if [[ $submenu == "true" ]]; then
+    if submenu; then
 
-        remaininsubmenu="true"
+        remaininsubmenu=true
         oldsubmenutitle="$submenutitle"
         oldtabpos=$tabpos
         oldmainmenupos=$mainmenupos
 
     else
 
-        remaininsubmenu="false"
+        remaininsubmenu=false
 
     fi
 
-    submenu="true"
-    subflagsmenu="true"
+    submenu=true
+    subflagsmenu=true
 
     subflagsmenutitle="$1"
     submenucommand="$2"
@@ -1342,7 +1342,7 @@ function command_builder_function {
 
     done
     # submenu="$sourcesubmenu"
-    # subflagsmenu="false"
+    # subflagsmenu=false
 
 }
 
@@ -1382,7 +1382,7 @@ function display_hotkeys {
     # or the single help file, depending on where the user is
 function display_help {
 
-    if [[ $subflagsmenu == "true" ]]; then
+    if subflagsmenu; then
 
         functhelp_commanbuilder
 
@@ -1418,19 +1418,19 @@ function back_to_main_menu {
 
     activepanel="left"
     menupos=0
-    subflagsmenu="false"
+    subflagsmenu=false
     helpsubmenu=false
 
-    if [[ $remaininsubmenu == "true" ]]; then
+    if remaininsubmenu; then
 
-        submenu="true"
-        remaininsubmenu="false"
+        submenu=true
+        remaininsubmenu=false
         submenutitle="$oldsubmenutitle"
         tabpos=$oldtabpos
         mainmenupos=$oldmainmenupos
 
     else
-    	submenu="false"
+    	submenu=false
 
     fi
 
@@ -1458,8 +1458,8 @@ function back_to_main_menu {
 # (Re)draws items of main menu and includes the picker
 function main_menu {
 
-    submenu="false"
-    subflagsmenu="false"
+    submenu=false
+    subflagsmenu=false
 
     read_tab_items
     read_menu_items
@@ -1485,8 +1485,8 @@ function main_menu {
 # decide menu type
 function sub_menu {
 
-    submenu="true"
-    subflagsmenu="false"
+    submenu=true
+    subflagsmenu=false
 
     read_tab_items
     read_menu_items $1 $2
@@ -1510,8 +1510,8 @@ function sub_menu {
 # TODO could be comnsolidated into one function, as above
 function help_menu {
 
-    #submenu="true"
-    subflagsmenu="false"
+    #submenu=true
+    subflagsmenu=false
     read_descriptor $1 $2
     infinite_menu
     write_help_menu_items
@@ -1531,9 +1531,9 @@ function help_menu {
 # Will set menu item and title variable
 function init_menu {
     if [[ "$(whoami)" != "root" ]]; then
-    	root="false"
+    	root=false
     else
-    	root="true"
+    	root=true
     fi
 
     clear
@@ -1554,9 +1554,9 @@ function init_menu {
 function init_help_menu {
 
     if [[ "$(whoami)" != "root" ]]; then
-      root="false"
+      root=false
     else
-      root="true"
+      root=true
     fi
 
     clear
@@ -1569,16 +1569,16 @@ function init_help_menu {
 # This will be called whrn a submenu is selected
 function enter_submenu {
 
-    remaininsubmenu="false";
-    submenu="true"
+    remaininsubmenu=false;
+    submenu=true
     submenutitle="$3"
     mainmenupos="$menupos"
     menupos=0
 
   
     init_menu $1 $2
-    while [[ $submenu == "true" ]]; do
-    	#if [[ $submenu == "false" ]]; then
+    while $submenu; do
+    	#if ! submenu; then
         #    break
         #fi
         sub_menu $1 $2
@@ -1588,31 +1588,31 @@ function enter_submenu {
 # This will be called when help menu is selected
 function enter_helpmenu {
 
-    helpsubmenu="true"
+    helpsubmenu=true
 
-    if [[ $submenu == "true" ]]; then
+    if submenu; then
 
-        remaininsubmenu="true"
+        remaininsubmenu=true
         oldsubmenutitle="$submenutitle"
         oldtabpos=$tabpos
         oldmainmenupos=$mainmenupos
 
     else
 
-        remaininsubmenu="false"
+        remaininsubmenu=false
 
     fi
 
-    submenu="true"
+    submenu=true
     submenutitle="Help"
 
     mainmenupos="$menupos"
     menupos=0
 
     init_help_menu
-    while [[ $helpsubmenu == "true" ]]; do
-
-      help_menu
+    
+    while $helpsubmenu; do
+        help_menu
     done
 
 }
@@ -1650,7 +1650,7 @@ function functright3 {
 
 function functright4 {
 
-    if [[ "$root" == "true" ]]; then
+    if root; then
     	exit_la_menus "Leaving root shell"
     else
 
@@ -1676,11 +1676,11 @@ function main {
             
             if [[ "${!j}" == "off" ]]; then
 
-              displaylineconnectors="false"
+              displaylineconnectors=false
 
             elif [[ "${!j}" == "on" ]]; then
 
-              displaylineconnectors="true"
+              displaylineconnectors=true
 
             fi
           ;;
