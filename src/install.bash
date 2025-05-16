@@ -261,7 +261,7 @@ fi
 
 
 echo
-echo "This is the installer for WL Admin. (Learn more at http://wayoflinux.com)"
+echo "This is the installer for Lazy Admin."
 echo
 echo "First I need you to tell me, wether you want me to create a user"
 echo "specific installation in $HOME/.LazyAdmin/, or install globally"
@@ -298,7 +298,7 @@ done
 
 
 echo
-echo "You will find your starter file named \"ladmin\" in"
+echo "You will find your launcher file named \"ladmin\" in"
 echo
 echo "$installdir"
 echo
@@ -424,24 +424,37 @@ if [[ $installtype = "local" ]]; then
    
 else
 
-    echo
-    echo "Attempting to access /opt. Need root"
-    echo
+    needroot = false
+    if [["$(stat -c "%U" "/opt")" == "root"]] || ["$(stat -c "%G" "/opt")" == "root"]; then
+        needroot = true
+    fi
+
+    if $needroot; then
+        echo
+        echo "Attempting to access /opt. I will need root privileges."
+    fi
 
     installdir="/opt/LazyAdmin"
 
     if [[ -d $installdir ]]; then
-
+        echo
         echo "Replacing old installation"
-
-        run_as_root "rm -rf /opt/LazyAdmin && mkdir -p /opt/LazyAdmin && tar xvzC \"$installdir\" -f $installtarball 'core'; tar xvzC \"$installdir\" -f $installtarball 'plugins'; tar xvzC \"$installdir\" -f $installtarball 'res'; sed -i \"s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|\" $installdir/core/includes.la; sed -i \"s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|\" $installdir/core/includes.la; sed -i \"s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|\" $installdir/core/includes.la"
-    
-    else
-      
-       run_as_root "mkdir -p /opt/LazyAdmin && tar xvzC \"$installdir\" -f $installtarball 'core'; tar xvzC \"$installdir\" -f $installtarball 'plugins'; tar xvzC \"$installdir\" -f $installtarball 'res'; sed -i \"s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|\" $installdir/core/includes.la; sed -i \"s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|\" $installdir/core/includes.la; sed -i \"s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|\" $installdir/core/includes.la"
-     
-
+        if $needroot; then
+            run_as_root "rm -rf /opt/LazyAdmin"
+        else
+            rm -rf /opt/LazyAdmin
+        fi
+        sleep 1
     fi
+    echo
+    echo "Extracting stuff..."
+    if $needroot; then
+        run_as_root "mkdir -p /opt/LazyAdmin && tar xvzC \"$installdir\" -f $installtarball 'core'; tar xvzC \"$installdir\" -f $installtarball 'plugins'; tar xvzC \"$installdir\" -f $installtarball 'res'; sed -i \"s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|\" $installdir/core/includes.la; sed -i \"s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|\" $installdir/core/includes.la; sed -i \"s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|\" $installdir/core/includes.la"
+    else
+        mkdir -p /opt/LazyAdmin && tar xvzC "$installdir" -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res'; sed -i "s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|" $installdir/core/includes.la; sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" $installdir/core/includes.la; sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|" $installdir/core/includes.la
+    fi
+
+    sleep 1
 
 
 fi
@@ -470,10 +483,9 @@ if [[ -f "$launcherdir/ladmin" ]]; then
     echo
     echo "Starter file already exists. Removing..."
 
-    if [[ $installtype == "global" ]]; then
+    if [[ $installtype == "global" ]] && $needroot; then
 
        run_as_root rm "$launcherdir/ladmin"
-
        
     else
 
@@ -485,13 +497,16 @@ if [[ -f "$launcherdir/ladmin" ]]; then
 fi
 
 echo
-echo "Creating new starter file: $launcherdir/ladmin"
+echo "Creating new launcher file: $launcherdir/ladmin"
 echo
 
 if [[ $installtype == "global" ]]; then
 
-    run_as_root "tar xvzC \"$launcherdir\" -f $installtarball --strip=1 \"launcher/ladmin\"; sed -i \"s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|\" \"$launcherdir/ladmin\""
-
+    if $needroot; then
+        run_as_root "tar xvzC \"$launcherdir\" -f $installtarball --strip=1 \"launcher/ladmin\"; sed -i \"s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|\" \"$launcherdir/ladmin\""
+    else
+        tar xvzC \"$launcherdir\" -f $installtarball --strip=1 "launcher/ladmin"; sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|" "$launcherdir/ladmin"
+    fi
     
 else
 
@@ -506,10 +521,10 @@ echo
 echo "Done."
 echo
 
-echo "Attempting to make la-menus executable."
+echo "Attempting to make launcher executable."
 echo "(If this step fails, you will need to do this manually)"
 
-if [[ installtype == "gobal" ]]; then
+if [[ installtype == "gobal" ]]; && $needroot then
 
     run_as_root "chmod 0755 \"$launcherdir/ladmin\""
     
@@ -525,23 +540,32 @@ echo "Done (unless you got an error here)."
 
 
 sleep 1
-if [[ "$symlinking" == "true" ]]; then
+if $symlinking; then
     echo
     echo "Now creating symlink in  $symlinkdir."
     echo "It is likely a system directory, so root will be needed..."
     echo
 
+    if [["$(stat -c "%U" "$symlinkdir")" == "root"]] || ["$(stat -c "%G" "$symlinkdir")" == "root"]; then
+        needroot = true
+    else
+        needroot = false
 
     if [[ -f "$symlinkdir/ladmin" ]]; then
-
-       run_as_root "rm \"$symlinkdir/ladmin\"; ln -s \"$launcherdir/ladmin\" \"$symlinkdir/ladmin\""
-
-    else 
-
-        run_as_root "ln -s \"$launcherdir/ladmin\" \"$symlinkdir/ladmin\""
-
+        if $needroot; then
+            run_as_root "rm \"$symlinkdir/ladmin\""
+        else
+            rm "$symlinkdir/ladmin"
+        fi
     fi
-    
+
+    if $needroot; then
+        run_as_root "ln -s \"$launcherdir/ladmin\" \"$symlinkdir/ladmin\""
+    else
+        ln -s "$launcherdir/ladmin" "$symlinkdir/ladmin"
+    fi
+
+        
     sleep 1
     echo
     echo "All done!"
@@ -576,7 +600,6 @@ else
 
    echo
    echo "In that case we are all done."
-
 
 fi
 
