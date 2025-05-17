@@ -2,7 +2,7 @@
 
 # Lazy Admin
 #
-# Copyright © 2017, Attila Orosz, http://wayoflinux.com
+# Copyright © 2017-2025, Attila Orosz
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -136,7 +136,7 @@ function set_symlink_dir {
     read -p "> " symlinkdir
     while true; do
         if [[ "$symlinkdir" == "none" ]]; then
-            symlinking="false"
+            symlinking=false
             echo
             echo "No symbolic link will be created."
             sleep 1
@@ -147,7 +147,7 @@ function set_symlink_dir {
                 echo "A symbolic link will be created in"
                 echo
                 echo "$symlinkdir"
-                symlinking="true"
+                symlinking=true
                 sleep 1
                 break
             else
@@ -232,7 +232,7 @@ while true; do
         echo
         echo "A symlink will be created in /usr/local/bin"
         echo
-        symlinking="true"
+        symlinking=true
         symlinkdir="/usr/local/bin"
         break
         ;;
@@ -312,7 +312,7 @@ echo "Extracting files..."
 tar xvzC "$userfilesdir" -f $installtarball "user"
 
 
-if [[ $installtype = "local" ]]; then
+if [[ $installtype == "local" ]]; then
 
    if [[ -d "$HOME/.LazyAdmin/" ]]; then
 
@@ -431,7 +431,7 @@ echo "Done (unless you got an error here)."
 
 
 sleep 1
-if [[ "$symlinking" == "true" ]]; then
+if $symlinking; then
     echo
     echo "Now creating symlink in  $symlinkdir."
     echo "It is likely a system directory, so root will be needed..."

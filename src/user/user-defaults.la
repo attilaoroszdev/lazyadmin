@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright © 2017, Attila Orosz, http://wayoflinux.com
+# Copyright © 2017-2025, Attila Orosz
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 
 #The title displayed in the main menu
 
-maintitle="Lazy Admin - v2.1"
+maintitle="Lazy Admin - v2.2 Beta"
 
 # Switch right panel on or off
 rightpanel=true
@@ -55,4 +55,4 @@ defaulteditor="not set"
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)
 # Which might render these out of place
-displaylineconnectors="true"
+displaylineconnectors=true

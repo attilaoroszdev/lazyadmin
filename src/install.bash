@@ -2,7 +2,7 @@
 
 # Lazy Admin
 #
-# Copyright © 2017, Attila Orosz, http://wayoflinux.com
+# Copyright © 2017-2025, Attila Orosz
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -137,7 +137,7 @@ function set_symlink_dir {
     read -p "> " symlinkdir
     while true; do
         if [[ "$symlinkdir" == "none" ]]; then
-            symlinking="false"
+            symlinking=false
             echo
             echo "No symbolic link will be created."
             sleep 1
@@ -148,7 +148,7 @@ function set_symlink_dir {
                 echo "A symbolic link will be created in"
                 echo
                 echo "$symlinkdir"
-                symlinking="true"
+                symlinking=true
                 sleep 1
                 break
             else
@@ -162,30 +162,138 @@ function set_symlink_dir {
     done
 }
 
+
+# This currently means `sed` and `tar`, and the latter is only necessary for this installer to work.. 
+# While these come rpesinstalled in most systems, it never hurts to chekc
+function check_for_essential_dependencies {
+    
+    whilte true; do
+    
+        echo
+        echo "Checking if we have 'sed'..."
+        sleep 1
+
+        if hash sed 2>/dev/null; then
+            echo
+            echo "Of course, we do. Why wouldn't we...?"
+            break
+        else
+            echo
+            echo "It looks like 'sed' is missing."
+            echo "Seriously, what kind of systemn is this???)"
+            echo
+            echo "Do you wan tto install sed now? (I wil try to use apt)"
+            echo
+
+            read -p "(y/n) > " -n 1 installsed
+
+            if [[ $installsed == "y" || $installsed == "Y" ]]; then
+
+                run_as_root "apt install sed"
+                
+            elif
+                
+                [[ $installsed == "n" || $installsed == "N" ]]; then
+                echo
+                echo "Awright, suit yourself. But I cannto go on without sed, sorry."
+                echo 
+                echo "I will now exit. Come back whn you have 'sed'. 
+                echo "(Yeah, I know, that's what she "sed'... I will see myself out.)
+
+                exit 69
+
+            else
+                echo
+
+                echo "You want to try that again."
+                echo "It's really quite simple: Press y for 'yes', or n for 'no'". 
+                echo "(You know, on the keyboard.)"
+                echo
+                read -p "(y/n) > " -n 1 installsed
+
+            fi
+        
+        fi
+
+         whilte true; do
+    
+        echo
+        echo "Checking if we have 'tar'..."
+        sleep 1
+
+        if hash tar 2>/dev/null; then
+            echo
+            echo "Of course, we do. Why wouldn't we...?"
+            break
+        else
+            echo
+            echo "It looks like 'tar' is missing."
+            echo "Seriously, what kind of systemn is this???)"
+            echo
+            echo "Do you wan tto install 'tar' now? (I wil try to use apt)"
+            echo
+
+            read -p "(y/n) > " -n 1 installtar
+
+            if [[ $installtar == "y" || $installtar == "Y" ]]; then
+
+                run_as_root "apt install tar"
+                
+            elif
+                
+                [[ $installtar == "n" || $installtar == "N" ]]; then
+                echo
+                echo "Awright, suit yourself. But I cannto go on without tar, sorry."
+                echo 
+                echo "I will now exit. Come back when you have 'tar'". 
+                
+                exit 65
+
+            else
+                echo
+
+                echo "You want to try that again."
+                echo "It's really quite simple: Press y for 'yes', or n for 'no'". 
+                echo "(You know, on the keyboard.)"
+                echo
+                read -p "(y/n) > " -n 1 installtar
+
+            fi
+        
+        fi
+
+
+
+
+
+    done
+
+}
+
+
 function check_for_external_dependencies {
 
     if hash pandoc 2>/dev/null; then
 
-        pandocinstalled="true"
+        pandocinstalled=true
 
     fi
 
     if hash lynx 2>/dev/null; then
 
-        lynxinstalled="true"
+        lynxinstalled=true
 
     fi
 
-
     if hash xdotool 2>/dev/null; then
 
-        xdotoolinstalled="true"
+        xdotoolinstalled=true
 
     fi
 
     if hash setxkbmap 2>/dev/null; then
 
-        setxkbmapinstalled="true"
+        setxkbmapinstalled=true
 
     fi
 
@@ -194,11 +302,10 @@ function check_for_external_dependencies {
         echo
         echo "All dependencies are satisfied, nothing to do..."
 
-
     else
 
         echo
-        echo "Some dependencies are missing:"
+        echo "Some non-essential dependencies are missing:"
 
          if [[ ! $pandocinstalled ]]; then
 
@@ -214,12 +321,10 @@ function check_for_external_dependencies {
 
         fi
 
-
-         if [[ ! $xdotoolinstalled ]]; then
+        if [[ ! $xdotoolinstalled ]]; then
 
             echo "  - xdotool"
             xdotoolpackage="xdotool"
-
 
         fi
 
@@ -229,6 +334,7 @@ function check_for_external_dependencies {
             setxkbmappackage="x11-xkb-utils"
 
         fi
+
         echo
         echo "Want to install them now? (I wil try to use apt)"
         echo
@@ -259,13 +365,16 @@ else
     exit 65
 fi
 
+echo "Before we start, I need to verify is essential dependencies are met"
+
+check_for_essential_dependencies
 
 echo
 echo "This is the installer for Lazy Admin."
 echo
 echo "First I need you to tell me, wether you want me to create a user"
-echo "specific installation in $HOME/.LazyAdmin/, or install globally"
-echo "in /opt/LazyAdmin/"
+echo "specific installation in $HOME/.LazyAdmin/, or install Lazy Admin globally"
+echo "for everyone in /opt/LazyAdmin/"
 echo
 echo "1 - Install for current user only"
 echo "2 - Install for all users"
@@ -287,10 +396,11 @@ while true; do
         break
         ;;
     *)
-    echo
-    echo "Come on, it's a simple enough choice. 1 or 2?"
-    echo
-    read -p "Choose 1, or 2> " -n 1 installtype
+
+        echo
+        echo "Come on, it's a simple enough choice. 1 or 2?"
+        echo
+        read -p "Choose 1, or 2> " -n 1 installtype
     ;;
 
     esac
@@ -306,6 +416,7 @@ echo "when this installer finishes."
 echo
 echo "Please confirm if it's OK to symlink the starter file in /usr/local/bin"
 echo
+
 read -p "(y/n) > " -n 1 isitok
 
 while true; do
@@ -316,7 +427,7 @@ while true; do
         echo
         echo "A symlink will be created in /usr/local/bin"
         echo
-        symlinking="true"
+        symlinking=true
         symlinkdir="/usr/local/bin"
         break
         ;;
@@ -325,11 +436,11 @@ while true; do
         break
         ;;
     *)
-    echo
-    echo "Please go again. Y or N?"
-    echo
-    read -p "(y/n) > " -n 1 isitok
-    ;;
+        echo
+        echo "Please go again. Y or N?"
+        echo
+        read -p "(y/n) > " -n 1 isitok
+        ;;
 
     esac
 done
@@ -354,8 +465,11 @@ if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
     echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to"
     echo "keep the config files"
     echo
+
     read -p "(yes/no) > " isitok
+
     if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes" ]]; then
+
         echo
         echo
         echo "Purging old configs..."
@@ -363,28 +477,38 @@ if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
         if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
 
             rm -rf "$HOME/.config/LazyAdmin/user.OLD"
+
         fi
 
         mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
+
         echo
         echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later'"
+       
         sleep 1
+
     else
+
         echo
         echo
         echo "Using old configs can lead to unexpected behavour..."
         echo "if you encounter problems, run the installer again, and purge old config files"
+       
         sleep 1
+
     fi
 
 else
     echo
     echo "Creating config directory for user..."
+
     mkdir "$HOME/.config/LazyAdmin/"
 
     sleep 1
+
     echo
     echo "Done."
+
     sleep 1
 fi
 
@@ -402,7 +526,7 @@ if [[ "$(whoami)" != "root" ]]; then
 fi
 
 
-if [[ $installtype = "local" ]]; then
+if [[ $installtype == "local" ]]; then
 
    if [[ -d "$HOME/.LazyAdmin/" ]]; then
 
@@ -421,37 +545,55 @@ if [[ $installtype = "local" ]]; then
     sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
     sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
 
-   
 else
 
-    needroot = false
+    needroot=false
+
     if [["$(stat -c "%U" "/opt")" == "root"]] || ["$(stat -c "%G" "/opt")" == "root"]; then
-        needroot = true
+
+        needroot=true
+
     fi
 
     if $needroot; then
+
         echo
         echo "Attempting to access /opt. I will need root privileges."
+
     fi
 
     installdir="/opt/LazyAdmin"
 
     if [[ -d $installdir ]]; then
+
         echo
         echo "Replacing old installation"
+
         if $needroot; then
+
             run_as_root "rm -rf /opt/LazyAdmin"
+
         else
+
             rm -rf /opt/LazyAdmin
+
         fi
+
         sleep 1
+
     fi
+
     echo
     echo "Extracting stuff..."
+
     if $needroot; then
+
         run_as_root "mkdir -p /opt/LazyAdmin && tar xvzC \"$installdir\" -f $installtarball 'core'; tar xvzC \"$installdir\" -f $installtarball 'plugins'; tar xvzC \"$installdir\" -f $installtarball 'res'; sed -i \"s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|\" $installdir/core/includes.la; sed -i \"s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|\" $installdir/core/includes.la; sed -i \"s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|\" $installdir/core/includes.la"
+   
     else
+
         mkdir -p /opt/LazyAdmin && tar xvzC "$installdir" -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res'; sed -i "s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|" $installdir/core/includes.la; sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" $installdir/core/includes.la; sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|" $installdir/core/includes.la
+    
     fi
 
     sleep 1
@@ -471,15 +613,14 @@ else
 
     launcherdir="$installdir"
 
-
 fi
 
 
 echo "I will put the starter file in $launcherdir"
 sleep 1
 
-
 if [[ -f "$launcherdir/ladmin" ]]; then
+
     echo
     echo "Starter file already exists. Removing..."
 
@@ -494,6 +635,7 @@ if [[ -f "$launcherdir/ladmin" ]]; then
     fi
 
     sleep 1
+
 fi
 
 echo
@@ -503,9 +645,13 @@ echo
 if [[ $installtype == "global" ]]; then
 
     if $needroot; then
+       
         run_as_root "tar xvzC \"$launcherdir\" -f $installtarball --strip=1 \"launcher/ladmin\"; sed -i \"s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|\" \"$launcherdir/ladmin\""
+   
     else
+        
         tar xvzC \"$launcherdir\" -f $installtarball --strip=1 "launcher/ladmin"; sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|" "$launcherdir/ladmin"
+   
     fi
     
 else
@@ -535,43 +681,62 @@ else
 fi
 
 sleep 1
+
 echo
 echo "Done (unless you got an error here)."
 
 
 sleep 1
+
 if $symlinking; then
+
     echo
     echo "Now creating symlink in  $symlinkdir."
     echo "It is likely a system directory, so root will be needed..."
     echo
 
     if [["$(stat -c "%U" "$symlinkdir")" == "root"]] || ["$(stat -c "%G" "$symlinkdir")" == "root"]; then
-        needroot = true
+       
+        needroot=true
+   
     else
-        needroot = false
+       
+        needroot=false
 
     if [[ -f "$symlinkdir/ladmin" ]]; then
+       
         if $needroot; then
+           
             run_as_root "rm \"$symlinkdir/ladmin\""
+       
         else
+          
             rm "$symlinkdir/ladmin"
+       
         fi
+
     fi
 
     if $needroot; then
+      
         run_as_root "ln -s \"$launcherdir/ladmin\" \"$symlinkdir/ladmin\""
+    
     else
+        
         ln -s "$launcherdir/ladmin" "$symlinkdir/ladmin"
+   
     fi
 
         
     sleep 1
+
     echo
     echo "All done!"
     echo "You can now start Lazy Admin by Typing 'ladmin' as a command."
     echo "Check help for customizaton info and options."
+
 else
+
     echo
     echo "All done!"
     echo "You can now start lazy Admin by typing (bash) $launcherdir/ladmin"
@@ -582,14 +747,18 @@ fi
 
 echo
 echo "Done."
+
 sleep 1
 
 echo
-echo "After install optional dependency check."
+echo "Post-install optional dependency check."
+echo "(Because you thought it was over, didn't you?)"
+echo
 echo "Some plugins, such as \"Help\",or \"Extra functions\""
-echo "require external programs to be installed. Wanna check for"
+echo "require external stuffs to be installed. Wanna check for"
 echo "any missing dependencies now?"
 echo
+
 read -p "(y/n) > " -n 1 isitok
 
 if [[ $isitok == "y" || $isitok == "Y" ]]; then
@@ -611,6 +780,7 @@ echo "ladmin"
 echo
 echo "as a command."
 echo "Now press anything to go back to doing whatever it was you did before..."
+
 read -n 1 -s keypress
 
 exit 0
