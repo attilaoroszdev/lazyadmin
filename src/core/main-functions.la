@@ -83,13 +83,13 @@ function read_menu_items {
 
     menuentry=""
 
-    if submenu; then
+    if $submenu; then
 
        OLDIFS="$IFS"
        IFS=$'\n'
        menuentry=( `cat $menufile | sed -n '/'_submenu$subparent$subitem'/{:a;n;/'_endsubmenu$subparent$subitem'/q;p;ba}'` )
 
-       if helpsubmenu; then
+       if $helpsubmenu; then
 
            menuheight=$helpsubmenuheight
 
@@ -198,7 +198,7 @@ function read_descriptor {
 
   if [[ -z $menutype || $menutype == "old" ]]; then
 
-    if submenu; then
+    if $submenu; then
 
        OLDIFS="$IFS"
        IFS=$'\n'
@@ -236,7 +236,7 @@ function read_descriptor {
           OLDIFS="$IFS"
           IFS=$'\n'
 
-          if submenu; then
+          if $submenu; then
               menudescentry=( `cat $menufile | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'` )
 
 
@@ -301,7 +301,7 @@ function read_tab_items {
 function read_rightpanel_items {
     OLDIFS="$IFS"
     IFS=$'\n'
-    if submenu; then
+    if $submenu; then
     	rightpanelentry=( `cat $menufile | sed -n '/'_subrightpanel'/{:a;n;/'_endsubrightpanel'/q;p;ba}'` )
     else
     	rightpanelentry=( `cat $menufile | sed -n '/'_rightpanel'/{:a;n;/'_endrightpanel'/q;p;ba}'` )
@@ -327,7 +327,7 @@ function write_tab_items {
 
     # Mpodify top line first, draw connectors
 
-    if displaylineconnectors; then
+    if $displaylineconnectors; then
 
         horizontalconnectorposition=0
 
@@ -380,7 +380,7 @@ function write_tab_items {
      fi
     done
 
-    if displaylineconnectors; then
+    if $displaylineconnectors; then
 
         # Then draw connectors ont he bottom line
         horizontalconnectorposition=0
@@ -545,16 +545,16 @@ function draw_menu {
 
     tput civis
 
-    if subflagsmenu; then
+    if $subflagsmenu; then
 
       let menuheight=$menulength+3
       headerheight=$subheaderheight;
       title=$subflagsmenutitle
 
     else
-    if submenu; then
+    if $submenu; then
 
-       if helpsubmenu; then
+       if $helpsubmenu; then
 
            menuheight=$helpsubmenuheight
 
@@ -589,7 +589,7 @@ function draw_menu {
 
     fi
 
-    if root; then
+    if $root; then
 
     title=$title$roottitle
     fi
@@ -628,7 +628,7 @@ function draw_menu {
 
     #Draw top and bottom border of menu tabs
     #Skip this for submenus
-    if ! submenu; then
+    if ! $submenu; then
 
     	((cursorpos++))
     	tput cup $cursorpos 0
@@ -829,7 +829,7 @@ function pick_menu_item {
 
           $'\e[D'|$'\e0D'|"a"|"A")
 
-            if ! submenu; then
+            if ! $submenu; then
               # if [[ $tabpos -gt 0 ]]; then
                  clear_menu
                  menupos=0
@@ -839,7 +839,7 @@ function pick_menu_item {
             ;;
 
          $'\e[C'|$'\e0C'|"d"|"D")
-            if ! submenu; then
+            if ! $submenu; then
            #   if [[ $tabpos -lt $tablength ]]; then
                  clear_menu
                  menupos=0
@@ -869,7 +869,7 @@ function pick_menu_item {
                 
                if [[ -z $functionstyle || $functionstyle == "old" ]]; then
 
-                 if submenu; then
+                 if $submenu; then
                     subfunct$tabpos$mainmenupos$key $tabpos $menupos
                  else
                     funct$tabpos$key $tabpos $menupos
@@ -878,7 +878,7 @@ function pick_menu_item {
                elif [[ $functionstyle == "simple" ]]; then
 
 
-                 if submenu; then
+                 if $submenu; then
                     tab$(( $tabpos+1 ))item$(( $mainmenupos+1 ))sub$(( $key+1 )) $tabpos $menupos
                  else
                     tab$(( $tabpos+1 ))item$(( $key+1 )) $tabpos $menupos
@@ -905,7 +905,7 @@ function pick_menu_item {
 
               if [[ -z $functionstyle || $functionstyle == "old" ]]; then          
 
-                 if submenu; then
+                 if $submenu; then
                   
                      subfunct$tabpos$mainmenupos$menupos $tabpos $menupos
                  
@@ -918,7 +918,7 @@ function pick_menu_item {
               elif [[ $functionstyle == "simple" ]]; then
 
 
-                 if submenu; then
+                 if $submenu; then
                     tab$(( $tabpos+1 ))item$(( $mainmenupos+1 ))sub$(( $menupos+1 )) $tabpos $menupos
                  else
                     tab$(( $tabpos+1 ))item$(( $menupos+1 )) $tabpos $menupos
@@ -947,7 +947,7 @@ function pick_menu_item {
             functright4
             ;;
          "b" | "B")
-            if submenu; then
+            if $submenu; then
                back_to_main_menu
                return
             fi
@@ -1282,7 +1282,7 @@ function command_builder_function {
 
     set_args=""
 
-    if submenu; then
+    if $submenu; then
 
         remaininsubmenu=true
         oldsubmenutitle="$submenutitle"
@@ -1382,7 +1382,7 @@ function display_hotkeys {
     # or the single help file, depending on where the user is
 function display_help {
 
-    if subflagsmenu; then
+    if $subflagsmenu; then
 
         functhelp_commanbuilder
 
@@ -1421,7 +1421,7 @@ function back_to_main_menu {
     subflagsmenu=false
     helpsubmenu=false
 
-    if remaininsubmenu; then
+    if $remaininsubmenu; then
 
         submenu=true
         remaininsubmenu=false
@@ -1578,7 +1578,7 @@ function enter_submenu {
   
     init_menu $1 $2
     while $submenu; do
-    	#if ! submenu; then
+    	#if ! $submenu; then
         #    break
         #fi
         sub_menu $1 $2
@@ -1590,7 +1590,7 @@ function enter_helpmenu {
 
     helpsubmenu=true
 
-    if submenu; then
+    if $submenu; then
 
         remaininsubmenu=true
         oldsubmenutitle="$submenutitle"
@@ -1650,7 +1650,7 @@ function functright3 {
 
 function functright4 {
 
-    if root; then
+    if $root; then
     	exit_la_menus "Leaving root shell"
     else
 

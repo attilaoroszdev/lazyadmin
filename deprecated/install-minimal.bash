@@ -431,7 +431,7 @@ echo "Done (unless you got an error here)."
 
 
 sleep 1
-if symlinking; then
+if $symlinking; then
     echo
     echo "Now creating symlink in  $symlinkdir."
     echo "It is likely a system directory, so root will be needed..."
