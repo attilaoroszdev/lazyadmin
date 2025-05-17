@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Copyright © 2017, Attila Orosz, http://wayoflinux.com
-#
+# Copyright © 2017-2025, Attila Oroszc
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -38,10 +37,12 @@ function example_function {
 	read -n 1 -s keypress
 
 	echo
-	echo "Fell for that, haven't you? Ha-ha-ha..."
+	echo "You didn't actually think, did you...?"
 	echo
-	echo "Now, press a key to get back to the menu. (No, really!)"
+	echo "Now, press a key to get back to the menu. (This time for real)"
+	
 	read -n 1 -s keypress
+
 	clear
 
 }
@@ -72,7 +73,7 @@ function flagtest_localhostping {
 
 function dummy_function {
 
-		echo "If you can see this text, something is broken"
+	echo "If you can see this text, something is broken"
 
 }
 

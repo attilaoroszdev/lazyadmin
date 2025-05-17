@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright © 2017, Attila Orosz, http://wayoflinux.com
+# Copyright © 2017-2025, Attila Orosz
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ function run_as_root {
                     preferredrootcommand="su"
                     echo '
 
-# This will be used by WL Admin to execute stuff as root
+# This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                     echo
                     echo "su saved as your preferred command"
@@ -70,7 +70,7 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                     preferredrootcommand="sudo"
                     echo '
 
-# This will be used by WL Admin to execute stuff as root
+# This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                     echo
                     echo "sudo saved as your preferred command"
@@ -89,7 +89,7 @@ preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                          preferredrootcommand="sudo"
                         echo '
 
-# This will be used by WL Admin to execute stuff as root
+# This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                         echo
                         echo "Your user can use sudo, thus sudo saved as your preferred command"
@@ -105,7 +105,7 @@ preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                         preferredrootcommand="su"
                         echo '
 
-# This will be used by WL Admin to execute stuff as root
+# This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                         echo
                         echo "Your user cannot use sudo so, su was saved as your preferred command"

@@ -1,4 +1,4 @@
-# Copyright © 2017, Attila Orosz, http://wayoflinux.com
+# Copyright © 2017-2025, Attila Orosz
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -106,12 +106,12 @@ _endmenu5
 
 
 
-###############
+################
 # System menus #
 ################
 
-# Keep these ion the last tab to preserve hotkeys
-# Sixth tab
+# Keep these on the LAST TAB to preserve hotkeys
+# Sixth tab. (If you add or remove some tabs, change this accordingly)
 _menu6
 e - Edit menu entries :: Interactively change menu entries
 u - Edit user functions :: Add user defined scripts and functions
