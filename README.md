@@ -77,7 +77,7 @@ where `<profilename>` is the name of the folder your other profiles is saved.
 
 For example: 
 
-`ladmin --load-profile seconduser` or `ladmin -p secseconduserrofile` 
+`ladmin --load-profile seconduser` or `ladmin -p seconduser` 
 
 will attempt to load the contents of `~/.config/LazyAdmin/seconduser`. To load the user's profeil from e.g. the non-standard location: `~/LAProfiles/seconduser`, you can either specify the absolute path:
 
