@@ -78,10 +78,13 @@ function check_editor {
         fi
 
         echo "c - Custom editor"
-
+        
+        tput cnorm
+        
         read -p "> " -n 1 editorpreference
 
-
+        tput civis
+        
         if [[ $editorpreference == "c" ]]; then
 
 

@@ -33,14 +33,14 @@ rightpanel=true
 # (normalmenuheight = number_of_items + 2)
 # Minumum height is 7 (5 items max.)
 # Maximum height is 11 (9 items max.)
-normalmenuheight=8
+normalmenuheight=11
 
 # How many elements should submenus hold
 # Allow +3 for top and bottom padding
 # (submenuheight = number_of_items + 3)
 # Minumum height is 8 (5 items  max.)
 # Maximum height is 12 (9 items max.)
-submenuheight=9
+submenuheight=12
 
 # Change the size of the right panel
 rightpanelwidth=27

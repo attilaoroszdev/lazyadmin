@@ -40,20 +40,53 @@ functionstyle="simple"
 
  
 # You could implement your functions right here, but it is probably
-# easier and less messy to put them in a separate file, and it will make
-# them easier to reuse or reorganise in the menu
+# easier and less messy to put them into suer-functions.la and call them from there.
+# That will also make it easier to reuse or reorganise in the menu.
 
+
+# Tab 1, menu item 1
 function tab1item1 {
 
-	#call the built in, fantastic function example. o yeah
-	example_function
+	run_if_installed top
 
 }
 
+
+# Tab 1, menu item 2
 function tab1item2 {
 
+	run_if_installed htop
+
+}
+
+# Tab 1, menu item 3
+function tab1item3 {
+
+	show_sensors
+
+}
+
+# Tab 1, menu item 4
+function tab1item4 {
+
+	show_system_logs
+	
+}
+
+# Tab 1, menu item 5
+function tab1item5 {
+
+	run_if_installed mc
+
+}
+
+
+# Tab 1, menu item 6
+function tab1item6 {
+
 	#To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
-	enter_submenu $@ "Sample submenu title"
+	enter_submenu $@ "Analyse disk space"
+	
 }
 
 
@@ -80,19 +113,56 @@ function tab1item2 {
 # Third tab, fourth menuitem, second submenuitem: subfunct231
 # and so on
 
-function tab1item2sub1 {
 
-	localhost_ping
-
+# Tab 1, menu item 6, submenu item 1
+function tab1item6sub1 {
+	run_if_installed ncdu /
 }
 
-function tab1item2sub2 {
 
-	example_function
+# Tab 1, menu item 6, submenu item 2 was skipped
 
+
+# Tab 1, menu item 6, submenu item 3
+function tab1item6sub3 {
+	run_if_installed ncdu ~
 }
 
-function tab1item2sub4 {
+
+# Tab 1, menu item 6, submenu item 4
+function tab1item6sub4 {
+	run_if_installed ncdu ~/Downloads
+}
+
+
+# Tab 1, menu item 6, submenu item 5
+function tab1item6sub5 {
+	run_if_installed ncdu ~/Documents
+}
+
+
+# Tab 1, menu item 6, submenu item 6
+function tab1item6sub6 {
+	run_if_installed ncdu ~/.cache
+}
+
+
+# Tab 1, menu item 6, submenu item 7 was skipped
+
+# Tab 1, menu item 6, submenu item 8
+function tab1item6sub8 {
+	run_if_installed ncdu /tmp
+}
+
+
+# Tab 1, menu item 6, submenu item 9
+function tab1item6sub9 {
+	run_if_installed ncdu /var/log
+}
+
+
+# Tab 1, menu item 7
+function tab1item7 {
 
     # Here is an example of how to invoke the flag setting submenu
 	#
@@ -100,121 +170,217 @@ function tab1item2sub4 {
 	#
 	# $1 - Title of submenu, enclosed in ""
 	# $2 - Function to execute
-	# $3 to $9 - A list of the flags entered literally
+	# $3 to $9 - A list of the flags entered literally 
 	#
 	# Note 0: You could set 10 or more arguments, but the shortkeys
 	# (i.e. using the keyboard to add the flags) wil only work up to nine
 	# parameters
 	#
 	# Note 1: You can hard-code items that contain whitespace by placing
-	# them in single or doune quotes. (See '-c 3' here) For flexibility
+	# them in single or double quotes. (See '-c 3' here) For flexibility
 	# it might be better to only hardcode the first part and the optional
 	# bit could be entered manually, using the "m - Enter flags manually"
 	# functionality. I.e. You could pass -c as an argument, then set the
 	# number manually, as in the last argument
 	#
-	# Note 2: You must literally enter all arguments, along with the
+	# Note 1.1: When manually entering paramenters, no whitespace will be added to it.
+	# This is useful if you want to extend a hardcoded or previously entered parameter
+	# If you want it to be a separate argument, start with space, wollowed by whatever you want to write.
+	#
+	# Note 1.2: Manually entered arguments can contain any number of white spaces
+	#
+	# Note 1.3: You must literally enter all arguments, along with the
 	# adequate number of hyphens (- or --)
 	#
-	# Note 3: The manual set option can be useful for setting the hostname/any
-	# other argumenrt (in that case just take out the "localhost" bit
-	# from the original function "flagtets_localhostping in this case)
+	# Note 1.4: The manual set option can be useful for setting the hostname/any
+	# other argument here, or anything at all, really
+	#
+	# Note 2: The command builder function can be used inside a submenu as well
 
-	command_builder_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+	command_builder_function "Ping any host with flags" "ping" -n -q -v --help '-c 5' -c
 }
 
-function tab1item2sub5 {
 
-	dummy_function
+# Tab 1, menu item 8
+function tab1item8 {
 
-}
-function tab1item2sub6 {
-
-	dummy_function
-
-}
-
-function tab1item3 {
-
-		drop_to_shell
+	drop_to_shell
 
 }
 
-function tab1item4 {
 
-	command_builder_function "Ping Localhost with flags" "ping localhost" -n -q -v --help '-c 5' -c
+# Tab 1, menu item 9
+function tab1item9 {
 
-}
-
-function tab1item5 {
-
-    enter_root_shell
+	drop_to_root_shell
 
 }
 
+
+# Tab 2, menu item 1
 function tab2item1 {
 
-dummy_function
+	update_system
 
 }
 
+
+# Tab 2, menu item 2
+function tab2item2 {
+	
+	upgrade_without_asking
+
+}
+
+
+# Tab 2, menu item 3
 function tab2item3 {
-	dummy_function
+	
+	clean_up_apt
 
 }
 
-function tab2item4 {
-	dummy_function
+# Tab 2, menu item 4 was skipped
 
-
-}
-
+# Tab 2, menu item 5
 function tab2item5 {
-	dummy_function
+	
+	install_packages
 
 }
 
+
+# Tab 2, menu item 6
+function tab2item6 {
+
+	remove_packages
+
+}
+
+
+# Tab 2, menu item 7
+function tab2item7 {
+
+	list_packages
+	
+}
+
+
+# Tab 2, menu item 8
+function tab2item8 {
+
+	search_packages
+	
+}
+
+
+# Tab 2, menu item 9
+function tab2item9 {
+
+	show_packages
+	
+}
+
+
+####################################################
+#                                                  #
+# These are completely useless (just placeholders) #
+#                                                  #
+####################################################
+
+# Tab 3, menu item 1
 function tab3item1 {
 
-	dummy_function
+	clear 
+
+	echo
+	echo "Hello world!"
+	echo
+
+	return_to_menu
 
 }
 
+# Tab 3, menu item 2
 function tab3item2 {
+	
+	clear
 
-	dummy_function
+	echo
+	echo "x == 42"
+	echo
+
+	return_to_menu
 
 }
 
+
+# Tab 3, menu item 3
 function tab3item3 {
+	
+	clear
 
-	dummy_function
+	echo
+	echo "The best way to secure yuor Window$ powered laptop is to"
+	echo "install Linux on it (or at least a BSD)"
+	echo
+
+	return_to_menu
 
 }
 
+
+# Tab 3, menu item 4
 function tab3item4 {
+	
+	clear
 
-	dummy_function
+	echo
+	echo "This is a very important script."
+	echo
+
+	return_to_menu
 
 }
 
+
+# Tab 3, menu item 5
 function tab3item5 {
-
-	dummy_function
+	
+	run_if_installed robotfindskitten
 
 }
 
+
+# Tab 3, menu item 6
+function tab3item6 {
+	
+	example_function
+
+}
+
+
+# Tab 4, menu item 1
 function tab4item1 {
-
+	
 	dummy_function
 
 }
 
+
+# Tab 5, menu item 1
 function tab5item1 {
-
+	
 	dummy_function
 
 }
+
+
+########################
+#                      #
+# Setup tab at the end #
+#                      #
+########################
 
 function tab6item1 {
 
@@ -243,7 +409,7 @@ function tab6item4 {
 
 
 
-# Only change these if you want tpo override help or setup functionality!
+# Only change these if you want to override help or setup functionality!
 
 function functsetup0 {
 
@@ -273,12 +439,12 @@ function functsetup3 {
 }
 
 
-
 function functhelp0 {
 
     display_markdown_help "$RES_DIR/usage-guide.md" "$RES_DIR/usage-guide.txt"
 
 }
+
 
 function functhelp1 {
 
@@ -292,6 +458,7 @@ function functhelp2 {
     functhelp_commanbuilder
 
 }
+
 
 function functhelp_commanbuilder {
 

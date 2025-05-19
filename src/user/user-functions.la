@@ -47,24 +47,6 @@ function example_function {
 
 }
 
-function flagtest_localhostping {
-
-	clear
-
-	echo
-	echo "Now we will ping localhost with the flags you have specified"
-	echo "The command executed will be:"
-	echo
-	echo "ping $@ localhost"
-	echo
-	ping $@ localhost
-	echo
-	echo "now press a key to return to the menu"
-	echo
-	read -n 1 -s keypress
-
-}
-
 
 #This dummy function is there as a placeholder for empty menus.
 #Only delete it, once all your menus are populated, to avoid error messages
@@ -77,21 +59,179 @@ function dummy_function {
 
 }
 
-function localhost_ping {
 
+
+
+######################################
+#                                    #	
+# Package management functions (apt) #
+#                                    #
+######################################
+
+function update_system {
 	clear
+	echo
+	run_as_root "apt update"
 
 	echo
-	echo "Will ping localhost 5 times... "
-	echo
-	echo "ping -c 5 localhost"
-	echo
+	echo "Repos refreshed. What next?"
+	echo "  1 - See what can be upgraded"
+	echo "  2 - Just do the upgrade already"
+	read -n 1 -s whatnext
 
-	ping -c 5 localhost
+	case $whatnext in
+	"1")
+		echo
+		echo
+		run_as_root "apt list --upgradable"
+		echo
+		read -p "Continue with upgrade? (y/n)" -n 1 yesorno
+		if [[ $yesorno == "y" || yesorno == "Y" ]]; then
+			echo
+			echo
+			run_as_root "apt upgrade -y"
+			echo
+			echo "Done."
+		else
+			echo
+			echo "OK."
+		fi
+	;;
+	"2")
+		echo
+		run_as_root "apt upgrade -y"
+		echo
+		echo "Done."
+	;;
+	*)
+		echo
+		echo "Yeah, whatever..."
+	;;
+	esac
 
-	echo
-	echo "Now press a key to get back to the menu"
-	read -n 1 -s keypress
+	return_to_menu
+	
+}
+
+function upgrade_without_asking {
 	clear
+	echo
+	echo "Will now update system"
+	echo
+	run_as_root "apt update"
+	echo
+	run_as_root "apt upgrade"
+	echo
+	return_to_menu
+}
+
+function clean_up_apt {
+	clear
+	echo
+	echo "Gonna clean up unused packages"
+	echo
+	run_as_root "apt autoremove"
+	echo
+	run_as_root "apt clean"
+	return_to_menu
+}
+
+function install_packages {
+	clear
+	tput cnorm
+	echo
+	read -p "Package(s) to install: " lineargs
+	tput civis
+	run_as_root "apt install $lineargs"
+	echo
+	return_to_menu
+}
+
+function remove_packages {
+	clear
+	tput cnorm
+	echo
+	read -p "Package(s) to remove: " lineargs
+
+	dopurge=""
+	read -p "Also purge configs? (y/n)" -n 1 yesorno
+
+	if [[ yesorno == "y" || yesorno == "Y" ]]; then
+		dopurge="--purge"
+	fi
+
+	tput civis
+
+	run_as_root "apt remove $dopurge $lineargs"
+	echo
+	return_to_menu
+}
+
+function list_packages {
+	clear
+	tput cnorm
+	echo
+	read -p "Package(s) to list: " lineargs
+	tput civis
+	run_as_root "apt list $lineargs"
+	echo
+	return_to_menu
+}
+
+function search_packages {
+	clear
+	tput cnorm
+	echo
+	read -p "Package(s) to search: " lineargs
+	tput civis
+	run_as_root "apt search $lineargs"
+	echo
+	return_to_menu
+}
+
+function show_packages {
+	clear
+	tput cnorm
+	echo
+	read -p "Package(s) to show: " lineargs
+	tput civis
+	run_as_root "apt show $lineargs"
+	echo
+	return_to_menu
+}
+
+###################
+#                 #
+# Other funcitons #
+#                 #
+###################
+
+function show_system_logs {
+
+	if hash journalctl 2>/dev/null; then
+		run_as_root journalctl
+	else
+		run_as_root "dmesg | less"
+	fi
 
 }
+
+
+function show_sensors {
+
+	if hash $1 2>/dev/null; then
+
+		watch -n 0.1 sensors
+
+	else
+
+		echo "lm_sensors does not seem to be instaleld."
+		echo "First install lm_sensors then run sensors detect to configure it,"
+		echo "Then come back here"
+	
+		return_to_menu
+	
+	fi
+}
+
+

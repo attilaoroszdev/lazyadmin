@@ -40,67 +40,90 @@ _endmenutype
 # The tabs displayed at the top. Change names here as desired
 # The last one should remain setup, unless you with to disable that functionality
 _menutab
-Demo Functions
-Second Tab
+System
+Packages
 Third tab
 Fourth Tab
 Fifth Tab
 Setup
 _endmenutab
 
-# In "old" menustyle, tab numbers start from 0
+# (Hint: In "old" menustyle, tab numbers start from 0
 # In "simple" menu style (default), tab numbers start from 1
+# The default is "simple")
+# 
+# Syntax: 
+# _menu# (where # is the tab number)
+# Menu item 1 :: Menu item 1 desription (Appears at the bottom when item is highlighted)
+# Menu item 2 :: Menu item 1 desription
+# Menu item 3 :: Menu item 1 desription
+# skip
+# Menu item 5 :: Menu item 1 desription
+# Menu item 6 :: Menu item 1 desription
+# _endmenu# (same number as above)
+#
+# Adding `skip` to a line will leave that line empty, useful for visual/logical separation
+
 
 # First tab
 _menu1
-1 - Run sample function :: Will run an example function
-2 - Show submenu... :: This menuitem leads to a submenu
-3 - Drop to CMD :: Drop to a command prompt. Type 'exit' to return to menu
-4 - Ping localhost with command builder :: Show example of visually setting flags to a command
-5 - Launch in root mode :: Enter root mode. Be very careful, this is real!
+1 - Resource monitor :: Show the output of top
+2 - Better resource monitor :: Show the output of htop (if installed)
+3 - Show sensors :: Thermal readings in real time 
+4 - Read the system logs ::  See the output of journalctl (or dmesg, if not systemd)
+5 - Browse files :: Launch Midnight Commander (f installed)
+6 - Analyse disk space :: Select your options in the submenu
+7 - Interactive ping :: Use the built-in command-builder to construct a ping command
+8 - Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
+9 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
 _endmenu1
 
-# Submenu itmems for first tab, second menu item
-_submenu12
-1 - First submenu item - Ping locahost :: This will be the first item in the submenu. I like to ping thngs...
-2 - Second item - Run sample function (again...) :: The second item, obviously. The next one is skipped.
+# Submenu itmes for tab 1, item 6
+_submenu16
+1 - Analyse root :: Run ncdu /
 skip
-4 - Fourth item - Run command builder (again) :: The prev. item was skipped. Command builder runs from submenu too.
-5 - Fifth submenu item - Noting here yet :: You can keep on adding items
-6 - Sixth submenu item - Noting here yet :: Much more then in the currenrt main menu
-7 - Seventh submenu item - Noting here yet :: A lot more
-8 - Eighth submenu item - Noting here yet :: Much, much more...
-9 - Nineth submenu item - Noting here yet :: Up to nine
-_endsubmenu12
+3 - Analyse /home :: Run ncdu /home/attila
+4 - Anaylise ~/Downloads :: Run ncdu ~/Downloads
+5 - Analyse ~/Documents :: ncdu ~/Documents
+6 - Analyse ~/.cache :: Run ncdu ~/.cache
+skip
+8 - Analyse tmp directory :: Run ncdu /tmp
+9 - Analyse logs :: Run ncdu /var/log
+_endsubmenu16
 
 
 #Second tab
 _menu2
-1 - First Menuitem :: This is the first menuitem on the second tab
+1 - Update system :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
+1 - Quick update system :: No silly questions, just do it already. (apt update && apt upgrade -y)
+3 - Clean up apt :: apt autoremove && apt clean
 skip
-3 - Third Menuitem :: Third menuitem. Previous item was skipped
-4 - Fourth Menuitem :: This is the fourth meniutem on the second tab
-5 - Fifth Menuitem :: Last item. You could squeeze one more, but it would be tight.
+5 - Install package(s) :: apt install <whatever>
+6 - Remove package(s) :: apt (--purge) remove <whatever>
+7 - List package(s) :: apt list <whatever>
+8 - Search package(s) :: apt search <whatever>
+9 - Show package details :: apt show <whatever>
 _endmenu2
 
 
 #Third Tab
 _menu3
-1 - Fisrt Menuitem :: This is the first menuitem on the third tab
-2 - Second Menuitem :: This is the second menuitem on the third tab
-3 - Third Menuitem :: This is the third menuitem on the third tab
-4 - Fourth Menuitem :: This is the fourth menuitem on the third tab
-5 - Fifth Menuitem :: This is the fifth menuitem on the third tab
+1 - Complex script :: Run a very-very complex script
+2 - Solve for x :: Solve the mysteries of the universe (all of them) for x
+3 - Make Window$ secure :: How to instantly secure any computer running Window$
+4 - Important script :: Run a very important script
+5 - Play robotfindskitten :: You don have robotfindskitten installed, right? Right?
+6 - Pointless menuitem :: This does not do anything, only pollutes the environment
 _endmenu3
 
 #Fourth tab
 _menu4
-Nothing yet :: Write your own menus here
+Nothing hete yet :: Write your own menus here
 _endmenu4
 
 #Fifth tab
 _menu5
-Nothing yet :: Write your own menus here
+Nothing here yet :: Write your own menus here
 _endmenu5
 
 
