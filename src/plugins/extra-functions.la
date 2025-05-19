@@ -37,8 +37,9 @@ function run_as_root {
 
         if [[ -z $preferredrootcommand ]]; then
             echo
-            echo "Will need root privileges to run this command, but your preference had not yet been set."
-            echo "How do you like to become root"
+            echo "Will need root privileges to run this command,"
+            echo "but your preference had not yet been set."
+            echo "How do you like to become root?"
             echo
             echo "1 - su"
             echo "2 - sudo"
@@ -58,8 +59,12 @@ function run_as_root {
 # This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                     echo
+                    echo
                     echo "su saved as your preferred command"
-                    echo "I will now become root with su." 
+                    echo "I will now run the command:"
+					echo
+                    echo "su -c \""$1"\"" 
+					echo
                     echo "Please provide the root password."
                     echo
                     su -c "$1; exit"
@@ -73,8 +78,12 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
 # This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                     echo
+                    echo
                     echo "sudo saved as your preferred command"
-                    echo "I will now run the command with sudo."
+                    echo "I will now run the command:"
+                    echo
+                    echo "sudo "$1
+                    echo
                     echo "Please provide user password when prompted."
                     echo
                     if [[ $2 == "external" ]]; then
@@ -92,8 +101,12 @@ preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
 # This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                         echo
+                        echo
                         echo "Your user can use sudo, thus sudo saved as your preferred command"
-                        echo "I will now run the command with sudo."
+                        echo "I will now run the command:"
+                        echo 
+                        echo "sudo "$1
+                        echo 
                         echo "Please provide user password when prompted."
                         echo
                         if [[ $2 == "external" ]]; then
@@ -108,8 +121,12 @@ preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
 # This will be used by Lazy Admin to execute stuff as root
 preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                         echo
+                        echo
                         echo "Your user cannot use sudo so, su was saved as your preferred command"
-                        echo "I will now become root with su." 
+                        echo "I will now run the command:"
+						echo
+                        echo "su -c \""$1"\""
+                        echo
                         echo "Please provide the root password."
                         echo
                         su -c "$1; exit"
@@ -140,15 +157,21 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
             if [[ $preferredrootcommand == "su" ]]; then
 
                 echo
-                echo "Running command as root."
-                echo "Plase provide root paswordf/when prompted"
+                echo "Running command:"
+                echo
+                echo "su -c \""$1"\""
+                echo
+                echo "Plase provide root pasword if/when prompted"
                 echo
                 
                 su -c "$1; exit"
 
             else 
                 echo 
-                echo "Running command as root"
+                echo "Running command:"
+                echo
+                echo "sudo "$1
+                echo
                 echo "Please provide sudo password if/when prompted"
                 echo
 
@@ -161,35 +184,19 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
 
             fi
 
-
         fi
 
     else
+
         echo
-        echo "We are already root! Will run command then then..."
+        echo "We are already root! Yay!"
         echo
+
         $1
 
     fi
 
 }
-
-
-
-# Use this at your own risk-...
-function enter_root_shell {
-
-     rootexitflag=true
-    clear
-    echo
-    echo "Gaining privileges..."
-    echo
-    run_as_root "ladmin"
-
-}
-
-
-
 
 
 # This will enter a directory, execute a command or script, then return to the original directory
@@ -211,11 +218,7 @@ function run_function_in_tmp_directory {
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
 function run_command_in_new_tab {
 
-
-
-
     originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
-
 
     WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
     xdotool windowfocus $WID
@@ -232,9 +235,9 @@ function run_command_in_new_tab {
     xdotool key Return
 
 
-     # If you find that the beow command does not set_add_info_line
+    # If you find that the below command does not set
     # the keyboard layout back correctly, you might manually need to
-    # Set it back to your own preference
+    # set it back to your own preference
     # get the correct values with
     # setxkbmap -query
     # (You might need to set variant as well as model, etc)
@@ -266,9 +269,9 @@ function run_command_in_new_window {
 
     xdotool key Return
 
-    # If you find that the beow command does not set_add_info_line
+    # If you find that the beow command does not set
     # the keyboard layout back correctly, you might manually need to
-    # Set it back to your own preference
+    # set it back to your own preference
     # get the correct values with
     # setxkbmap -query
     # (You might need to set variant as well as model, etc)
@@ -278,10 +281,60 @@ function run_command_in_new_window {
 
 }
 
-function drop_to_shell {}
+function drop_to_shell {
+
     clear
     tput cnorm
     bash
     tput civis
     
+}
+
+
+# Use this at your own risk-...
+function drop_to_root_shell {
+
+    rootexitflag=true
+    clear
+    tput cnorm
+    echo
+    run_as_root "clear; bash"
+    tput civis
+
+}
+
+
+
+function return_to_menu {
+
+    echo
+    echo "Press any key to return to menu"
+    read -n 1 -s keypress
+    clear
+
+}
+
+function run_if_installed {
+    
+    clear
+
+	if hash $1 2>/dev/null; then
+		
+		echo
+		$@
+		echo
+        clear
+        return 0
+	else
+	
+		echo 
+		echo "$1 does not seem to be instaleld. PLease install $1 and try again"
+		echo
+        echo "Press any key to return to menu"
+        read -n 1 -s keypress
+        clear
+        return 65
+	fi
+
+	
 }
