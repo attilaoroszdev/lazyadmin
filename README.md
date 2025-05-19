@@ -67,7 +67,7 @@ The portable editions have the advantages of not needing installation. You can s
 
 ### What's with those profiles, then?
 
-The default user data (Your menu items, and predefined functions) will be either stored in the `/user` directory (located in ~/.config/LazyAdmin for permanent installations). You can duplicted the contents of that folder into a different one, and then load it with either 
+The default user data (your menu items, and predefined functions) will be either stored in the `/user` directory (located in ~/.config/LazyAdmin for permanent installations). You can duplicte the contents of that folder into a different one, and then load it with either 
 
 `ladmin -p <profilename>` or `ladmin --load-profile <profilename>` 
 
@@ -77,7 +77,7 @@ where `<profilename>` is the name of the folder your other profiles is saved.
 
 For example: 
 
-`ladmin --load-profile seconduser` or `ladmin -p secseconduserrofile` 
+`ladmin --load-profile seconduser` or `ladmin -p seconduser` 
 
 will attempt to load the contents of `~/.config/LazyAdmin/seconduser`. To load the user's profeil from e.g. the non-standard location: `~/LAProfiles/seconduser`, you can either specify the absolute path:
 
