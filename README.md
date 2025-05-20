@@ -10,18 +10,18 @@ You can think of Lazy Admin as aliases on steroids. Instead of remembering  and 
 
 ## What does it do?
 
-- **Arrow-key navigation** - Arrow keys do what you expect them to do
-- **List-like menu items** - Each menu item is accessible through navigating a vertical list of items, organized neatly on tabs
-- **Tabs for grouping similar items** - Left/Right arrows will switch tabs
-- **One liner item descriptions** - When you navigate the menu, a description appears in the bottom row
-- **Shortkeys** - Each item is accessible by pressing its corresponding number on the current tab. E.g. to launch the 3rd item, press 3.
-- **Sub-menus** - Any menu-item can invoke a sub-menu, which can hold further items
+- **Arrow-key navigation** - Arrow keys do what you expect them to do.
+- **List-like menu items** - Each menu item is accessible through navigating a vertical list of items, organized neatly on tabs.
+- **Tabs for grouping similar items** - Left/Right arrows will switch tabs.
+- **One liner item descriptions** - When you navigate the menu, a description appears in the bottom row.
+- **Shortkeys** - Each item is accessible by pressing its corresponding number on the current tab. E.g. to launch the 3rd item, press <kbd>3</kbd>.
+- **Sub-menus** - Any menu-item can invoke a sub-menu, which can hold further items.
 - **Visual command builder with predefined parameters** - Build long commands in an interactive way.
-- **Optional side panel** - with predefined items like *Reflow menu*, *Help*, *Key Bindings*, *Back to main* and *Exit*, which can also hold user defined items. Ideal for holding menu items that might apply to all tabs.
-- **No dependencies "pure" bash interface** - ideal for managing servers via SSH. The only dependency is `sed`.
+- **Optional side panel** - With predefined items like *Reflow menu*, *Help*, *Key Bindings*, *Back to main* and *Exit*, which can also hold user defined items. Ideal for holding menu items that might apply to all tabs.
+- **No dependencies "pure" bash interface** - Ideal for managing servers via `ssh`. The only dependency is `sed`.
 - **Easy set-up** - The installer script is completely platform independent. Settings can be changed by editing simple text files, from within the UI. Script aliases bind scripts to menu items by position, and a user script "repository" file is also available.
-- **No-intstallation, portable version also abvailable** - Run it any time, anywhere, on any systrem that has bash and sed installed
-- **Multiple profiles** - Store different sets of menu items to use in different situations, and load them easily
+- **No-intstallation, portable version also abvailable** - Run it any time, anywhere, on any systrem that has `bash` and `sed` installed
+- **Multiple profiles** - Store different sets of menu items to use in different situations, and load them easily.
 
 
 ## Screenshots
@@ -48,61 +48,91 @@ Because it's meant for sysadmins, who are lazy. Lazy to type, lazy to remember, 
 
 ### Does it make sense?
 
-Probably not a lot, but it's fun. Although if you have mundane and/or repetative tasks to run on remote servers via SSH, it can be rather helpful.
+Probably not a lot, but it's fun. Although if you have mundane and/or repetative tasks to run on remote servers via `ssh`, it can be rather helpful.
 
 
 ## What are the different "editions"?
 
 Lazy admins comes in four flavours:
 
-- Full - The whole package, complete with sample data and an installer script
-- Portable - Same as the full version, only without an installer... or the need to install.
+- **Full** - The whole package, complete with sample data and an installer script
+- **Portable** - Same as the full version, only without an installer (or the need to install).
 
 (*Note: The minimal edition has been deprecated in v2.2.*)
 
 
 ### Why portable?
 
-The portable editions have the advantages of not needing installation. You can stick it on a pendrive and it will work on any computer that has a working bash shell and `sed`. The disadvantage is, your user preferences and preset values will not be transferred to any new version, whereas the full edition has the option to preserve user data while upgrading.
+The portable edition has all the advantages of not needing installation. You can stick it on a pendrive and it will work on any computer that has a working `bash` shell and `sed`. The disadvantage is, your user preferences and preset values will not be transferred to any new version, whereas the full edition has the option to preserve user data while upgrading. (It's easy enough to copy them, though.)
 
 ### What's with those profiles, then?
 
-The default user data (your menu items, and predefined functions) will be either stored in the `/user` directory (located in ~/.config/LazyAdmin for permanent installations). You can duplicte the contents of that folder into a different one, and then load it with either 
+The default user data (your menu items, and predefined functions) will be stored in the `/user` directory (located in `~/.config/LazyAdmin` for permanent installations). You can duplicte the contents of that folder into a different one, and then load it with either 
 
-`ladmin -p <profilename>` or `ladmin --load-profile <profilename>` 
+```bash
+ladmin -p <profilename>
+```
 
-where `<profilename>` is the name of the folder your other profiles is saved. 
+or 
 
-**Note:** Both relative and paths are supported for non-standard profile locations. If the profile is located next to the "default" one, it is quite enough to specify the folder name
+```bash
+ladmin --load-profile <profilename>
+```
 
-For example: 
+where `<profilename>` is the name of the folder your other profiles is saved.
 
-`ladmin --load-profile seconduser` or `ladmin -p seconduser` 
+***Note:** Both relative and paths are supported for non-standard profile locations. If the profile is located next to the "default" one, it is quite enough to specify the folder name*
 
-will attempt to load the contents of `~/.config/LazyAdmin/seconduser`. To load the user's profeil from e.g. the non-standard location: `~/LAProfiles/seconduser`, you can either specify the absolute path:
+For example:
 
-`ladmin --load-profile ~/LaProfiles/seconduser` or `ladmin -p ~/LaProfiles/seconduser`
+```bash
+ladmin --load-profile seconduser
+```
+
+or
+
+```bash
+ladmin -p seconduser
+```
+
+will attempt to load the contents of `~/.config/LazyAdmin/seconduser`. To load the user's profile from e.g. the non-standard location: `~/LAProfiles/seconduser`, you can either specify the absolute path:
+
+```bash
+ladmin --load-profile ~/LaProfiles/seconduser
+``` 
+
+or
+
+```bash
+ladmin -p ~/LaProfiles/seconduser
+```
 
 or use a relative path, such as:
 
-`ladmin --load-profile ../../LaProfiles/seconduser` or `ladmin -p ../../LaProfiles/seconduser`
+```bash
+ladmin --load-profile ../../LaProfiles/seconduser
+```
 
+or
 
+```bash
+ladmin -p ../../LaProfiles/seconduser
+```
 
 
 ## Installing Lazy Admin
 
-Installation is pretty straightforward. Download the latest release, and unpack the tarball. It should either contain an `install.sh` script, or a launcher, ready to go (in the portable variety). If you go the installer way, there should also be another tarball, corresponding to the release's version number. Keep these in the same directory and run the script. There are a few options to choose form, but these will be explained as you go along.
+Installation is pretty straightforward. Download the latest release, and unpack the tarball. It should either contain an `install.sh` script, or a ready to go launcher (`pladmin.bash` in the portable variety). If you go the installer way, there should also be another another tarball, corresponding to the release's version number. Keep these in the same directory and run the script. There are a few options to choose form, but these will be explained as you go along.
 
 
 ### Upgrading from a previous version
 
-If you already have Lazy Admin installed, and want to upgrade, you can just run the installer as you normally would. It will ask you if you want to purge your previous user configurations. If you say no, you will keep them and the new version will automatically use your defined menus and functions. If you say yes, it will still keep the old configs, in case you'd change your mind later.
+If you already have Lazy Admin installed, and want to upgrade, you can just run the installer as you normally would. It will ask you if you want to purge your previous user configurations. If you say no, you will keep them and the new version will automatically use your defined menus and functions. If you say yes, it will still keep the old configs, in case you'd change your mind later on.
 
 
 ## So how can I configure it?
 
-For a detailed guide of configuration and usage, you can refer to the help files within the package, accessible directly via the help menu in either MarkDown or plain text format. 
+For a detailed guide of configuration and usage, you can refer to the help files within the package, accessible directly via the help menu in either MarkDown or plain text format, or you can read them with any text/markdown editor straight from the `res` folder, on the install path.
 
 To access the help menu, either navigate to the right panel by pressing <kbd>r</kbd> or <kbd>Ctrl</kbd> + <kbd>➜</kbd>, and select *Get Help*, or just press <kbd>h</kbd> from anywhere inside Lazy Admin.
 
