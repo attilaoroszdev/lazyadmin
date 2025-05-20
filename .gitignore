@@ -1,4 +1,5 @@
 .directory
 ToDo.md
 ./pladmin
-./releases
+./releases/
+./releases/*
