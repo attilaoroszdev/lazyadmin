@@ -20,19 +20,53 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-USER_DIR=$userprofile
-COREDIRPLACEHOLDER
-PLUGINSDIRPLACEHOLDER
-RESDIRPLACEHOLDER
+
+function display_markdown_help {
+
+    if hash pandoc 2>/dev/null; then
+
+        pandocinstalled=true
+
+    fi
+
+    if hash lynx 2>/dev/null; then
+
+        lynxinstalled=true
+
+    fi
 
 
-. "$CORE_DIR/core-defaults.la"
-. "$CORE_DIR/main-functions.la"
+    if [[ $pandocinstalled && $lynxinstalled ]]; then
 
-. "$USER_DIR/user-defaults.la"
-. "$USER_DIR/user-functions.la"
-. "$USER_DIR/menu-bindings.la"
 
-. "$PLUGINS_DIR/extra-functions.la"
-. "$PLUGINS_DIR/setup-functions.la"
-. "$PLUGINS_DIR/display-help.la"
+        pandoc "$1" | lynx -stdin
+
+    else
+        clear
+        echo
+        echo "Some dependencies are missing."
+        echo "To display a formatted markdown,  install the following packag(es):"
+        echo
+
+        if [[ ! $pandocinstalled ]]; then
+
+            echo "  - pandoc"
+
+        fi
+
+        if [[ ! $lynxinstalled ]]; then
+
+            echo "  - lynx"
+
+        fi
+
+        echo
+        echo "Now press any key to display plain text"
+        read -n 1 -s keypress
+
+        less "$2"
+
+    fi
+
+
+}

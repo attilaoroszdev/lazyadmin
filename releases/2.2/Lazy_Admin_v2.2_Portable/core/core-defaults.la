@@ -20,19 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-USER_DIR=$userprofile
-COREDIRPLACEHOLDER
-PLUGINSDIRPLACEHOLDER
-RESDIRPLACEHOLDER
 
-
-. "$CORE_DIR/core-defaults.la"
-. "$CORE_DIR/main-functions.la"
-
-. "$USER_DIR/user-defaults.la"
-. "$USER_DIR/user-functions.la"
-. "$USER_DIR/menu-bindings.la"
-
-. "$PLUGINS_DIR/extra-functions.la"
-. "$PLUGINS_DIR/setup-functions.la"
-. "$PLUGINS_DIR/display-help.la"
+# Do not change these. (You have been warned)
+tabpos=0
+menupos=0
+bottomseparators=3
+descriptorheight=1
+mainheaderheight=4
+helpsubmenuheight=7
+subheaderheight=2
+activepanel="left"
+menufile="$USER_DIR/menu-entries.la"
+roottitle=" -- ROOT Shell"
+altmenu=false
+submenu=false
+subflagsmenu=false
+helpsubmenu=false
+cursorpos=0
+root=false

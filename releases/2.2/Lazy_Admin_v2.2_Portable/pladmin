@@ -20,19 +20,58 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-USER_DIR=$userprofile
-COREDIRPLACEHOLDER
-PLUGINSDIRPLACEHOLDER
-RESDIRPLACEHOLDER
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+userprofile="$CURRENT_DIR/user"
 
-. "$CORE_DIR/core-defaults.la"
-. "$CORE_DIR/main-functions.la"
+for (( i=1; i<=$#; i++)); do
 
-. "$USER_DIR/user-defaults.la"
-. "$USER_DIR/user-functions.la"
-. "$USER_DIR/menu-bindings.la"
+    j=$((i+1))
 
-. "$PLUGINS_DIR/extra-functions.la"
-. "$PLUGINS_DIR/setup-functions.la"
-. "$PLUGINS_DIR/display-help.la"
+    case "${!i}" in
+
+        "-p" | "--load-profile") 
+
+          userprofile=""
+          profilename=${!j}       
+          absolutepath=false
+
+          if [[ ${profilename:0:1} == "/" ]]; then
+
+            absolutepath=true
+          
+          fi
+
+          if $absolutepath && [[ -d "$profilename" ]]; then
+
+            userprofile="$profilename" 
+            
+          else
+            
+            if [[ -d "$CURRENT_DIR/$profilename" ]]; then
+
+              userprofile="$CURRENT_DIR/$profilename"
+              
+            fi
+            
+          fi
+          
+          if [[ -z $userprofile ]]; then
+            echo 
+            echo "Error: User profile $profilename not found. Exiting"
+            echo
+            exit 65
+
+          fi
+          ;;
+
+    esac   
+
+done
+
+USER_DIR="$userprofile"
+CORE_DIR="$CURRENT_DIR/core"
+
+. "$CORE_DIR/includes-port.la"
+
+main "$@"

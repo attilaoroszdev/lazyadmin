@@ -22,14 +22,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-installtarball=./files-v2.1.tar.gz
+installtarball=./files-v2.2.tar.gz
 
 # Installer function(s)
 
 if [[ "$(whoami)" == "root" ]]; then 
 
     echo
-    echo "you should run this installer as a normal user."
+    echo "You should run this installer as a normal user."
     echo "Root privileges will be obtained as and when needed."
     echo "I will exit now..."
     echo
@@ -167,17 +167,20 @@ function set_symlink_dir {
 # While these come rpesinstalled in most systems, it never hurts to chekc
 function check_for_essential_dependencies {
     
-    whilte true; do
+    while true; do
     
         echo
         echo "Checking if we have 'sed'..."
         sleep 1
 
         if hash sed 2>/dev/null; then
+
             echo
             echo "Of course, we do. Why wouldn't we...?"
             break
+
         else
+
             echo
             echo "It looks like 'sed' is missing."
             echo "Seriously, what kind of systemn is this???)"
@@ -195,16 +198,16 @@ function check_for_essential_dependencies {
                 
                 [[ $installsed == "n" || $installsed == "N" ]]; then
                 echo
-                echo "Awright, suit yourself. But I cannto go on without sed, sorry."
+                echo "Awright, suit yourself. But I cannto go on without 'sed', sorry."
                 echo 
-                echo "I will now exit. Come back whn you have 'sed'. 
-                echo "(Yeah, I know, that's what she "sed'... I will see myself out.)
+                echo "I will now exit. Come back when you have 'sed'."
+                echo "(Yeah, I know, that's what she sed... I will see myself out.)"
 
                 exit 69
 
             else
-                echo
 
+                echo
                 echo "You want to try that again."
                 echo "It's really quite simple: Press y for 'yes', or n for 'no'". 
                 echo "(You know, on the keyboard.)"
@@ -214,23 +217,29 @@ function check_for_essential_dependencies {
             fi
         
         fi
+    
+    done 
 
-         whilte true; do
+
+    while true; do
     
         echo
         echo "Checking if we have 'tar'..."
         sleep 1
 
         if hash tar 2>/dev/null; then
+
             echo
             echo "Of course, we do. Why wouldn't we...?"
             break
+
         else
+
             echo
             echo "It looks like 'tar' is missing."
             echo "Seriously, what kind of systemn is this???)"
             echo
-            echo "Do you wan tto install 'tar' now? (I wil try to use apt)"
+            echo "Do you want to install 'tar' now? (I wil try to use apt)"
             echo
 
             read -p "(y/n) > " -n 1 installtar
@@ -243,15 +252,15 @@ function check_for_essential_dependencies {
                 
                 [[ $installtar == "n" || $installtar == "N" ]]; then
                 echo
-                echo "Awright, suit yourself. But I cannto go on without tar, sorry."
+                echo "Awright, suit yourself. But I cannot go on without tar, sorry."
                 echo 
                 echo "I will now exit. Come back when you have 'tar'". 
                 
                 exit 65
 
             else
-                echo
 
+                echo
                 echo "You want to try that again."
                 echo "It's really quite simple: Press y for 'yes', or n for 'no'". 
                 echo "(You know, on the keyboard.)"
@@ -261,10 +270,6 @@ function check_for_essential_dependencies {
             fi
         
         fi
-
-
-
-
 
     done
 
@@ -483,7 +488,7 @@ if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
         mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
 
         echo
-        echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later'"
+        echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later"
        
         sleep 1
 
@@ -549,7 +554,7 @@ else
 
     needroot=false
 
-    if [["$(stat -c "%U" "/opt")" == "root"]] || ["$(stat -c "%G" "/opt")" == "root"]; then
+    if [[ "$(stat -c "%U" "/opt")" == "root" ]] || [[ "$(stat -c "%G" "/opt")" == "root" ]]; then
 
         needroot=true
 
@@ -650,7 +655,7 @@ if [[ $installtype == "global" ]]; then
    
     else
         
-        tar xvzC \"$launcherdir\" -f $installtarball --strip=1 "launcher/ladmin"; sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|" "$launcherdir/ladmin"
+        tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"; sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|" "$launcherdir/ladmin"
    
     fi
     
@@ -670,7 +675,7 @@ echo
 echo "Attempting to make launcher executable."
 echo "(If this step fails, you will need to do this manually)"
 
-if [[ installtype == "gobal" ]]; && $needroot then
+if [[ $installtype == "gobal" ]] && $needroot; then
 
     run_as_root "chmod 0755 \"$launcherdir/ladmin\""
     
@@ -695,13 +700,15 @@ if $symlinking; then
     echo "It is likely a system directory, so root will be needed..."
     echo
 
-    if [["$(stat -c "%U" "$symlinkdir")" == "root"]] || ["$(stat -c "%G" "$symlinkdir")" == "root"]; then
+    if [[ "$(stat -c "%U" "$symlinkdir")" == "root" ]] || [[ "$(stat -c "%G" "$symlinkdir")" == "root" ]]; then
        
         needroot=true
    
     else
        
         needroot=false
+
+    fi
 
     if [[ -f "$symlinkdir/ladmin" ]]; then
        
@@ -779,6 +786,7 @@ echo
 echo "ladmin"
 echo
 echo "as a command."
+echo
 echo "Now press anything to go back to doing whatever it was you did before..."
 
 read -n 1 -s keypress
