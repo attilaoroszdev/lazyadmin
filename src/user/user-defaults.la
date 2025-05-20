@@ -23,7 +23,7 @@
 
 #The title displayed in the main menu
 
-maintitle="Lazy Admin - v2.2 Beta"
+maintitle="Lazy Admin - v2.2"
 
 # Switch right panel on or off
 rightpanel=true
@@ -50,7 +50,7 @@ rightpanelwidth=27
 # It will be launched like this:
 # $defaulteditor $filename
 # So make sure all arguments are BEFORE the filename
-defaulteditor="not set"
+defaulteditor="micro"
 
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)

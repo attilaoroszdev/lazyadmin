@@ -7,7 +7,7 @@ There are currently two (2) "officially" packaged versions, both using slightly 
 
 This is the version that has it **all**
 
-
+```
 /Lazy_Admin_v2.2/─ install.sh
                 │
                 ├─ LICENSE
@@ -59,7 +59,7 @@ This is the version that has it **all**
                                           ├user-defaults.la
                                           |
                                           └user-functions.la
-
+```
 
 
 
@@ -67,6 +67,7 @@ This is the version that has it **all**
 
 Ready to go, no installation needed. Everything is dynamically linked, so it's useable from anywhere, any time
 
+```
 /Lazy_Admin_v2.2_Portable/ladmin
                          │
                          ├LICENSE
@@ -115,7 +116,7 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                                ├user-defaults.la
                                |
                                └user-functions.la
-
+```
 
 
 A later version of this document will give detailed explanations of installation structure, and the actual relations between included files, besides instructions and best practices about how to integrate Lazy Admin in your existing infrastructure, or how to build it into your own projects. until such time, you might as well figure it out for yourself-. :) (I realise I said that like 8 years ago, but it is coming soon, I promise.)

@@ -8,7 +8,7 @@ Navigation:
   Left (change tab) - ←  or 'a'
   Right (change tab) - →  or 'd'
   Change to right panel - Ctrl + →  or 'r'
-  Change to left panel - Ctrl + →  or 'l'
+  Change to left panel - Ctrl + ←  or 'l'
   Back to previous level - 'b'
   Select menu item - '1' to '9' or <Enter>
 
@@ -31,6 +31,6 @@ Reserved keys for setup options (works from main level only):
 
 Reserved keys for command builder options (works from command buidler only):
 
-Manually specify flags or arguments - 'm'
-Clear all flags or arguments - 'x'
-Run the command with the set flags or arguments - 'c'
+  Manually specify flags or arguments - 'm'
+  Clear all flags or arguments - 'x'
+  Run the command with the set flags or arguments - 'c'
