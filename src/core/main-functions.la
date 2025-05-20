@@ -1723,7 +1723,7 @@ function main {
         
         # This can be extended with any number of arguments later, possibly to change defaults on the fly
         
-        "--join-lines")
+        "-j" | "--join-lines")
             
             if [[ "${!j}" == "off" ]]; then
 

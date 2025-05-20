@@ -2,32 +2,40 @@
 
 ## **Navigation:**
 
-| `  Up - ↑  or 'w''`
-| `  Down - ↓  or 's'`
-| `  Left (change tab) - ←  or 'a'`
-| `  Right (change tab) - →  or 'd'`
-| `  Change to right panel - Ctrl + →  or 'r'`
-| `  Change to left panel - Ctrl + →  or 'l'`
-| `  Back to previous level - 'b'`
-| `  Select menu item - '1' to '9' or <Enter>`
+
+```
+    Up - ↑  or 'w''
+    Down - ↓  or 's'
+    Left (change tab) - ←  or 'a'
+    Right (change tab) - →  or 'd'
+    Change to right panel - Ctrl + →  or 'r'
+    Change to left panel - Ctrl + ←  or 'l'
+    Back to previous level - 'b'
+    Select menu item - '1' to '9' or <Enter>
+```
 
 ## **Other actions:**
 
-| `  Reflow menu - 'f'`
-| `  Get help - 'h'`
-| `  Display shortkeys - 'k'`
-| `  Quit LazyAdmin - 'q'`
+```
+    Reflow menu - 'f'
+    Get help - 'h'
+    Display shortkeys - 'k'
+    Quit LazyAdmin - 'q'
+```
 
 ## **Reserved keys for setup options (works from main level only):**
 
-| `  Edit menu entries - 'e'`
-| `  Edit user functions - 'u'`
-| `  Bind functions to menus - 'm'`
-| `  Edit default values - 'v'`
+```
+    Edit menu entries - 'e'
+    Edit user functions - 'u'
+    Bind functions to menus - 'm'
+    Edit default values - 'v'
+```
 
 ## **Reserved keys for command builder options (works from command buidler only):**
 
-| `Manually specify flags or arguments - 'm'`
-| `Clear all flags or arguments - 'x'`
-| `Run the command with the set flags or arguments - 'c'`
-
+```
+    Manually specify flags or arguments - 'm'
+    Clear all flags or arguments - 'x'
+    Run the command with the set flags or arguments - 'c'
+```
