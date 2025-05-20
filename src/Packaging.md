@@ -14,8 +14,6 @@ This is the version that has it **all**
                 │
                 ├─ README
                 │
-                ├─ Packaging.md
-                │
                 └─ files-v2.2.tar.gz/core/core-defaults.la
                                     |    |
                                     |    ├includes.la
@@ -49,7 +47,13 @@ This is the version that has it **all**
                                     |    |
                                     |    ├usage-guide.txt
                                     |    |
-                                    |    └user_files.tar.gz
+                                    |    └user_files.tar.gz/user/menu-bindings.la
+                                    |                           |
+                                    |                           ├menu-entries.la
+                                    |                           |
+                                    |                           ├user-defaults.la
+                                    |                           |
+                                    |                           └user-functions.la
                                     |
                                     |
                                     └/user/menu-bindings.la
@@ -68,13 +72,11 @@ This is the version that has it **all**
 Ready to go, no installation needed. Everything is dynamically linked, so it's useable from anywhere, any time
 
 ```
-/Lazy_Admin_v2.2_Portable/ladmin
+/Lazy_Admin_v2.2_Portable/pladmin
                          │
                          ├LICENSE
                          │
                          ├README
-                         │
-                         ├Packaging.md
                          │
                          ├/core/core-defaults.la
                          |     |
@@ -105,8 +107,6 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |    ├usage-guide.md
                          |    |
                          |    ├usage-guide.txt
-                         |    |
-                         |    └user_files.tar.gz
                          |
                          |
                          └/user/menu-bindings.la

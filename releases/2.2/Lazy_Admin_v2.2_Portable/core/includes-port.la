@@ -20,10 +20,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-USER_DIR=$userprofile
-COREDIRPLACEHOLDER
-PLUGINSDIRPLACEHOLDER
-RESDIRPLACEHOLDER
+
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# USER_DIR="$(dirname "$CURRENT_DIR")/user"
+CORE_DIR="$(dirname "$CURRENT_DIR")/core"
+PLUGINS_DIR="$(dirname "$CURRENT_DIR")/plugins"
+RES_DIR="$(dirname "$CURRENT_DIR")/res"
 
 
 . "$CORE_DIR/core-defaults.la"
