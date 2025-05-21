@@ -41,14 +41,14 @@ MAX_SUBMENU_ITEMS=9
 # Change the size of the right panel
 RIGHT_PANEL_WIDTH=27
 
-# This should be habdled by the setup script,
+# You can switch off line connector characters
+# Useful for incompatible terminals (like those on mobiles)
+# Which might render these out of place
+DISPLAY_LINE_CONNECTORS=true
+
+# This should be handled by the setup script,
 # but you can change it to any editor command
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
 DEFAULT_EDITOR="not set"
-
-# You can switch off line connector characters
-# Useful for incompatible terminals (like those on mobiles)
-# Which might render these out of place
-DISPLAY_LINE_CONNECTORS=true

@@ -33,7 +33,7 @@ SUB_HEADER_HEIGHT=2
 ROOT_TITLE=" -- ROOT Shell"
 
 menu_file="$USER_DIR/menu-entries.la"
-alt_menu=false # This is not yet implemented, do not change
+alt_menu=false # This is not yet fully implemented, and quite frankly, I forgot what it was meant to be``
 submenu=false 
 sub_flags_menu=false
 help_submenu=false

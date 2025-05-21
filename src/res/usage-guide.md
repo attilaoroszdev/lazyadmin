@@ -12,11 +12,11 @@ Again, if you are a sysadmin, who does a lot of remote server maintenance, you w
 
 ## **Capacity**
 
-The downloaded version, of Lazy Admin is already set to have 6 tabs, fi5ve of which are free to use (6th is reserved, but it does not have to be), each holding up to 9 entries. That makes the maximum capacity of the main menu alone 45 commands or functions. (Or 51 if you override the setup tab).
+The downloaded version, of Lazy Admin is already set to have 6 tabs, 5 of which are free to use (6th is reserved, but it does not have to be), each holding up to 9 entries. That makes the maximum capacity of the main menu alone 45 commands or functions. (Or 51 if you override the setup tab).
 
 You can also use sub-menus, if you like, each could hold up to nine entries with the default settings. This means, with 5 main menu tabs, each holding 9 sub-menus, which in turn hold 9 sub-menu entries each, theoretically your total number or entries would be 405 (or 459 without the setup)
 
-If that is not enough, you can add up to 9 tabs, if you use short enough names. Unfortunately, you cannot add more than 9 entries per tab as of now. (This limitation is due to how Lazy Admin handles menu function aliases (single digits are only accepted at the moment)).
+If that is not enough, you can add up to 9 tabs, if you use short enough names. Unfortunately, you cannot add more than 9 entries per tab as of now. (This limitation is due to how Lazy Admin handles menu function aliases (single digits are only accepted at the moment).
 
 Thus, the maximum capacity assuming 9 tabs, each with 9 menus that hold 9 sub-menus, is 9x9x9=729 entries. Now, if you have 729 commands or scripts and you are still short on space, you already are having serious issues...
 
@@ -157,6 +157,7 @@ To learn how to use the command builder function, check out the `Command Builder
 ## **Bottom row**
 
 At the bottom of the UI, there is a special row, which displays a short one liner description of the currently highlighted menu item. These descriptions must be set at the same time menu items are set up, and are available for menu and sub-menu items, and right panel items, but *not* for the command builder.
+
 
 ## **The End**
 
