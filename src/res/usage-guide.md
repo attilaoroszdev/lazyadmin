@@ -31,7 +31,7 @@ Lazy Admin currently takes two command line arguments:
 
 ### `--join-lines`, or `-j`
 
-`--join-lines` or `-j` for short, can override the default setting of the `$displaylineconnectors` variable. This is useful when accessing Lazy Admin via e.g. SSH, and the device used does not display Lazy Admin correctly. This can happen when using a terminal emulator on Android devices, which often do not use proper monospace font.
+`--join-lines` or `-j` for short, can override the default setting of the `$DISPLAY_LINE_CONNECTORS` variable. This is useful when accessing Lazy Admin via e.g. SSH, and the device used does not display Lazy Admin correctly. This can happen when using a terminal emulator on Android devices, which often do not use proper monospace font.
 
 - `ladmin --join-lines off` or `ladmin -j off` will start Lazy Admin without drawing line-jonits, so that no misalignment occusr with non-monospace fonts
 - `ladmin --join-lines on` or `ladmin -j on`will force drawing line-jonits, even when Lazy Admin is set not to draw them
@@ -149,7 +149,7 @@ In the command builder (see below), you have three additional reserved keys, whi
 
 ## **Command builder**
 
-There is a special, visual command builder function built right into Lazy Admin, called the command builder. You can bind this interface to any menu or sub-menu item, and it will bring up a special type of sub-menu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this functionality, you need to bind `flags_submenu_funtion` with the right arguments to the menu or submenu item you wish to invoke the command builder with.
+There is a special, visual command builder function built right into Lazy Admin, called the command builder. You can bind this interface to any menu or sub-menu item, and it will bring up a special type of sub-menu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this functionality, you need to bind `flags_sub_menu_funtion` with the right arguments to the menu or sub_menu item you wish to invoke the command builder with.
 
 To learn how to use the command builder function, check out the `Command Builder Usage Guide` in the *Help* menu
 

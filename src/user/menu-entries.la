@@ -25,7 +25,6 @@
 # refer to the help files in the "res" directory #                                                                  #
 ##################################################
 
-
 # This tells WLAdmin how the menu-file should be read. "simple" means one liners, 
 # "old" means separate menudescriptors, like in right-panel
 _menutype
@@ -47,6 +46,7 @@ Fourth Tab
 Fifth Tab
 Setup
 _endmenutab
+
 
 # (Hint: In "old" menustyle, tab numbers start from 0
 # In "simple" menu style (default), tab numbers start from 1
@@ -78,7 +78,8 @@ _menu1
 9 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
 _endmenu1
 
-# Submenu itmes for tab 1, item 6
+
+# submenu itmes for tab 1, item 6
 _submenu16
 1 - Analyse root :: Run ncdu /
 skip
@@ -92,7 +93,7 @@ skip
 _endsubmenu16
 
 
-#Second tab
+# Second tab
 _menu2
 1 - Update system :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
 1 - Quick update system :: No silly questions, just do it already. (apt update && apt upgrade -y)
@@ -106,7 +107,7 @@ skip
 _endmenu2
 
 
-#Third Tab
+# Third Tab
 _menu3
 1 - Complex script :: Run a very-very complex script
 2 - Solve for x :: Solve the mysteries of the universe (all of them) for x
@@ -116,12 +117,14 @@ _menu3
 6 - Pointless menuitem :: This does not do anything, only pollutes the environment
 _endmenu3
 
-#Fourth tab
+
+# Fourth tab
 _menu4
 Nothing hete yet :: Write your own menus here
 _endmenu4
 
-#Fifth tab
+
+# Fifth tab
 _menu5
 Nothing here yet :: Write your own menus here
 _endmenu5
@@ -143,7 +146,7 @@ v - Edit default values :: Edit default menu length, number of tabs, etc.
 _endmenu6
 
 
-### Contents of the right panel. Only change this if you alter right panel functionality 
+# Contents of the right panel. Only change this if you alter right panel functionality 
 
 # Simplified menu-style is not currently implemented for the right panel
 # Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
@@ -169,7 +172,7 @@ Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
 
-# In the submenus (contains back link)  #
+# In the submenus (contains back link) 
 _subrightpanel
 f - Reflow menu
 h - Get Help

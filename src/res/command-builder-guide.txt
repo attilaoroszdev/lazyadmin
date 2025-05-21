@@ -13,7 +13,7 @@ The command builder let you visually build a command, and then execute it. In th
 - When you select "Delete Set args", or press `x`, the command builder will be reset, and all flags will be removed, so you can start over again
 
 
-How to set up a command builder submenu
+How to set up a command builder sub_menu
 ---------------------------------------
 
 To access this functionality, you will use the predefined function named `command_builder_function`. It will accept a number of arguments, each having their own specific functionality:
@@ -28,7 +28,7 @@ So, for example, if you want to ping *google.com* with five packets and get a ve
     command_builder_function "Ping any host with flags" "ping" -v -n '-c 5' --help
 
 
- Your command builder submenu should look something like this:
+ Your command builder sub_menu should look something like this:
 
 
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -110,7 +110,7 @@ in the exact same way, you'd declared in the function itself. This would result 
   
 ...and that's it. You will also have other functionality, like manually adding flags, automatically added. Numbers for short-keys are also automatically added. Please be aware, that short-keys only work from `1` to `9`, so any more than `9` flag entries will simply be ignored.
 
-To exit the command builder and return to the calling menu or submenu, just press `b` (or navigate to the right panel and choose the option)
+To exit the command builder and return to the calling menu or sub_menu, just press `b` (or navigate to the right panel and choose the option)
 
 Of course, this may look as if it does not make any sense, and in this case you would be right. On the other hand, there are scenarios, when this could come in handy. Only I cannot think of any, not when I'm busy pinging Google anyway...
 

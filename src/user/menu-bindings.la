@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-functionstyle="simple"
+function_style="simple"
 
 # fucntionstyle="simple" (default)
 # Main menu functions in the format of tab$item$
@@ -30,72 +30,60 @@ functionstyle="simple"
 # Second tab third menuitem is: tab2item3
 #
 # Backward compat:
-# functionstyle="old"
+# function_style="old"
 # Main menu functions in the format of funct#tab#menuitem
 # First tab is 0, first item is 0
 # E.g.
 # Fist tab first item is: funct00
 # Second tab tird menuitem is: funct12
 
-
- 
 # You could implement your functions right here, but it is probably
 # easier and less messy to put them into suer-functions.la and call them from there.
 # That will also make it easier to reuse or reorganise in the menu.
 
-
 # Tab 1, menu item 1
-function tab1item1 {
-
-	run_if_installed top
-
+function tab1item1 { 
+    run_if_installed top
 }
 
 
 # Tab 1, menu item 2
-function tab1item2 {
-
-	run_if_installed htop
-
+function tab1item2 { 
+    run_if_installed htop
 }
+
 
 # Tab 1, menu item 3
-function tab1item3 {
-
-	show_sensors
-
+function tab1item3 { 
+    show_sensors
 }
+
 
 # Tab 1, menu item 4
-function tab1item4 {
-
-	show_system_logs
-	
+function tab1item4 { 
+    show_system_logs
 }
 
+
 # Tab 1, menu item 5
-function tab1item5 {
-
-	run_if_installed mc
-
+function tab1item5 { 
+    run_if_installed mc
 }
 
 
 # Tab 1, menu item 6
-function tab1item6 {
-
-	#To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
-	enter_submenu $@ "Analyse disk space"
-	
+function tab1item6 { 
+    #To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
+    enter_submenu $@ "Analyse disk space"
 }
 
 
-# Submenu functions. These will have a similar naming system, except
+# submenu functions. These will have a similar naming system, except
 # they would be extended by submenu position as well,
 #
 # fucntionstyle="simple" (default)
-# 
-# Tab and menuitem are marked (in which submenu we are), 
+#
+# Tab and menuitem are marked (in which submenu we are),
 # then sub-item number follows, starting from 1 like so:
 # tab$item$sub$
 # E.g.
@@ -103,182 +91,160 @@ function tab1item6 {
 # Third tab, fourth menu item, second submenu item: tab3item4sub2
 #
 # Backward compat:
-# functionstyle="old"
+# function_style="old"
 #
 # Similar to main menus, only one digit more, starting from 0, like
 # subfunct$$$
-# or sunfunct$(tabposition)$(mainmenuposition)$(submenuposition)
+# or sunfunct$(tab_position)$(mainmenu_position)$(submenu_position)
 #E.g. F
 # First tab first menuitem, first submenuitem: subfunct000
 # Third tab, fourth menuitem, second submenuitem: subfunct231
 # and so on
 
-
 # Tab 1, menu item 6, submenu item 1
-function tab1item6sub1 {
-	run_if_installed ncdu /
+function tab1item6sub1 {     
+    run_if_installed ncdu /
 }
 
 
 # Tab 1, menu item 6, submenu item 2 was skipped
 
-
 # Tab 1, menu item 6, submenu item 3
-function tab1item6sub3 {
-	run_if_installed ncdu ~
+function tab1item6sub3 {     
+    run_if_installed ncdu ~
 }
 
 
 # Tab 1, menu item 6, submenu item 4
-function tab1item6sub4 {
-	run_if_installed ncdu ~/Downloads
+function tab1item6sub4 {     
+    run_if_installed ncdu ~/Downloads
 }
 
 
 # Tab 1, menu item 6, submenu item 5
-function tab1item6sub5 {
-	run_if_installed ncdu ~/Documents
+function tab1item6sub5 {     
+    run_if_installed ncdu ~/Documents
 }
 
 
 # Tab 1, menu item 6, submenu item 6
-function tab1item6sub6 {
-	run_if_installed ncdu ~/.cache
+function tab1item6sub6 {     
+    run_if_installed ncdu ~/.cache
 }
 
 
 # Tab 1, menu item 6, submenu item 7 was skipped
 
 # Tab 1, menu item 6, submenu item 8
-function tab1item6sub8 {
-	run_if_installed ncdu /tmp
+function tab1item6sub8 {     
+    run_if_installed ncdu /tmp
 }
 
 
 # Tab 1, menu item 6, submenu item 9
-function tab1item6sub9 {
-	run_if_installed ncdu /var/log
+function tab1item6sub9 {     
+    run_if_installed ncdu /var/log
 }
 
 
 # Tab 1, menu item 7
-function tab1item7 {
-
+function tab1item7 { 
     # Here is an example of how to invoke the flag setting submenu
-	#
-	# Call command_builder_function with the following arguments:
-	#
-	# $1 - Title of submenu, enclosed in ""
-	# $2 - Function to execute
-	# $3 to $9 - A list of the flags entered literally 
-	#
-	# Note 0: You could set 10 or more arguments, but the shortkeys
-	# (i.e. using the keyboard to add the flags) wil only work up to nine
-	# parameters
-	#
-	# Note 1: You can hard-code items that contain whitespace by placing
-	# them in single or double quotes. (See '-c 3' here) For flexibility
-	# it might be better to only hardcode the first part and the optional
-	# bit could be entered manually, using the "m - Enter flags manually"
-	# functionality. I.e. You could pass -c as an argument, then set the
-	# number manually, as in the last argument
-	#
-	# Note 1.1: When manually entering paramenters, no whitespace will be added to it.
-	# This is useful if you want to extend a hardcoded or previously entered parameter
-	# If you want it to be a separate argument, start with space, wollowed by whatever you want to write.
-	#
-	# Note 1.2: Manually entered arguments can contain any number of white spaces
-	#
-	# Note 1.3: You must literally enter all arguments, along with the
-	# adequate number of hyphens (- or --)
-	#
-	# Note 1.4: The manual set option can be useful for setting the hostname/any
-	# other argument here, or anything at all, really
-	#
-	# Note 2: The command builder function can be used inside a submenu as well
+    #
+    # Call command_builder_function with the following arguments:
+    #
+    # $1 - Title of submenu, enclosed in ""
+    # $2 - Function to execute
+    # $3 to $9 - A list of the flags entered literally
+    #
+    # Note 0: You could set 10 or more arguments, but the shortkeys
+    # (i.e. using the keyboard to add the flags) wil only work up to nine
+    # parameters
+    #
+    # Note 1: You can hard-code items that contain whitespace by placing
+    # them in single or double quotes. (See '-c 3' here) For flexibility
+    # it might be better to only hardcode the first part and the optional
+    # bit could be entered manually, using the "m - Enter flags manually"
+    # functionality. I.e. You could pass -c as an argument, then set the
+    # number manually, as in the last argument
+    #
+    # Note 1.1: When manually entering paramenters, no whitespace will be added to it.
+    # This is useful if you want to extend a hardcoded or previously entered parameter
+    # If you want it to be a separate argument, start with space, wollowed by whatever you want to write.
+    #
+    # Note 1.2: Manually entered arguments can contain any number of white spaces
+    #
+    # Note 1.3: You must literally enter all arguments, along with the
+    # adequate number of hyphens (- or --)
+    #
+    # Note 1.4: The manual set option can be useful for setting the hostname/any
+    # other argument here, or anything at all, really
+    #
+    # Note 2: The command builder function can be used inside a submenu as well
 
-	command_builder_function "Ping any host with flags" "ping" -n -q -v --help '-c 5' -c
+    command_builder_function "Ping any host with flags" "ping" -n -q -v --help '-c 5' -c
 }
 
 
 # Tab 1, menu item 8
-function tab1item8 {
-
-	drop_to_shell
-
+function tab1item8 { 
+    drop_to_shell
 }
 
 
 # Tab 1, menu item 9
-function tab1item9 {
-
-	drop_to_root_shell
-
+function tab1item9 { 
+    drop_to_root_shell
 }
 
 
 # Tab 2, menu item 1
-function tab2item1 {
-
-	update_system
-
+function tab2item1 { 
+    update_system
 }
 
 
 # Tab 2, menu item 2
-function tab2item2 {
-	
-	upgrade_without_asking
-
+function tab2item2 { 
+    upgrade_without_asking
 }
 
 
 # Tab 2, menu item 3
-function tab2item3 {
-	
-	clean_up_apt
-
+function tab2item3 { 
+    clean_up_apt
 }
+
 
 # Tab 2, menu item 4 was skipped
 
 # Tab 2, menu item 5
-function tab2item5 {
-	
-	install_packages
-
+function tab2item5 { 
+    install_packages
 }
 
 
 # Tab 2, menu item 6
-function tab2item6 {
-
-	remove_packages
-
+function tab2item6 { 
+    remove_packages
 }
 
 
 # Tab 2, menu item 7
-function tab2item7 {
-
-	list_packages
-	
+function tab2item7 { 
+    list_packages
 }
 
 
 # Tab 2, menu item 8
-function tab2item8 {
-
-	search_packages
-	
+function tab2item8 { 
+    search_packages
 }
 
 
 # Tab 2, menu item 9
-function tab2item9 {
-
-	show_packages
-	
+function tab2item9 { 
+    show_packages
 }
 
 
@@ -289,90 +255,67 @@ function tab2item9 {
 ####################################################
 
 # Tab 3, menu item 1
-function tab3item1 {
-
-	clear 
-
-	echo
-	echo "Hello world!"
-	echo
-
-	return_to_menu
-
+function tab3item1 { 
+    clear
+    echo
+    echo "Hello world!"
+    echo
+    return_to_menu
 }
 
+
 # Tab 3, menu item 2
-function tab3item2 {
-	
-	clear
-
-	echo
-	echo "x == 42"
-	echo
-
-	return_to_menu
-
+function tab3item2 { 
+    clear
+    echo
+    echo "x == 42"
+    echo
+    return_to_menu
 }
 
 
 # Tab 3, menu item 3
-function tab3item3 {
-	
-	clear
-
-	echo
-	echo "The best way to secure yuor Window$ powered laptop is to"
-	echo "install Linux on it (or at least a BSD)"
-	echo
-
-	return_to_menu
-
+function tab3item3 { 
+    clear
+    echo
+    echo "The best way to secure yuor Window$ powered laptop is to"
+    echo "install Linux on it (or at least a BSD)"
+    echo
+    return_to_menu
 }
 
 
 # Tab 3, menu item 4
-function tab3item4 {
-	
-	clear
-
-	echo
-	echo "This is a very important script."
-	echo
-
-	return_to_menu
-
+function tab3item4 { 
+    clear
+    echo
+    echo "This is a very important script."
+    echo
+    return_to_menu
 }
 
 
 # Tab 3, menu item 5
-function tab3item5 {
-	
-	run_if_installed robotfindskitten
-
+function tab3item5 { 
+    run_if_installed robotfindskitten
 }
 
 
 # Tab 3, menu item 6
-function tab3item6 {
-	
-	example_function
-
+function tab3item6 { 
+    example_function
 }
 
 
 # Tab 4, menu item 1
-function tab4item1 {
-	
-	dummy_function
-
+function tab4item1 { 
+    dummy_function
 }
 
 
 # Tab 5, menu item 1
-function tab5item1 {
-	
-	dummy_function
-
+function tab5item1 { 
+    dummy_function
 }
 
 
@@ -382,86 +325,63 @@ function tab5item1 {
 #                      #
 ########################
 
-function tab6item1 {
-
-	functsetup0
-
+function tab6item1 { 
+    functsetup0
 }
 
-function tab6item2 {
 
-	functsetup1
-
+function tab6item2 { 
+    functsetup1
 }
 
-function tab6item3 {
 
+function tab6item3 { 
     functsetup2
-
-}
-
-function tab6item4 {
-
-	functsetup3
-
 }
 
 
+function tab6item4 { 
+    functsetup3
+}
 
 
 # Only change these if you want to override help or setup functionality!
 
-function functsetup0 {
-
+function functsetup0 { 
     edit_setup_file "$USER_DIR/menu-entries.la"
-
 }
 
 
-function functsetup1 {
-
-   	edit_setup_file "$USER_DIR/user-functions.la"
-
+function functsetup1 { 
+    edit_setup_file "$USER_DIR/user-functions.la"
 }
 
 
-function functsetup2 {
-
+function functsetup2 { 
     edit_setup_file "$USER_DIR/menu-bindings.la"
-
 }
 
 
-function functsetup3 {
-
-   	edit_setup_file "$USER_DIR/user-defaults.la"
-
+function functsetup3 { 
+    edit_setup_file "$USER_DIR/user-defaults.la"
 }
 
 
-function functhelp0 {
-
+function functhelp0 { 
     display_markdown_help "$RES_DIR/usage-guide.md" "$RES_DIR/usage-guide.txt"
-
 }
 
 
-function functhelp1 {
-
+function functhelp1 { 
     display_markdown_help "$RES_DIR/configuration-guide.md" "$RES_DIR/configuration-guide.txt"
-
 }
 
 
-function functhelp2 {
-
+function functhelp2 { 
     functhelp_commanbuilder
-
 }
 
 
-function functhelp_commanbuilder {
-
+functhelp_commanbuilder() { 
     display_markdown_help "$RES_DIR/command-builder-guide.md" "$RES_DIR/command-builder-guide.txt"
-
 }

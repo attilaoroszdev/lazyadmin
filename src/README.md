@@ -21,15 +21,15 @@ Run one of the following launchers:
 
 To load a different user profile (located next to the "user" directory, and with similar contents"), run
 
-`ladmin --load-profile <profilename>` or `ladmin -p <profilename>`
+`ladmin --load-profile <profile_name>` or `ladmin -p <profile_name>`
 
 or 
 
-`pladmin --load-profile <profilename>` or `pladmin -p <profilename>`
+`pladmin --load-profile <profile_name>` or `pladmin -p <profile_name>`
 
 if you have the portable edition.
 
-`<profilename>` must be the name of the folder your alternative profile lives in the default location, or a path to the non-standard location (both relastive or absolute path will work).
+`<profile_name>` must be the name of the folder your alternative profile lives in the default location, or a path to the non-standard location (both relastive or absolute path will work).
 
 
 To temporarily disable line connectors on the fly, run

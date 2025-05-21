@@ -70,16 +70,16 @@ The portable edition has all the advantages of not needing installation. You can
 The default user data (your menu items, and predefined functions) will be stored in the `/user` directory (located in `~/.config/LazyAdmin` for permanent installations). You can duplicte the contents of that folder into a different one, and then load it with either 
 
 ```bash
-ladmin -p <profilename>
+ladmin -p <profile_name>
 ```
 
 or 
 
 ```bash
-ladmin --load-profile <profilename>
+ladmin --load-profile <profile_name>
 ```
 
-where `<profilename>` is the name of the folder your other profiles is saved.
+where `<profile_name>` is the name of the folder your other profiles is saved.
 
 ***Note:** Both relative and paths are supported for non-standard profile locations. If the profile is located next to the "default" one, it is quite enough to specify the folder name*
 

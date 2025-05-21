@@ -20,18 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-USER_DIR=$userprofile
+USER_DIR=$user_profile
 COREDIRPLACEHOLDER
 PLUGINSDIRPLACEHOLDER
 RESDIRPLACEHOLDER
 
-
-. "$CORE_DIR/core-defaults.la"
-. "$CORE_DIR/main-functions.la"
-
 . "$USER_DIR/user-defaults.la"
 . "$USER_DIR/user-functions.la"
 . "$USER_DIR/menu-bindings.la"
+
+. "$CORE_DIR/core-defaults.la"
+. "$CORE_DIR/main-functions.la"
 
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"

@@ -40,9 +40,8 @@ fi
 
 # Run some function or script or command or anythign as root,
 # either with or without sudo
-function run_as_root {
-
-    if [[ -z $preferredrootcommand ]]; then
+run_as_root() { 
+    if [[ -z $preferred_root_command ]]; then
         echo
         echo "Will need root privileges to run some parts."
         echo "How do you like to become root"
@@ -51,21 +50,21 @@ function run_as_root {
         echo "2 - sudo"
         echo "3 - I'm not sure..."
         echo
-        read -p "Pick one > " -n 1 usesudo
+        read -p "Pick one > " -n 1 use_sudo
         echo " "
 
         while true; do
 
-            case $usesudo in
+            case $use_sudo in
 
             "1")
-                preferredrootcommand="su"
+                preferred_root_command="su"
                 
                 break
                 ;;
                 
             "2")
-                preferredrootcommand="sudo"
+                preferred_root_command="sudo"
                 
                 break
                 ;;
@@ -76,7 +75,7 @@ function run_as_root {
                     echo "Your user can use sudo, setting it as preference..."
                     echo
 
-                    preferredrootcommand="sudo"
+                    preferred_root_command="sudo"
 
                 else
 
@@ -84,7 +83,7 @@ function run_as_root {
                     echo "Your user can't use sudo, setting 'su' as preference..."
                     echo
 
-                    preferredrootcommand="su"
+                    preferred_root_command="su"
 
                 fi   
                 break
@@ -95,19 +94,19 @@ function run_as_root {
                 echo
                 echo "Please go again. Pick 1 - 3:"
                 echo
-                read -p "(1, 2, or 3) > " -n 1 usesudo
+                read -p "(1, 2, or 3) > " -n 1 use_sudo
                 ;;
 
             esac
         done
     fi
     
-    commandsuffix=""
+    command_suffix=""
 
     echo
     echo "I need to become root now."
 
-    if [[ $preferredrootcommand == "su" ]]; then
+    if [[ $preferred_root_command == "su" ]]; then
         
         echo "Plase provide root pasword when prompted"
         echo
@@ -122,12 +121,10 @@ function run_as_root {
         sudo -- sh -c "$1"                
 
     fi
-
 }
 
 
-function set_symlink_dir {
-
+set_symlink_dir() { 
     echo
     echo
     echo "Please specify where to symlink, so that you can start la-menus as a command."
@@ -474,6 +471,6 @@ echo "ladmin"
 echo
 echo "as a command."
 echo "Now press anything to go back to doing whatever it was you did before..."
-read -n 1 -s keypress
+read -n 1 -s key_press
 
 exit 0

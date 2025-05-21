@@ -34,7 +34,7 @@ Lazy Admin currently takes two command line arguments:
 --join-lines, or -j
 ```````````````````````
 
-`--join-lines` or `-j` for short, can override the default setting of the `$displaylineconnectors` variable. This is useful when accessing Lazy Admin via e.g. SSH, and the device used does not display Lazy Admin correctly. This can happen when using a terminal emulator on Android devices, which often do not use proper monospace font.
+`--join-lines` or `-j` for short, can override the default setting of the `$DISPLAY_LINE_CONNECTORS` variable. This is useful when accessing Lazy Admin via e.g. SSH, and the device used does not display Lazy Admin correctly. This can happen when using a terminal emulator on Android devices, which often do not use proper monospace font.
 
 - `ladmin --join-lines off` or `ladmin -j off` will start Lazy Admin without drawing line-jonits, so that no misalignment occusr with non-monospace fonts
 - `ladmin --join-lines on` or `ladmin -j on`will force drawing line-jonits, even when Lazy Admin is set not to draw them
@@ -147,7 +147,7 @@ In the command builder (see below), you have three additional reserved keys, whi
 Command builder
 ---------------
 
-There is a special, visual command builder function built right into Lazy Admin, called the command builder. You can bind this interface to any menu or sub-menu item, and it will bring up a special type of sub-menu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this functionality, you need to bind `flags_submenu_funtion` with the right arguments to the menu or submenu item you wish to invoke the command builder with.
+There is a special, visual command builder function built right into Lazy Admin, called the command builder. You can bind this interface to any menu or sub-menu item, and it will bring up a special type of sub-menu, allowing you to visually build long commands with preset flags, arguments, or sets of flags/arguments. To access this functionality, you need to bind `flags_sub_menu_funtion` with the right arguments to the menu or sub_menu item you wish to invoke the command builder with.
 In the command builder menu, you can select an item by navigating to it and pressing enter (or just press its corresponding number) and then the flag or argument bound to that item will be added to the build command. You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to run the built command. Currently the number of preset arguments or argument sets is limited to 9, so as to keep the number-shortkey functionality intact. The height of the command builder menu will dynamically change according to the number of preset arguments passed to it.
 So if e.g. you want to ping *google.com* with five packets and get a verbose output, and you wish to do this 23 times a day, you could set up the `-v` and `-c 5` flags, and manually enter the domain to ping. To do this, you would have to bind the command builder to a menu item, like so:
 
@@ -155,7 +155,7 @@ So if e.g. you want to ping *google.com* with five packets and get a verbose out
    command_builder_function "Ping any host with flags" "ping" -v -n '-c 5' --help`
 
 
-Your command builder submenu should look something like this:
+Your command builder sub_menu should look something like this:
 
 
     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -205,7 +205,7 @@ The manual option is not reserved to the end of the sequence, you can set manual
 5. press `c` to commit.
 
 Of course, this may look as if it does not make any sense, and in this case you would be right. On the other hand, there are scenarios, when this could come in handy. Only I cannot think of any, not when I'm busy pinging Google anyway.
-To exit the command builder and return to the calling menu or submenu, just press `b` (or navigate to the right panel and choose the option)
+To exit the command builder and return to the calling menu or sub_menu, just press `b` (or navigate to the right panel and choose the option)
 
 
 Bottom row
