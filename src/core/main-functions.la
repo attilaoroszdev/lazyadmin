@@ -670,11 +670,13 @@ pick_menu_item() {
     read -sN1 -t 0.0001 k4 # timed reads to check for second third etc characters
     read -sN1 -t 0.0001 k5
     read -sN1 -t 0.0001 k6
-    key+=${k1}${k2}${k3}${k4}${k5}${k6}
-   
+    read -sN1 -t 0.0001 k7
+    read -sN1 -t 0.0001 k8
+    read -sN1 -t 0.0001 k9
+    key+=${k1}${k2}${k3}${k4}${k5}${k6}${k7}${k8}${k9}
+    # TODO: Update User guide and key binding guide with F1-9 keys for tabs access and TAB key for changing panels
     case $key in
     $'\e[A' | $'\e0A' | "w" | "W")
-        
         #Double jump if run on skip
         if [[ "$active_panel" == "left" ]] && [[ "${menu_entry[$menu_pos - 1]}" == "skip" ]]; then
             ((menu_pos--))
@@ -721,6 +723,78 @@ pick_menu_item() {
             #  fi
         fi
         ;;
+    $'\e[11~' | $'\eOP') 
+        # F1 - Tab 1
+        if ! $submenu; then
+            clear_menu
+            menu_pos=0
+            tab_pos=0
+        fi
+        ;;
+    $'\e[12~' | $'\eOQ')
+        # F2 - Tab 2
+        if ! $submenu && [[ $tab_length -gt 0 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=1
+        fi
+        ;;
+    $'\e[13~' | $'\eOR')
+        # F3 - Tab 3
+        if ! $submenu && [[ $tab_length -gt 1 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=2
+        fi
+        ;;
+    $'\e[14~' | $'\eOS') 
+        # F4 - Tab 4
+        if ! $submenu && [[ $tab_length -gt 2 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=3
+        fi
+        ;;
+    $'\e[15~')
+        # F5 - Tab 5
+        if ! $submenu && [[ $tab_length -gt 3 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=4
+        fi
+        ;;
+    $'\e[17~')
+        # F6 - Tab 6
+        if ! $submenu && [[ $tab_length -gt 3 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=5
+        fi
+        ;;
+    $'\e[18~')
+        # F7 - Tab 7
+        if ! $submenu && [[ $tab_length -gt 5 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=6
+        fi
+        ;;
+    $'\e[19~') 
+        # F8 - Tab 8
+        if ! $submenu && [[ $tab_length -gt 6 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=7
+        fi
+        ;;
+    $'\e[20~')
+        # F9 - Tab 9
+        if ! $submenu && [[ $tab_length -gt 7 ]]; then
+            clear_menu
+            menu_pos=0
+            tab_pos=8
+        fi
+        ;;
     $'\e[1;5C' | $'\e01;5C' | "r" | "R")
         if $RIGHT_PANEL && [[ "$active_panel" == "left" ]]; then
             active_panel="right"
@@ -745,9 +819,20 @@ pick_menu_item() {
 
         fi
         ;;
-    [0-9])
+    
+    [1-9])
         # If numeric input is selected
-        if [[ $key -le $menu_length ]] && [[ $key -ge 0 ]]; then
+
+        # This allows for double digits, basically a half-second delay waiting for the second key, in case user pressed 1 first
+        if [[ $key -eq 1 ]]; then
+            read -sN1 -t 0.5 key2
+            if [[ -n $key2 ]] || [[ $key2 -le 9 ]] && [[ $key2 -ge 0 ]]; then
+              key=$((10 + $key2))
+            fi
+        fi
+        
+      
+        if [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
             ((key--))
             menu_pos=$key
 
@@ -771,6 +856,7 @@ pick_menu_item() {
 
         init_menu
         ;;
+   
     $'\x0a' | '')
 
         # If enter is pressed
