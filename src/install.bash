@@ -40,7 +40,7 @@ fi
 # Run some function or script or command or anythign as root,
 # either with or without sudo
 run_as_root() { 
-    if [[ -z $preferredrootcommand ]]; then
+    if [[ -z $preferred_root_command ]]; then
         echo
         echo "Will need root privileges to run some parts."
         echo "How do you like to become root"
@@ -49,17 +49,17 @@ run_as_root() {
         echo "2 - sudo"
         echo "3 - I'm not sure..."
         echo
-        read -p "Pick one > " -n 1 usesudo
+        read -p "Pick one > " -n 1 use_sudo
         echo " "
 
         while true; do
-            case $usesudo in
+            case $use_sudo in
                 "1")
-                    preferredrootcommand="su"
+                    preferred_root_command="su"
                     break
                     ;; 
                 "2")
-                    preferredrootcommand="sudo"
+                    preferred_root_command="sudo"
                     break
                     ;;
                 "3")
@@ -67,12 +67,12 @@ run_as_root() {
                         echo
                         echo "Your user can use sudo, setting it as preference..."
                         echo
-                        preferredrootcommand="sudo"
+                        preferred_root_command="sudo"
                     else
                         echo
                         echo "Your user can't use sudo, setting 'su' as preference..."
                         echo
-                        preferredrootcommand="su"
+                        preferred_root_command="su"
                     fi   
                     break
                     ;;
@@ -80,17 +80,17 @@ run_as_root() {
                     echo
                     echo "Please go again. Pick 1 - 3:"
                     echo
-                    read -p "(1, 2, or 3) > " -n 1 usesudo
+                    read -p "(1, 2, or 3) > " -n 1 use_sudo
                     ;;
             esac
         done
     fi
     
-    commandsuffix=""
+    command_suffix=""
     echo
     echo "I need to become root now."
 
-    if [[ $preferredrootcommand == "su" ]]; then
+    if [[ $preferred_root_command == "su" ]]; then
         echo "Plase provide root pasword when prompted"
         echo
         su -c "$1; exit"
@@ -222,11 +222,11 @@ check_for_essential_dependencies() {
 
 check_for_external_dependencies() { 
     if hash pandoc 2>/dev/null; then
-        pandocinstalled=true
+        pandoc_installed=true
     fi
 
     if hash lynx 2>/dev/null; then
-        lynxinstalled=true
+        lynx_installed=true
     fi
 
     if hash xdotool 2>/dev/null; then
@@ -237,19 +237,19 @@ check_for_external_dependencies() {
         setxkbmapinstalled=true
     fi
 
-    if [[ $pandocinstalled && $lynxinstalled && $xdotoolinstalled && $setxkbmapinstalled ]]; then
+    if [[ $pandoc_installed && $lynx_installed && $xdotoolinstalled && $setxkbmapinstalled ]]; then
         echo
         echo "All dependencies are satisfied, nothing to do..."
     else
         echo
         echo "Some non-essential dependencies are missing:"
 
-        if [[ ! $pandocinstalled ]]; then
+        if [[ ! $pandoc_installed ]]; then
             echo "  - pandoc"
             pandocinpackage="pandoc"
         fi
 
-        if [[ ! $lynxinstalled ]]; then
+        if [[ ! $lynx_installed ]]; then
             echo "  - lynx"
             lynxpackage="lynx"
         fi
@@ -603,6 +603,6 @@ echo
 echo "as a command."
 echo
 echo "Now press anything to go back to doing whatever it was you did before..."
-read -n 1 -s keypress
+read -n 1 -s key_press
 
 exit 0

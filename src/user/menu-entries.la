@@ -79,7 +79,7 @@ _menu1
 _endmenu1
 
 
-# Submenu itmes for tab 1, item 6
+# submenu itmes for tab 1, item 6
 _submenu16
 1 - Analyse root :: Run ncdu /
 skip

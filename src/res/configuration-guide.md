@@ -31,12 +31,12 @@ For the menus themselves there Are three kinds of sections:
 
 - `_menutab` ending with `_endmenutab` and hold the names of the top-row tabs, each on its own line
 - `_menu` and `_endmenu` are for the main menu entries
-- `_submenu` and `_endsubmenu` will hold the sub-menu entries
+- `_sub_menu` and `_endsub_menu` will hold the sub-menu entries
 
 To know which menu is which, numbers will be used, starting with `1`
 
 - For main menu entries the number will mark the tab position. This means that between `_menu1` and `_endmenu1` are all the menu entries of the first tab, `_menu2` and `_endmenu2` mark the second tab, etc. (Up to maximum 9, see below why)
-- For sub-menu entries two numbers will mark the tab position and the menu position (these are **two single digits written together**, which is the reason the maximum number of menu entries is 9.) For example between `_submenu11` and `_endsubmenu11` you will find sub-menu entries for the `first tab`, `first menu item` (`tab 1`, `item 1`), while e.g. `_submenu32` and `_endsubmenu32` mark the boundaries for the sub-menu items of `third tab`, `second menu item` (`tab 3`, `item 3`), etc.
+- For sub-menu entries two numbers will mark the tab position and the menu position (these are **two single digits written together**, which is the reason the maximum number of menu entries is 9.) For example between `_sub_menu11` and `_endsub_menu11` you will find sub-menu entries for the `first tab`, `first menu item` (`tab 1`, `item 1`), while e.g. `_sub_menu32` and `_endsub_menu32` mark the boundaries for the sub-menu items of `third tab`, `second menu item` (`tab 3`, `item 3`), etc.
 
 Each menu item can also have a **descriptor**, that displays on a designated row at the bottom of LazyAdmin, as you navigate. While descriptors are optional, they can enhance the experience, and give more information about what a menu item does or contain. To add a description, simply write it after the menu item, on the same line, separated by `::`, like so:
 
@@ -65,11 +65,11 @@ Similarly, to add a sub-menu, to the second item of the third tab, so that `Tab 
 
 ```bash
 
-    _submenu32
+    _sub_menu32
     First sub-menu item :: Descriptor line for first sub-menu item
     Second sub-menu item :: Descriptor line for second sub-menu item
     Third sub-menu item :: Descriptor line for third sub-menu item
-    _endsubmenu32
+    _endsub_menu32
 
 ```
 
@@ -99,11 +99,11 @@ There are two types of function calls:
 - `tab#item#`- for main menu entries
 - `tab#item#sub#` - for sub menu entries
 
-where `#` id the number of the tab, menu item, or submenu-item, respectively.
+where `#` id the number of the tab, menu item, or sub_menu-item, respectively.
 
 The `tab#item#` functions correspond to menu entries on the main menu level. These functions will need two numbers: tab-position and menu-entry-position. Again, the numbering starts with 1, so the first entry of the first tab will be `tab1item1`, while the `third entry` of the `second tab` will be `tab2item3`.
 
-For sub-menus, there is an additional number for sub-menu entry, making the `tab#item#sub#` takes three numbers to be identifiable. The `first sub-menu entry` on the `first menu entry` of the `first tab` will be `tab1item1sub1` (`tab 1`, `menuitem 1`, `submenuitem 1`), while e.g. the `second sub-menu entry` on the `third menu` of the `second tab would` be `tab2item3sub2`.
+For sub-menus, there is an additional number for sub-menu entry, making the `tab#item#sub#` takes three numbers to be identifiable. The `first sub-menu entry` on the `first menu entry` of the `first tab` will be `tab1item1sub1` (`tab 1`, `menuitem 1`, `sub_menuitem 1`), while e.g. the `second sub-menu entry` on the `third menu` of the `second tab would` be `tab2item3sub2`.
 
 To bind a command to a menu item, you must invoke it from a function corresponding the menu item's position. For example to put `ping localhost` to ping the hell out of your machine when you select the `second tab`'s `third item`, you'd do the following:
 
@@ -128,15 +128,15 @@ It's as simple as that.
 
 ## **Invoking a sub-menu**
 
-Binding commands to sub-menu items is all very well, but how will Lazy Admin know where to find sub-menus? Easily, you will mark its menu-binding. The built-in function to achieve this is called `enter_submenu`. This function will take **two arguments**. The first one must always be `$@` (basically passing on tab and menu position), and the second argument will be the **title of the sub-menu** to be displayed. because in Kazy Admin, you name your own sub-menus. Oh yeah...
+Binding commands to sub-menu items is all very well, but how will Lazy Admin know where to find sub-menus? Easily, you will mark its menu-binding. The built-in function to achieve this is called `enter_sub_menu`. This function will take **two arguments**. The first one must always be `$@` (basically passing on tab and menu position), and the second argument will be the **title of the sub-menu** to be displayed. because in Kazy Admin, you name your own sub-menus. Oh yeah...
 
-**At the moment, sub-menus would only work, when invoked from the main menu...  Unfortunately, nested submenus are not yet implemented.**
+**At the moment, sub-menus would only work, when invoked from the main menu...  Unfortunately, nested sub_menus are not yet implemented.**
 
-In practice, invoking  submenu will look like this:
+In practice, invoking  sub_menu will look like this:
 
 ```bash
 
-    enter_submenu $@ "Sub-menu Title"
+    enter_sub_menu $@ "Sub-menu Title"
 
 ```
 
@@ -144,7 +144,7 @@ You would place this line, to the main menu's function where you want to access 
 
 ```bash
 
-    function tab2item3 {         enter_submenu $@ "My New Sub-menu"
+    function tab2item3 {         enter_sub_menu $@ "My New Sub-menu"
     }
 
 ```
@@ -153,11 +153,11 @@ Then you would, of course, need to set up the menu entries for your new sub-menu
 
 ```bash
 
-    _submenu32
+    _sub_menu32
     First sub-menu item :: Descriptor for first sub-menu item
     Second sub-menu item :: Descriptor for second sub-menu item
     Third sub-menu item :: Descriptor for third sub-menu item
-    _endsubmenu32
+    _endsub_menu32
 
 ```
   
@@ -224,13 +224,13 @@ Another file you might want to know more about is`$HOME/.config/LazyAdmin/user/u
 
 In this file you can change the following variables:
 
-- `maintitle` - This is what it looks like. Please use double quotes when setting up your own title/
-- `rightpanel` - Defaults to `true`. If you change this value to `false`, the right panel will no longer be displayed (requires restart)
-- `normalmenuheight` - Is the height of the main menu. Allow 2 spaces for top and bottom padding, so a value of 11 will hold 9 entries
-- `submenuheight` - is the height of the sub-menus, similarly with padding
-- `rightpanelwidth` - is the width of the right panel in characters. (No! Really?!). You only need change this if you decide to change those items
-- `defaulteditor` - this will be automatically set, when you first attempt to edit config files from within Lazy Admin. You can change it manually any time.
-- `displaylineconnectors` - Defaults to `true`. The other possible value is  (you guessed it right): `false`. Line connectors are the little characters that make the 90° connections between lines. Turn it off if you experience drawing issues (like on mobile terminal emulators, or if your emulator does not use fixed width characters for some reason, etc.)
+- `MAIN_TITLE` - This is what it looks like. Please use double quotes when setting up your own title/
+- `RIGHT_PANEL` - Defaults to `true`. If you change this value to `false`, the right panel will no longer be displayed (requires restart)
+- `normal_menu_height` - Is the height of the main menu. Allow 2 spaces for top and bottom padding, so a value of 11 will hold 9 entries
+- `sub_menu_height` - is the height of the sub-menus, similarly with padding
+- `RIGHT_PANEL_WIDTH` - is the width of the right panel in characters. (No! Really?!). You only need change this if you decide to change those items
+- `DEFAULT_EDITOR` - this will be automatically set, when you first attempt to edit config files from within Lazy Admin. You can change it manually any time.
+- `DISPLAY_LINE_CONNECTORS` - Defaults to `true`. The other possible value is  (you guessed it right): `false`. Line connectors are the little characters that make the 90° connections between lines. Turn it off if you experience drawing issues (like on mobile terminal emulators, or if your emulator does not use fixed width characters for some reason, etc.)
 
 So that's about it. You can expect more rants to accompany later versions. 
 

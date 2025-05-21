@@ -22,7 +22,7 @@
 
 INSTALLDIRPLACEHOLDER
 USER_DIR_BASE="$HOME/.config/LazyAdmin"
-userprofile="$USER_DIR_BASE/user"
+user_profile="$USER_DIR_BASE/user"
 
 # In case the user starts ladmin for the first time...
 if [[ "$INSTALL_DIR" != "$HOME/.LazyAdmin" ]]; then
@@ -39,27 +39,27 @@ for ((i = 1; i <= $#; i++)); do
 
     case "${!i}" in
     "-p" | "--load-profile")
-        userprofile=""
-        profilename=${!j}
-        absolutepath=false
+        user_profile=""
+        profile_name=${!j}
+        absolute_path=false
 
-        if [[ ${profilename:0:1} == "/" ]]; then
-            absolutepath=true
+        if [[ ${profile_name:0:1} == "/" ]]; then
+            absolute_path=true
         fi
 
-        if $absolutepath && [[ -d "$profilename" ]]; then
-            userprofile="$profilename"
+        if $absolute_path && [[ -d "$profile_name" ]]; then
+            user_profile="$profile_name"
         else
 
-            if [[ -d "$USER_DIR_BASE/$profilename" ]]; then
-                userprofile="$USER_DIR_BASE/$profilename"
+            if [[ -d "$USER_DIR_BASE/$profile_name" ]]; then
+                user_profile="$USER_DIR_BASE/$profile_name"
             fi
 
         fi
 
-        if [[ -z $userprofile ]]; then
+        if [[ -z $user_profile ]]; then
             echo
-            echo "Error: User profile $profilename not found. Exiting"
+            echo "Error: User profile $profile_name not found. Exiting"
             echo
             exit 65
 

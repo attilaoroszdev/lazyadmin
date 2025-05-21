@@ -23,36 +23,32 @@
 
 #The title displayed in the main menu
 
-maintitle="Lazy Admin - v2.2"
+MAIN_TITLE="Lazy Admin - v3.0alpha"
 
 # Switch right panel on or off
-rightpanel=true
+RIGHT_PANEL=true
 
 # How many elements should the main menu hold
-# Allow +2 for top and bottom padding
-# (normalmenuheight = number_of_items + 2)
-# Minumum height is 7 (5 items max.)
-# Maximum height is 11 (9 items max.)
-normalmenuheight=11
+# Minumum number of menu items: 5
+# Minumum number of menu items: 9
+MAX_MENU_ITEMS=9
 
-# How many elements should submenus hold
-# Allow +3 for top and bottom padding
-# (submenuheight = number_of_items + 3)
-# Minumum height is 8 (5 items  max.)
-# Maximum height is 12 (9 items max.)
-submenuheight=12
+# How many elements should sub-menus hold
+# Minumum number of sub-menu items: 5
+# Minumum number of sub-menu items: 9
+MAX_SUBMENU_ITEMS=9
 
 # Change the size of the right panel
-rightpanelwidth=27
+RIGHT_PANEL_WIDTH=27
 
 # This should be habdled by the setup script,
 # but you can change it to any editor command
 # It will be launched like this:
-# $defaulteditor $filename
+# $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-defaulteditor="not set"
+DEFAULT_EDITOR="not set"
 
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)
 # Which might render these out of place
-displaylineconnectors=true
+DISPLAY_LINE_CONNECTORS=true

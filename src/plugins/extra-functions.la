@@ -31,7 +31,7 @@
 run_as_root() { 
     if [[ "$(whoami)" != "root" ]]; then
 
-        if [[ -z $preferredrootcommand ]]; then
+        if [[ -z $preferred_root_command ]]; then
             echo
             echo "Will need root privileges to run this command,"
             echo "but your preference had not yet been set."
@@ -42,18 +42,18 @@ run_as_root() {
             echo "3 - I'm not sure..."
             echo "4 - I imagine I'm a plant"
             echo
-            read -p "Pick one > " -n 1 usesudo
+            read -p "Pick one > " -n 1 use_sudo
             echo " "
            
             while true; do
 
-                case $usesudo in
+                case $use_sudo in
                 "1")
-                    preferredrootcommand="su"
+                    preferred_root_command="su"
                     echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
+preferred_root_command="su"' >>"$USER_DIR/user-defaults.la"
                     echo
                     echo
                     echo "su saved as your preferred command"
@@ -67,11 +67,11 @@ preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
                     break
                     ;;
                 "2")
-                    preferredrootcommand="sudo"
+                    preferred_root_command="sudo"
                     echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="sudo"' >>"$USER_DIR/user-defaults.la"
+preferred_root_command="sudo"' >>"$USER_DIR/user-defaults.la"
                     echo
                     echo
                     echo "sudo saved as your preferred command"
@@ -92,11 +92,11 @@ preferredrootcommand="sudo"' >>"$USER_DIR/user-defaults.la"
                     ;;
                 "3")
                     if groups "$(whoami)" | grep &>/dev/null '\bsudo\b'; then
-                        preferredrootcommand="sudo"
+                        preferred_root_command="sudo"
                         echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="sudo"' >>"$USER_DIR/user-defaults.la"
+preferred_root_command="sudo"' >>"$USER_DIR/user-defaults.la"
                         echo
                         echo
                         echo "Your user can use sudo, thus sudo saved as your preferred command"
@@ -114,11 +114,11 @@ preferredrootcommand="sudo"' >>"$USER_DIR/user-defaults.la"
                         fi
         
                     else
-                        preferredrootcommand="su"
+                        preferred_root_command="su"
                         echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
+preferred_root_command="su"' >>"$USER_DIR/user-defaults.la"
                         echo
                         echo
                         echo "Your user cannot use sudo so, su was saved as your preferred command"
@@ -138,20 +138,20 @@ preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
                     echo "Ha-ha-ha, very funny."
                     echo "Now pick one for real."
                     echo
-                    read -p "(1, 2, or 3) > " -n 1 usesudo
+                    read -p "(1, 2, or 3) > " -n 1 use_sudo
                     ;;
                 *)
                     echo
                     echo "Please go again. Pick 1 - 4:"
                     echo
-                    read -p "(1, 2, 3, or 4...) > " -n 1 usesudo
+                    read -p "(1, 2, 3, or 4...) > " -n 1 use_sudo
                     ;;
                 esac
             done
         else
-            commandsuffix=""
+            command_suffix=""
 
-            if [[ $preferredrootcommand == "su" ]]; then
+            if [[ $preferred_root_command == "su" ]]; then
                 echo
                 echo "Running command:"
                 echo
@@ -189,10 +189,10 @@ preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
 # Usage:
 # run_function_in_tmp_directory "<target_tmp_:dir>" "<function_or_script>"
 run_function_in_tmp_directory() { 
-    currentdirectory=$(pwd)
+    current_directory=$(pwd)
     cd $1
     $2
-    cd $currentdirectory
+    cd $current_directory
 }
 
 
@@ -201,7 +201,7 @@ run_function_in_tmp_directory() {
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
 run_command_in_new_tab() { 
-    originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
+    original_layout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
     WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)" | awk '{print $5}'
     xdotool windowfocus $WID
     xdotool key ctrl+shift+t $WID
@@ -220,14 +220,14 @@ run_command_in_new_tab() {
     # get the correct values with
     # setxkbmap -query
     # (You might need to set variant as well as model, etc)
-    setxkbmap -layout $originallayout
+    setxkbmap -layout $original_layout
 }
 
 
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
 run_command_in_new_window() { 
-    originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
+    original_layout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
     WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)" | awk '{print $5}'
     xdotool windowfocus $WID
     xdotool key ctrl+shift+n $WID
@@ -246,7 +246,7 @@ run_command_in_new_window() {
     # get the correct values with
     # setxkbmap -query
     # (You might need to set variant as well as model, etc)
-    setxkbmap -layout $originallayout
+    setxkbmap -layout $original_layout
 }
 
 
@@ -260,7 +260,7 @@ drop_to_shell() {
 
 # Use this at your own risk-...
 drop_to_root_shell() { 
-    rootexitflag=true
+    root_exit_flag=true
     clear
     tput cnorm
     echo
@@ -272,7 +272,7 @@ drop_to_root_shell() {
 return_to_menu() { 
     echo
     echo "Press any key to return to menu"
-    read -n 1 -s keypress
+    read -n 1 -s key_press
     clear
 }
 
@@ -291,7 +291,7 @@ run_if_installed() {
         echo "$1 does not seem to be instaleld. PLease install $1 and try again"
         echo
         echo "Press any key to return to menu"
-        read -n 1 -s keypress
+        read -n 1 -s key_press
         clear
         return 65
     fi

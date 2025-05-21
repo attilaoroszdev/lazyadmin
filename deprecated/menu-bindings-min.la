@@ -50,27 +50,27 @@ function tab1item1 {
 }
 
 
-# Submenu functions. These will have a similar naming system, except
-# they would be extended by submenu position as well,
+# sub_menu functions. These will have a similar naming system, except
+# they would be extended by sub_menu position as well,
 #
 # fucntionstyle="simple" (default)
 # 
-# Tab and menuitem are marked (in which submenu we are), 
+# Tab and menuitem are marked (in which sub_menu we are), 
 # then sub-item number follows, starting from 1 like so:
 # tab$item$sub$
 # E.g.
-# First tab, first menu item, first submenuu-item: tab1item1sub1
-# Third tab, fourth menu item, second submenu item: tab3item4sub2
+# First tab, first menu item, first sub_menuu-item: tab1item1sub1
+# Third tab, fourth menu item, second sub_menu item: tab3item4sub2
 #
 # Backward compat:
 # functionstyle="old"
 #
 # Similar to main menus, only one digit more, starting from 0, like
 # subfunct$$$
-# or sunfunct$(tabposition)$(mainmenuposition)$(submenuposition)
+# or sunfunct$(tab_position)$(mainmenu_position)$(sub_menu_position)
 #E.g. F
-# First tab first menuitem, first submenuitem: subfunct000
-# Third tab, fourth menuitem, second submenuitem: subfunct231
+# First tab first menuitem, first sub_menuitem: subfunct000
+# Third tab, fourth menuitem, second sub_menuitem: subfunct231
 # and so on
 
 

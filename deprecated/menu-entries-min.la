@@ -58,18 +58,18 @@ _endmenu1
 
 
 # "old" menustyle
-# Submenuitems for submenu00 - two digit numbers indicate submenus,
-# where the first digit (0) indicates the main menu entry the submenu belongs
-# and the second digit (0) indicates the submenu number
+# sub_menuitems for sub_menu00 - two digit numbers indicate sub_menus,
+# where the first digit (0) indicates the main menu entry the sub_menu belongs
+# and the second digit (0) indicates the sub_menu number
 #
 # "simple" menustyle
-# Submenuitems for submenu11 - two digit numbers indicate submenus,
-# where the first digit (1) indicates the main menu entry the submenu belongs 
-# and the second digit (1) indicates the submenu number
+# sub_menuitems for sub_menu11 - two digit numbers indicate sub_menus,
+# where the first digit (1) indicates the main menu entry the sub_menu belongs 
+# and the second digit (1) indicates the sub_menu number
 
-_submenu11
-1 - Submenu item placeholder :: Single placeholder item
-_endsubmenu11
+_sub_menu11
+1 - sub_menu item placeholder :: Single placeholder item
+_endsub_menu11
 
 
 
@@ -83,7 +83,7 @@ _endsubmenu11
 # Simplified menu-style is not currently implemented for the right panel
 # Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
 # menu positions for the other entries are identical (needed for aliases, when using enter for selection)
-# This is necessary, for "b -Back to Main Menu" is added in the submenu function
+# This is necessary, for "b -Back to Main Menu" is added in the sub_menu function
 
 # In the main menus
 _rightpanel
@@ -100,14 +100,14 @@ Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpaneldesc
 
 
-# In the submenus (contains back link)  #
+# In the sub_menus (contains back link)  #
 _subrightpanel
 f - Reflow menu
 b - Back to Main Menu
 q - Quit
 _endsubrightpanel
 
-# Descriptions of menuitems in submenus in the same order as the items above
+# Descriptions of menuitems in sub_menus in the same order as the items above
 _subrightpaneldesc
 Redraw the Lazy Admin UI
 Return to main menu

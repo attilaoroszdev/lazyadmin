@@ -32,13 +32,13 @@ example_function() {
     echo "You have 40 minutes to finish the test. Good luck..."
     echo
     echo "Press any key to start"
-    read -n 1 -s keypress
+    read -n 1 -s key_press
 
     echo
     echo "You didn't actually think, did you...?"
     echo
     echo "Now, press a key to get back to the menu. (This time for real)"
-    read -n 1 -s keypress
+    read -n 1 -s key_press
 
     clear
 }
@@ -68,17 +68,17 @@ update_system() {
     echo "  1 - See what can be upgraded"
     echo "  2 - Just do the upgrade already"
     echo "  3 - Quit"
-    read -n 1 -s whatnext
+    read -n 1 -s what_next
 
-    case $whatnext in
+    case $what_next in
     "1")
         echo
         echo
         run_as_root "apt list --upgradable"
         echo
-        read -p "Continue with upgrade? (y/n)" -n 1 yesorno
+        read -p "Continue with upgrade? (y/n)" -n 1 yes_or_no
 
-        if [[ $yesorno == "y" || yesorno == "Y" ]]; then
+        if [[ $yes_or_no == "y" || yes_or_no == "Y" ]]; then
             echo
             echo
             run_as_root "apt upgrade -y"
@@ -134,10 +134,10 @@ install_packages() {
     clear
     tput cnorm
     echo
-    read -p "Package(s) to install: " lineargs
+    read -p "Package(s) to install: " line_args
 
     tput civis
-    run_as_root "apt install $lineargs"
+    run_as_root "apt install $line_args"
     echo
     return_to_menu
 }
@@ -147,17 +147,17 @@ remove_packages() {
     clear
     tput cnorm
     echo
-    read -p "Package(s) to remove: " lineargs
+    read -p "Package(s) to remove: " line_args
 
-    dopurge=""
-    read -p "Also purge configs? (y/n)" -n 1 yesorno
+    do_purge=""
+    read -p "Also purge configs? (y/n)" -n 1 yes_or_no
 
-    if [[ yesorno == "y" || yesorno == "Y" ]]; then
-        dopurge="--purge"
+    if [[ yes_or_no == "y" || yes_or_no == "Y" ]]; then
+        do_purge="--purge"
     fi
 
     tput civis
-    run_as_root "apt remove $dopurge $lineargs"
+    run_as_root "apt remove $do_purge $line_args"
     echo
     return_to_menu
 }
@@ -167,10 +167,10 @@ list_packages() {
     clear
     tput cnorm
     echo
-    read -p "Package(s) to list: " lineargs
+    read -p "Package(s) to list: " line_args
 
     tput civis
-    run_as_root "apt list $lineargs"
+    run_as_root "apt list $line_args"
     echo
     return_to_menu
 }
@@ -180,10 +180,10 @@ search_packages() {
     clear
     tput cnorm
     echo
-    read -p "Package(s) to search: " lineargs
+    read -p "Package(s) to search: " line_args
 
     tput civis
-    run_as_root "apt search $lineargs"
+    run_as_root "apt search $line_args"
     echo
     return_to_menu
 }
@@ -193,10 +193,10 @@ show_packages() {
     clear
     tput cnorm
     echo
-    read -p "Package(s) to show: " lineargs
+    read -p "Package(s) to show: " line_args
 
     tput civis
-    run_as_root "apt show $lineargs"
+    run_as_root "apt show $line_args"
     echo
     return_to_menu
 }

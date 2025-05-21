@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-functionstyle="simple"
+function_style="simple"
 
 # fucntionstyle="simple" (default)
 # Main menu functions in the format of tab$item$
@@ -30,7 +30,7 @@ functionstyle="simple"
 # Second tab third menuitem is: tab2item3
 #
 # Backward compat:
-# functionstyle="old"
+# function_style="old"
 # Main menu functions in the format of funct#tab#menuitem
 # First tab is 0, first item is 0
 # E.g.
@@ -78,7 +78,7 @@ function tab1item6 {
 }
 
 
-# Submenu functions. These will have a similar naming system, except
+# submenu functions. These will have a similar naming system, except
 # they would be extended by submenu position as well,
 #
 # fucntionstyle="simple" (default)
@@ -91,11 +91,11 @@ function tab1item6 {
 # Third tab, fourth menu item, second submenu item: tab3item4sub2
 #
 # Backward compat:
-# functionstyle="old"
+# function_style="old"
 #
 # Similar to main menus, only one digit more, starting from 0, like
 # subfunct$$$
-# or sunfunct$(tabposition)$(mainmenuposition)$(submenuposition)
+# or sunfunct$(tab_position)$(mainmenu_position)$(submenu_position)
 #E.g. F
 # First tab first menuitem, first submenuitem: subfunct000
 # Third tab, fourth menuitem, second submenuitem: subfunct231

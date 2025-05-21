@@ -22,14 +22,14 @@
 
 display_markdown_help() { 
     if hash pandoc 2>/dev/null; then
-        pandocinstalled=true
+        pandoc_installed=true
     fi
 
     if hash lynx 2>/dev/null; then
-        lynxinstalled=true
+        lynx_installed=true
     fi
 
-    if [[ $pandocinstalled && $lynxinstalled ]]; then
+    if [[ $pandoc_installed && $lynx_installed ]]; then
         pandoc "$1" | lynx -stdin
     else
         clear
@@ -38,17 +38,17 @@ display_markdown_help() {
         echo "To display a formatted markdown,  install the following packag(es):"
         echo
 
-        if [[ ! $pandocinstalled ]]; then
+        if [[ ! $pandoc_installed ]]; then
             echo "  - pandoc"
         fi
 
-        if [[ ! $lynxinstalled ]]; then
+        if [[ ! $lynx_installed ]]; then
             echo "  - lynx"
         fi
 
         echo
         echo "Now press any key to display plain text"
-        read -n 1 -s keypress
+        read -n 1 -s key_press
 
         less "$2"
 
