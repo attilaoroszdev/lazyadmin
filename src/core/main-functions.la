@@ -23,41 +23,60 @@
 #This file fontains the functions providing basic functionality of the menu system
 #Cusom "user functions" will be stored in $USER-DIR/user-function.la
 
-if [[ -f $menu_file ]]; then
-    echo "Setting menus..."
 
-    normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
-    submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
+normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
+submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
+menu_height=0
 
-    # Currently not supporting menus taller than 11 lines or shorter than 7 lines.
-    # (with padding, so min. 5, max 9 items)
-    if [[ $normal_menu_height -gt 12 ]]; then
-        normal_menu_height=12
+
+set_up_menus() {
+    if [[ -f $menu_file ]]; then
+        echo "Setting menus..."
+
+        # Currently not supporting menus taller than 11 lines or shorter than 7 lines.
+        # (with padding, so min. 5, max 9 items)
+        if [[ $normal_menu_height -gt $MAX_MENU_HEIGHT ]]; then
+            normal_menu_height=$MAX_MENU_HEIGHT
+        fi
+
+        if [[ $submenu_height -gt $MAX_MENU_HEIGHT ]]; then
+            submenu_height=$MAX_MENU_HEIGHT
+        fi
+
+        if $RIGHT_PANEL; then
+            
+            if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT ]]; then
+                normal_menu_height=$MIN_MENU_HEIGHT
+            fi
+
+            if [[ $submenu_height -lt $MIN_MENU_HEIGHT ]]; then
+                submenu_height=$MIN_MENU_HEIGHT
+            fi
+
+        else
+            
+            if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
+                normal_menu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
+            fi
+
+            if [[ $submenu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
+                submenu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
+            fi
+
+        fi
+        
+        $menu_height=$normal_menu_height
+    else
+        clear
+        echo
+        echo "Looked for menus in:"
+        echo $menu_file
+        echo
+        echo "Error: Cannot find menuentries file in default location. Exiting..."
+        echo
+        exit 65
     fi
-
-    if [[ $normal_menu_height -lt 8 ]]; then
-        normal_menu_height=8
-    fi
-
-    if [[ $submenu_height -gt 12 ]]; then
-        submenu_height=12
-    fi
-
-    if [[ $submenu_height -lt 8 ]]; then
-        submenu_height=8
-    fi
-    
-    menu_height=$normal_menu_height
-else
-    clear
-    echo
-    echo "Looked for menus in:"
-    echo $menu_file
-    echo
-    echo "Error: Cannot find menuentries file in default location. Exiting..."
-    echo
-    exit 65
-fi
+}
 
 find_menu_type() {     
     OLDIFS="$IFS"
@@ -714,7 +733,18 @@ pick_menu_item() {
             menu_pos=0
         fi
         ;;
+    $'\x09')
+        if $RIGHT_PANEL; then
+            if [[ "$active_panel" == "right" ]]; then
+                active_panel="left"
+                menu_pos=0
+            else
+                active_panel="right"
+                menu_pos=0
+            fi
 
+        fi
+        ;;
     [0-9])
         # If numeric input is selected
         if [[ $key -le $menu_length ]] && [[ $key -ge 0 ]]; then
@@ -741,7 +771,6 @@ pick_menu_item() {
 
         init_menu
         ;;
-
     $'\x0a' | '')
 
         # If enter is pressed
@@ -1432,3 +1461,5 @@ main() {
         main_menu
     done
 }
+
+set_up_menus
