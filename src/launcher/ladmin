@@ -27,64 +27,45 @@ userprofile="$USER_DIR_BASE/user"
 # In case the user starts ladmin for the first time...
 if [[ "$INSTALL_DIR" != "$HOME/.LazyAdmin" ]]; then
 
-
-  if [[ ! -d "$USER_DIR_BASE" ]]; then
-
-    mkdir "$USER_DIR_BASE"
-
-    tar -xvzC "$USER_DIR_BASE" -f "$INSTALL_DIR/res/user_files.tar.gz"
-
-
-  fi
-
+    if [[ ! -d "$USER_DIR_BASE" ]]; then
+        mkdir "$USER_DIR_BASE"
+        tar -xvzC "$USER_DIR_BASE" -f "$INSTALL_DIR/res/user_files.tar.gz"
+    fi
 
 fi
 
-
-for (( i=1; i<=$#; i++)); do
-
-    j=$((i+1))
+for ((i = 1; i <= $#; i++)); do
+    j=$((i + 1))
 
     case "${!i}" in
-                
-        "-p" | "--load-profile") 
+    "-p" | "--load-profile")
+        userprofile=""
+        profilename=${!j}
+        absolutepath=false
 
-            userprofile=""
-            profilename=${!j}       
-            absolutepath=false
+        if [[ ${profilename:0:1} == "/" ]]; then
+            absolutepath=true
+        fi
 
-            if [[ ${profilename:0:1} == "/" ]]; then
+        if $absolutepath && [[ -d "$profilename" ]]; then
+            userprofile="$profilename"
+        else
 
-              absolutepath=true
-            
-            fi
-
-
-            if $absolutepath && [[ -d "$profilename" ]]; then
-      
-              userprofile="$profilename" 
-              
-            else
-              
-              if [[ -d "$USER_DIR_BASE/$profilename" ]]; then
-
+            if [[ -d "$USER_DIR_BASE/$profilename" ]]; then
                 userprofile="$USER_DIR_BASE/$profilename"
-                
-              fi
-              
             fi
-            
-          
-            if [[ -z $userprofile ]]; then
-              echo 
-              echo "Error: User profile $profilename not found. Exiting"
-              echo
-              exit 65
 
-            fi
-            ;;
-    esac   
+        fi
 
+        if [[ -z $userprofile ]]; then
+            echo
+            echo "Error: User profile $profilename not found. Exiting"
+            echo
+            exit 65
+
+        fi
+        ;;
+    esac
 done
 
 . "$INSTALL_DIR/core/includes.la"

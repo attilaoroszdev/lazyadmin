@@ -23,32 +23,22 @@
 # Any functions distrubuted with Lazy Adming, which have external
 # dependencies (other than sed), will live here
 
-
-function check_editor {
-
+check_editor() { 
     clear
-
 
     if [[ $defaulteditor == "not set" ]]; then
 
         if hash nano 2>/dev/null; then
-
             hasnano=true
-
         fi
 
         if hash vi 2>/dev/null; then
-
             hasvi=true
-
         fi
 
         if hash emacs 2>/dev/null; then
-
             hasemacs=true
-
         fi
-
 
         echo "Interactive setup will be implemented in a later version of Lazy Admin."
         echo "Until then, you can just access the config files from here."
@@ -59,90 +49,54 @@ function check_editor {
         echo
 
         if $hasnano; then
-
             echo "n - nano"
-
         fi
-
 
         if $hasvi; then
-
             echo "v - vi"
-
         fi
 
-         if $hasemacs; then
-
+        if $hasemacs; then
             echo "e - emacs"
-
         fi
 
         echo "c - Custom editor"
-        
         tput cnorm
-        
         read -p "> " -n 1 editorpreference
-
         tput civis
-        
+
         if [[ $editorpreference == "c" ]]; then
-
-
             echo
             echo "Please type in your preferred editor command, with any parameters applicable BEFORE the editable filename"
             echo
             read -p "> " editorpreference
             sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
-
-
         else
 
-
             case $editorpreference in
-
-                'n')
-                    editorpreference="nano"
-                    sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
-
-                    ;;
-                'v')
-                    editorpreference="vi"
-                    sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
-
-                    ;;
-                'e')
-                    editorpreference="emacs"
-                    sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
-
-                    ;;
-
-
+            'n')
+                editorpreference="nano"
+                sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
+                ;;
+            'v')
+                editorpreference="vi"
+                sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
+                ;;
+            'e')
+                editorpreference="emacs"
+                sed -i "s|defaulteditor=\"not set\"|defaulteditor=\"$editorpreference\"|" "$USER_DIR/user-defaults.la"
+                ;;
             esac
-
-
-
         fi
-
-
-
-
+       
         defaulteditor=$editorpreference
 
-
-
-
     fi
-
-
 }
 
 
-function edit_setup_file {
-
+edit_setup_file() { 
     check_editor
-
     $defaulteditor $1
-
     tput civis
-
 }

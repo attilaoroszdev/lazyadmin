@@ -109,8 +109,7 @@ To bind a command to a menu item, you must invoke it from a function correspondi
 
 ```bash
  
-    function tab2item3 {
-        ping localhost
+    function tab2item3 {         ping localhost
     }
 
 ```
@@ -119,8 +118,7 @@ To do the same from the `fourth sub-menu` of the` fifth menu` on the `third tab`
 
 ```bash
  
-    function tab3item5sub4 {
-        ping localhost
+    function tab3item5sub4 {         ping localhost
     }
 
 ```
@@ -146,8 +144,7 @@ You would place this line, to the main menu's function where you want to access 
 
 ```bash
 
-    function tab2item3 {
-        enter_submenu $@ "My New Sub-menu"
+    function tab2item3 {         enter_submenu $@ "My New Sub-menu"
     }
 
 ```
@@ -168,16 +165,13 @@ This would make the sub-menu navigable with the proper names. To set up some sim
   
 ``` bash
 
-    function tab2item3sub1 {
-        ping -c 5 google.com
+    function tab2item3sub1 {         ping -c 5 google.com
     }
 
-    function tab2item3sub2 {
-        ping -c 15 google.com
+    function tab2item3sub2 {         ping -c 15 google.com
     }
 
-    function tab2item3sub3 {
-        ping -c 25 google.com
+    function tab2item3sub3 {         ping -c 25 google.com
     }
 
 ```
@@ -195,8 +189,7 @@ If put the following function into `user-functions.la`:
 
 ```bash
 
-    function my_favurite_function{
-        clear
+    function my_favurite_function{         clear
         echo
         echo "Hello world!"
         sleep 5
@@ -210,8 +203,7 @@ you can bind it to any menu item in `menu-bindings.la`, liek so:
 ```bash
 
     # Bind my favourite function to Tab 3, Item 4
-    function tab3item4 {
-    
+    function tab3item4 {     
         my_favourite_function
         
     }

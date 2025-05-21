@@ -20,20 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
 # The following fuinctions are provided "as is", or, in this case, "are"..
 # No guarantees that theY1ll evven work.
 # They meant are to allow for opening stuff in new terminal tab, or terminal window.
 # If your favourite terminal emulator uses different key combos, you might need to
 # set those manually
 
-
 # Run some function or script or command or anythign as root,
 # either with or without sudo
-function run_as_root {
-
+run_as_root() { 
     if [[ "$(whoami)" != "root" ]]; then
-
 
         if [[ -z $preferredrootcommand ]]; then
             echo
@@ -48,35 +44,34 @@ function run_as_root {
             echo
             read -p "Pick one > " -n 1 usesudo
             echo " "
+           
             while true; do
 
                 case $usesudo in
-
                 "1")
                     preferredrootcommand="su"
                     echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
+preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
                     echo
                     echo
                     echo "su saved as your preferred command"
                     echo "I will now run the command:"
-					echo
-                    echo "su -c \""$1"\"" 
-					echo
+                    echo
+                    echo "su -c \""$1"\""
+                    echo
                     echo "Please provide the root password."
                     echo
                     su -c "$1; exit"
                     break
                     ;;
-                   
                 "2")
                     preferredrootcommand="sudo"
                     echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
+preferredrootcommand="sudo"' >>"$USER_DIR/user-defaults.la"
                     echo
                     echo
                     echo "sudo saved as your preferred command"
@@ -86,51 +81,56 @@ preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
                     echo
                     echo "Please provide user password when prompted."
                     echo
+
                     if [[ $2 == "external" ]]; then
                         sudo $1
                     else
                         sudo -- sh -c "$1"
                     fi
+
                     break
                     ;;
                 "3")
                     if groups "$(whoami)" | grep &>/dev/null '\bsudo\b'; then
-                         preferredrootcommand="sudo"
+                        preferredrootcommand="sudo"
                         echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="sudo"' >> "$USER_DIR/user-defaults.la"
+preferredrootcommand="sudo"' >>"$USER_DIR/user-defaults.la"
                         echo
                         echo
                         echo "Your user can use sudo, thus sudo saved as your preferred command"
                         echo "I will now run the command:"
-                        echo 
+                        echo
                         echo "sudo "$1
-                        echo 
+                        echo
                         echo "Please provide user password when prompted."
                         echo
+
                         if [[ $2 == "external" ]]; then
                             sudo $1
                         else
                             sudo -- sh -c "$1"
                         fi
+        
                     else
                         preferredrootcommand="su"
                         echo '
 
 # This will be used by Lazy Admin to execute stuff as root
-preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
+preferredrootcommand="su"' >>"$USER_DIR/user-defaults.la"
                         echo
                         echo
                         echo "Your user cannot use sudo so, su was saved as your preferred command"
                         echo "I will now run the command:"
-						echo
+                        echo
                         echo "su -c \""$1"\""
                         echo
                         echo "Please provide the root password."
                         echo
                         su -c "$1; exit"
                     fi
+
                     break
                     ;;
                 "4")
@@ -146,16 +146,12 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                     echo
                     read -p "(1, 2, 3, or 4...) > " -n 1 usesudo
                     ;;
-
                 esac
             done
         else
-
-
             commandsuffix=""
 
             if [[ $preferredrootcommand == "su" ]]; then
-
                 echo
                 echo "Running command:"
                 echo
@@ -163,11 +159,9 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                 echo
                 echo "Plase provide root pasword if/when prompted"
                 echo
-                
                 su -c "$1; exit"
-
-            else 
-                echo 
+            else
+                echo
                 echo "Running command:"
                 echo
                 echo "sudo "$1
@@ -175,40 +169,30 @@ preferredrootcommand="su"' >> "$USER_DIR/user-defaults.la"
                 echo "Please provide sudo password if/when prompted"
                 echo
 
-                 if [[ $2 == "external" ]]; then
-                        sudo $1
-                    else
-                        sudo -- sh -c "$1"
-
-                    fi
-
+                if [[ $2 == "external" ]]; then
+                    sudo $1
+                else
+                    sudo -- sh -c "$1"
+                fi
             fi
-
         fi
-
     else
-
         echo
         echo "We are already root! Yay!"
         echo
-
         $1
-
     fi
-
 }
 
 
 # This will enter a directory, execute a command or script, then return to the original directory
 # Usage:
 # run_function_in_tmp_directory "<target_tmp_:dir>" "<function_or_script>"
-function run_function_in_tmp_directory {
-
+run_function_in_tmp_directory() { 
     currentdirectory=$(pwd)
     cd $1
     $2
     cd $currentdirectory
-
 }
 
 
@@ -216,24 +200,19 @@ function run_function_in_tmp_directory {
 
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
-function run_command_in_new_tab {
-
+run_command_in_new_tab() { 
     originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
-
-    WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
+    WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)" | awk '{print $5}'
     xdotool windowfocus $WID
     xdotool key ctrl+shift+t $WID
-
 
     # This is a workaround, for whne non-us layouts cause xdotool
     # to occasionally garble output (non-consistently, even within
     # the same session)
     setxkbmap -layout us
-
     sleep 1
     xdotool type --delay 1 --clearmodifiers "$1"
     xdotool key Return
-
 
     # If you find that the below command does not set
     # the keyboard layout back correctly, you might manually need to
@@ -242,31 +221,23 @@ function run_command_in_new_tab {
     # setxkbmap -query
     # (You might need to set variant as well as model, etc)
     setxkbmap -layout $originallayout
-
 }
-
-
 
 
 # Usage: run_command_in_new_window "<command>"
 # Can also be used in la-function-aliases, to run your cusotm command in a new tab
-function run_command_in_new_window {
-
+run_command_in_new_window() { 
     originallayout=$(setxkbmap -print | awk -F"+" '/xkb_symbols/ {print $2}')
-
-
-    WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)"| awk '{print $5}'
+    WID= xprop -root | grep "_NET_ACTIVE_WINDOW(WINDOW)" | awk '{print $5}'
     xdotool windowfocus $WID
     xdotool key ctrl+shift+n $WID
 
-        # This is a workaround, for whne non-us layouts cause xdotool
+    # This is a workaround, for whne non-us layouts cause xdotool
     # to occasionally garble output (non-consistently, even within
     # the same session)
     setxkbmap -layout us
-
     sleep 1
     xdotool type --delay 1 --clearmodifiers "$1"
-
     xdotool key Return
 
     # If you find that the beow command does not set
@@ -276,65 +247,52 @@ function run_command_in_new_window {
     # setxkbmap -query
     # (You might need to set variant as well as model, etc)
     setxkbmap -layout $originallayout
-
-
-
 }
 
-function drop_to_shell {
 
+drop_to_shell() { 
     clear
     tput cnorm
     bash
     tput civis
-    
 }
 
 
 # Use this at your own risk-...
-function drop_to_root_shell {
-
+drop_to_root_shell() { 
     rootexitflag=true
     clear
     tput cnorm
     echo
     run_as_root "clear; bash"
     tput civis
-
 }
 
 
-
-function return_to_menu {
-
+return_to_menu() { 
     echo
     echo "Press any key to return to menu"
     read -n 1 -s keypress
     clear
-
 }
 
-function run_if_installed {
-    
+
+run_if_installed() { 
     clear
 
-	if hash $1 2>/dev/null; then
-		
-		echo
-		$@
-		echo
+    if hash $1 2>/dev/null; then
+        echo
+        $@
+        echo
         clear
         return 0
-	else
-	
-		echo 
-		echo "$1 does not seem to be instaleld. PLease install $1 and try again"
-		echo
+    else
+        echo
+        echo "$1 does not seem to be instaleld. PLease install $1 and try again"
+        echo
         echo "Press any key to return to menu"
         read -n 1 -s keypress
         clear
         return 65
-	fi
-
-	
+    fi
 }

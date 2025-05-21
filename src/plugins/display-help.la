@@ -20,27 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
-function display_markdown_help {
-
+display_markdown_help() { 
     if hash pandoc 2>/dev/null; then
-
         pandocinstalled=true
-
     fi
 
     if hash lynx 2>/dev/null; then
-
         lynxinstalled=true
-
     fi
 
-
     if [[ $pandocinstalled && $lynxinstalled ]]; then
-
-
         pandoc "$1" | lynx -stdin
-
     else
         clear
         echo
@@ -49,15 +39,11 @@ function display_markdown_help {
         echo
 
         if [[ ! $pandocinstalled ]]; then
-
             echo "  - pandoc"
-
         fi
 
         if [[ ! $lynxinstalled ]]; then
-
             echo "  - lynx"
-
         fi
 
         echo
@@ -67,6 +53,4 @@ function display_markdown_help {
         less "$2"
 
     fi
-
-
 }

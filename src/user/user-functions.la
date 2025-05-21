@@ -19,186 +19,188 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
 # Set your custom functions here, if any custom script is to be called
 # from the menus
-#Function corresponding to choice 1 in the menu, install packages
-function example_function {
-	clear
 
-	echo
-	echo "This is a dummy function to demonstrate how the menu system works"
-	echo
-	echo "You will now be presented with a multiple choice test of 40 questions."
-	echo "You have 40 minutes to finish the test. Good luck..."
-	echo
-	echo "Press any key to start"
+# Pointless filler function
+example_function() {     
+    clear
+    echo
+    echo "This is a dummy function to demonstrate how the menu system works"
+    echo
+    echo "You will now be presented with a multiple choice test of 40 questions."
+    echo "You have 40 minutes to finish the test. Good luck..."
+    echo
+    echo "Press any key to start"
+    read -n 1 -s keypress
 
-	read -n 1 -s keypress
+    echo
+    echo "You didn't actually think, did you...?"
+    echo
+    echo "Now, press a key to get back to the menu. (This time for real)"
+    read -n 1 -s keypress
 
-	echo
-	echo "You didn't actually think, did you...?"
-	echo
-	echo "Now, press a key to get back to the menu. (This time for real)"
-	
-	read -n 1 -s keypress
-
-	clear
-
+    clear
 }
 
 
-#This dummy function is there as a placeholder for empty menus.
-#Only delete it, once all your menus are populated, to avoid error messages
-#Keeping it will allow you to easily fill the void, if/when changes occur,
-#or you want to temporarily leave something "broken"
-
-function dummy_function {
-
-	echo "If you can see this text, something is broken"
-
+# This dummy function is there as a placeholder for empty menus.
+# Only delete it, once all your menus are populated, to avoid error messages
+# Keeping it will allow you to easily fill the void, if/when changes occur,
+# or you want to temporarily leave something "broken"
+dummy_function() { 
+    echo "If you can see this text, something is broken"
 }
-
-
 
 
 ######################################
-#                                    #	
+#                                    #
 # Package management functions (apt) #
 #                                    #
 ######################################
 
-function update_system {
-	clear
-	echo
-	run_as_root "apt update"
+update_system() { 
+    clear
+    echo
+    run_as_root "apt update"
+    echo
+    echo "Repos refreshed. What next?"
+    echo "  1 - See what can be upgraded"
+    echo "  2 - Just do the upgrade already"
+    echo "  3 - Quit"
+    read -n 1 -s whatnext
 
-	echo
-	echo "Repos refreshed. What next?"
-	echo "  1 - See what can be upgraded"
-	echo "  2 - Just do the upgrade already"
-	read -n 1 -s whatnext
+    case $whatnext in
+    "1")
+        echo
+        echo
+        run_as_root "apt list --upgradable"
+        echo
+        read -p "Continue with upgrade? (y/n)" -n 1 yesorno
 
-	case $whatnext in
-	"1")
-		echo
-		echo
-		run_as_root "apt list --upgradable"
-		echo
-		read -p "Continue with upgrade? (y/n)" -n 1 yesorno
-		if [[ $yesorno == "y" || yesorno == "Y" ]]; then
-			echo
-			echo
-			run_as_root "apt upgrade -y"
-			echo
-			echo "Done."
-		else
-			echo
-			echo "OK."
-		fi
-	;;
-	"2")
-		echo
-		run_as_root "apt upgrade -y"
-		echo
-		echo "Done."
-	;;
-	*)
-		echo
-		echo "Yeah, whatever..."
-	;;
-	esac
+        if [[ $yesorno == "y" || yesorno == "Y" ]]; then
+            echo
+            echo
+            run_as_root "apt upgrade -y"
+            echo
+            echo "Done."
+        else
+            echo
+            echo "OK."
+        fi
+        ;;
+    "2")
+        echo
+        run_as_root "apt upgrade -y"
+        echo
+        echo "Done."
+        ;;
+    *)
+        echo
+        echo "Yeah, whatever..."
+        ;;
+    esac
 
-	return_to_menu
-	
+    return_to_menu
 }
 
-function upgrade_without_asking {
-	clear
-	echo
-	echo "Will now update system"
-	echo
-	run_as_root "apt update"
-	echo
-	run_as_root "apt upgrade"
-	echo
-	return_to_menu
+
+upgrade_without_asking() { 
+    clear
+    echo
+    echo "Will now update system"
+    echo
+    run_as_root "apt update"
+    echo
+    run_as_root "apt upgrade"
+    echo
+    return_to_menu
 }
 
-function clean_up_apt {
-	clear
-	echo
-	echo "Gonna clean up unused packages"
-	echo
-	run_as_root "apt autoremove"
-	echo
-	run_as_root "apt clean"
-	return_to_menu
+
+clean_up_apt() { 
+    clear
+    echo
+    echo "Gonna clean up unused packages"
+    echo
+    run_as_root "apt autoremove"
+    echo
+    run_as_root "apt clean"
+    return_to_menu
 }
 
-function install_packages {
-	clear
-	tput cnorm
-	echo
-	read -p "Package(s) to install: " lineargs
-	tput civis
-	run_as_root "apt install $lineargs"
-	echo
-	return_to_menu
+
+install_packages() { 
+    clear
+    tput cnorm
+    echo
+    read -p "Package(s) to install: " lineargs
+
+    tput civis
+    run_as_root "apt install $lineargs"
+    echo
+    return_to_menu
 }
 
-function remove_packages {
-	clear
-	tput cnorm
-	echo
-	read -p "Package(s) to remove: " lineargs
 
-	dopurge=""
-	read -p "Also purge configs? (y/n)" -n 1 yesorno
+remove_packages() { 
+    clear
+    tput cnorm
+    echo
+    read -p "Package(s) to remove: " lineargs
 
-	if [[ yesorno == "y" || yesorno == "Y" ]]; then
-		dopurge="--purge"
-	fi
+    dopurge=""
+    read -p "Also purge configs? (y/n)" -n 1 yesorno
 
-	tput civis
+    if [[ yesorno == "y" || yesorno == "Y" ]]; then
+        dopurge="--purge"
+    fi
 
-	run_as_root "apt remove $dopurge $lineargs"
-	echo
-	return_to_menu
+    tput civis
+    run_as_root "apt remove $dopurge $lineargs"
+    echo
+    return_to_menu
 }
 
-function list_packages {
-	clear
-	tput cnorm
-	echo
-	read -p "Package(s) to list: " lineargs
-	tput civis
-	run_as_root "apt list $lineargs"
-	echo
-	return_to_menu
+
+list_packages() { 
+    clear
+    tput cnorm
+    echo
+    read -p "Package(s) to list: " lineargs
+
+    tput civis
+    run_as_root "apt list $lineargs"
+    echo
+    return_to_menu
 }
 
-function search_packages {
-	clear
-	tput cnorm
-	echo
-	read -p "Package(s) to search: " lineargs
-	tput civis
-	run_as_root "apt search $lineargs"
-	echo
-	return_to_menu
+
+search_packages() { 
+    clear
+    tput cnorm
+    echo
+    read -p "Package(s) to search: " lineargs
+
+    tput civis
+    run_as_root "apt search $lineargs"
+    echo
+    return_to_menu
 }
 
-function show_packages {
-	clear
-	tput cnorm
-	echo
-	read -p "Package(s) to show: " lineargs
-	tput civis
-	run_as_root "apt show $lineargs"
-	echo
-	return_to_menu
+
+show_packages() { 
+    clear
+    tput cnorm
+    echo
+    read -p "Package(s) to show: " lineargs
+
+    tput civis
+    run_as_root "apt show $lineargs"
+    echo
+    return_to_menu
 }
+
 
 ###################
 #                 #
@@ -206,32 +208,22 @@ function show_packages {
 #                 #
 ###################
 
-function show_system_logs {
-
-	if hash journalctl 2>/dev/null; then
-		run_as_root journalctl
-	else
-		run_as_root "dmesg | less"
-	fi
-
+show_system_logs() { 
+    if hash journalctl 2>/dev/null; then
+        run_as_root journalctl
+    else
+        run_as_root "dmesg | less"
+    fi
 }
 
 
-function show_sensors {
-
-	if hash $1 2>/dev/null; then
-
-		watch -n 0.1 sensors
-
-	else
-
-		echo "lm_sensors does not seem to be instaleld."
-		echo "First install lm_sensors then run sensors detect to configure it,"
-		echo "Then come back here"
-	
-		return_to_menu
-	
-	fi
+show_sensors() { 
+    if hash $1 2>/dev/null; then
+        watch -n 0.1 sensors
+    else
+        echo "lm_sensors does not seem to be instaleld."
+        echo "First install lm_sensors then run sensors detect to configure it,"
+        echo "Then come back here"
+        return_to_menu
+    fi
 }
-
-

@@ -57,6 +57,7 @@ for (( i=1; i<=$#; i++)); do
             fi
 
             if [[ -z $userprofile ]]; then
+            
               echo 
               echo "Error: User profile $profilename not found. Exiting"
               echo

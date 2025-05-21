@@ -40,8 +40,7 @@ fi
 
 # Run some function or script or command or anythign as root,
 # either with or without sudo
-function run_as_root {
-
+run_as_root() { 
     if [[ -z $preferredrootcommand ]]; then
         echo
         echo "Will need root privileges to run some parts."
@@ -122,12 +121,10 @@ function run_as_root {
         sudo -- sh -c "$1"                
 
     fi
-
 }
 
 
-function set_symlink_dir {
-
+set_symlink_dir() { 
     echo
     echo
     echo "Please specify where to symlink, so that you can start la-menus as a command."

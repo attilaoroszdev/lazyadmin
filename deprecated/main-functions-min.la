@@ -55,20 +55,16 @@ else
 fi
 
 
-function find_menu_type {
-
+find_menu_type() { 
    OLDIFS="$IFS"
    IFS=$'\n'
    menutype=( `cat $menufile | sed -n '/'_menutype'/{:a;n;/'_endmenutype'/q;p;ba}'` )
    IFS="$OLDIFS"
-
-
-}
+  }
 
 
 #This function will read the menu entries from the menu entries file as set in defaults
-function read_menu_items {
-
+read_menu_items() { 
     menuitem=$tabpos
     subparent=$1
     subitem=$2
@@ -134,14 +130,10 @@ function read_menu_items {
     fi
 
     menulength=${#menuentry[@]}
-
-
-
-
 }
 
-function set_command_builder_items {
-    #Parse the argument list into the array, starting form the 3rd argument
+
+set_command_builder_items() {     #Parse the argument list into the array, starting form the 3rd argument
     arrayoffset=2
     arraycounter=1
 
@@ -167,11 +159,10 @@ function set_command_builder_items {
     fi
 
     menulength=${#menuentry[@]}
-
 }
 
-function write_flags_descriptor {
-    cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
+
+write_flags_descriptor() {     cursorpos=$(( $headerheight+$menuheight+$descriptorheight ))
     tput cup $cursorpos $menuwidth
     echo -e "\033[1K"
     tput cup $cursorpos 2
@@ -191,11 +182,11 @@ function write_flags_descriptor {
             echo "Set the specified flag"
         ;;
     esac
-}
+  }
+
 
 # read descriptor lines for menu items
-function read_descriptor {
-
+read_descriptor() { 
   if [[ -z $menutype || $menutype == "old" ]]; then
 
     if $submenu; then
@@ -267,12 +258,11 @@ function read_descriptor {
         fi
 
   fi
-
 }
 
+
 # Load the items shown in the tab
-function read_tab_items {
-    OLDIFS="$IFS"
+read_tab_items() {     OLDIFS="$IFS"
     IFS=$'\n'
 
     if $altmenu; then
@@ -295,11 +285,10 @@ function read_tab_items {
       tablength=9
 
     fi
-
 }
 
-function read_rightpanel_items {
-    OLDIFS="$IFS"
+
+read_rightpanel_items() {     OLDIFS="$IFS"
     IFS=$'\n'
     if $submenu; then
       rightpanelentry=( `cat $menufile | sed -n '/'_subrightpanel'/{:a;n;/'_endsubrightpanel'/q;p;ba}'` )
@@ -309,10 +298,10 @@ function read_rightpanel_items {
     IFS="$OLDIFS"
 
     rightpanellength=${#rightpanelentry[@]}
-}
+  }
 
-function read_help_rightpanel_items {
-    OLDIFS="$IFS"
+
+read_help_rightpanel_items() {     OLDIFS="$IFS"
     IFS=$'\n'
 
     rightpanelentry=( `cat $menufile | sed -n '/'_helprightpanel'/{:a;n;/'_endhelprightpanel'/q;p;ba}'` )
@@ -320,11 +309,11 @@ function read_help_rightpanel_items {
     IFS="$OLDIFS"
 
     rightpanellength=${#rightpanelentry[@]}
-}
+  }
+
 
 #Display the menu tabs
-function write_tab_items {
-
+write_tab_items() { 
     # Mpodify top line first, draw connectors
 
     if $displaylineconnectors; then
@@ -425,12 +414,11 @@ function write_tab_items {
     done
 
     fi
-
 }
 
-# Populate the drawn menu template with themenuitelms
-function write_menu_items {
 
+# Populate the drawn menu template with themenuitelms
+write_menu_items() { 
     #draw the menu items
     #If the position is right, it changes the background.
     #As the variable does not get modified, this needs no resetting
@@ -453,13 +441,12 @@ function write_menu_items {
     done
 
     cursorpos=`tput lines`
-    tput cup $cursorpos 0
-}
+    tput cup $cursorpos 0}
+
 
 # This is hardcoded for now.
 # Might gonna get its own resource file in a future release
-function write_help_menu_items {
-
+write_help_menu_items() { 
     menulength=0
 
     
@@ -485,12 +472,11 @@ function write_help_menu_items {
       fi
 
     done
-
 }
 
-# Draw rightpanel items
-function write_rightpanel_items {
 
+# Draw rightpanel items
+write_rightpanel_items() { 
     for (( n=0; n < $rightpanellength; n++ ))
     do
        if [[ "${rightpanelentry[n]}" == "skip" ]]; then
@@ -509,12 +495,11 @@ function write_rightpanel_items {
     done
 
     cursorpos=`tput lines`
-    tput cup $cursorpos 0
-}
+    tput cup $cursorpos 0}
+
 
 #Draws a line
-function draw_line {
-
+draw_line() { 
     #draw line with the length of the screen/window width
     for (( i=0; i<$menuwidth; i++ ))
     do
@@ -523,24 +508,22 @@ function draw_line {
 
     done
     #cursor goes to next row
-
 }
 
-#clear menu area
-function clear_menu {
 
+#clear menu area
+clear_menu() { 
     for (( n=1; n<$menuheight; n++ ))
     do
 
       tput cup $(( n + $headerheight )) $(( $menuwidth-$rightpanelwidth-1 ))
       echo -e "\033[1K"
 
-    done
-}
+    done}
+
 
 #Draws the outline of the menu, with spaces left out for inclusion of items
-function draw_menu {
-
+draw_menu() { 
     tput civis
 
     if $subflagsmenu; then
@@ -678,12 +661,11 @@ function draw_menu {
 
     tput cup $cursorpos 0
     draw_line
-
 }
 
-# Simply write a one line descriptor, as read from the menu file
-function write_descriptor {
 
+# Simply write a one line descriptor, as read from the menu file
+write_descriptor() { 
     if [[ $menuheight -lt 8 ]]; then
 
         menuheight=8
@@ -701,12 +683,11 @@ function write_descriptor {
     echo -e "\033[1K"
     tput cup $cursorpos 2
     echo "${menudescentry[$menupos]}"
-
 }
 
-#Simply write a one line descriptor, as read from the menu file
-function write_help_descriptor {
 
+#Simply write a one line descriptor, as read from the menu file
+write_help_descriptor() { 
      
     helpmenudescentry[0]=""
     
@@ -723,12 +704,11 @@ function write_help_descriptor {
 
       echo "${helpmenudescentry[$menupos]}"
 
-    fi
-}
+    fi}
+
 
 # Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
-function infinite_menu {
-
+infinite_menu() { 
     if [[ "$activepanel" == "right" ]]; then
       limit=$rightpanellength
     else
@@ -741,11 +721,10 @@ function infinite_menu {
     if [[ $menupos -lt 0 ]]; then
       menupos=$(( $limit-1 ))
     fi
-
 }
 
-function infinite_tab {
-   limit=$(( $tablength + 1 ))
+
+infinite_tab() {    limit=$(( $tablength + 1 ))
 
 
     if [[ $tabpos -eq $limit ]]; then
@@ -758,8 +737,8 @@ function infinite_tab {
       read_menu_items
       read_descriptor
     fi
-
 }
+
 
 # This function will invoke a submenu where you can set flags/arguments/parameters for the spcified command or function
 # Call with parameters (args), like this:
@@ -768,8 +747,7 @@ function infinite_tab {
 #
 # submenu_flags_function currently supports five preset flags, this can be changed by modifying the menu structure below
 #
-function pick_menu_item {
-
+pick_menu_item() { 
     # Credit for the below picking solution (first 5 lines) goes for eMPee584
     # where he has originally presented it in his answer on stackoverflow.com
     # It does allows to read both arrow keys and single characters from a keyboard
@@ -969,11 +947,10 @@ function pick_menu_item {
             ;;
 
             esac
-
 }
 
-function pick_help_menu_item {
 
+pick_help_menu_item() { 
     read -sN1 key # 1 char (not delimiter), silent
     read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
     read -sN1 -t 0.0001 k2
@@ -1064,12 +1041,11 @@ function pick_help_menu_item {
         back_to_main_menu "read" "reflow"
       ;;
 
-    esac
-}
+    esac}
+
 
 # Command builder is a special case...
-function menu_item_picker_subflags  {
-
+function menu_item_picker_subflags  { 
      read -sN1 key # 1 char (not delimiter), silent
      read -sN1 -t 0.0001 k1 # timed reads to check for second third etc characters
      read -sN1 -t 0.0001 k2
@@ -1240,8 +1216,8 @@ function menu_item_picker_subflags  {
             ;;
 
     esac
-
 }
+
 
 # This fnction will
 # construct a submenu from the supplied arguments, from which
@@ -1262,8 +1238,7 @@ function menu_item_picker_subflags  {
 # -c 5 --whatever_flag -f 8
 #
 # the second menu entry. Selecting it will apply all the flags to the built chain
-function command_builder_function {
-
+command_builder_function() { 
     menuentry=()
 
     set_args=""
@@ -1329,14 +1304,12 @@ function command_builder_function {
     done
     # submenu="$sourcesubmenu"
     # subflagsmenu=false
-
 }
 
     #Right panel functions
     #this is the standard reflow function
 
-function reflow_menu {
-
+reflow_menu() { 
     clear
     draw_menu
     infinite_tab
@@ -1353,21 +1326,17 @@ function reflow_menu {
        write_descriptor
 
     fi
-
 }
 
 
-function display_hotkeys {
-
+display_hotkeys() { 
     display_markdown_help "$RES_DIR/shortkeys.md" "$RES_DIR/shortkeys.txt"
     reflow_menu
-
 }
 
     # Calls the papproropriate help function, either the help submenu
     # or the single help file, depending on where the user is
-function display_help {
-
+display_help() { 
     if $subflagsmenu; then
 
         functhelp_commanbuilder
@@ -1379,14 +1348,13 @@ function display_help {
         enter_helpmenu
 
     fi
-
 }
+
 
 # Quits Lazy Admin, and restores the cursor, but only if
 # not returning from a nested root shell
 # (It is possible to run another shell of ladmin form within)
-function exit_la_menus {
-
+exit_la_menus() { 
     tput cnorm
     clear
     clear
@@ -1394,14 +1362,12 @@ function exit_la_menus {
     echo "$@"
     echo
     exit 0
-
 }
 
     # Misleading function name (TODO:change it)
     # It will return to the calling menu, which can be a submenu in case of
     # help menu or command builder
-function back_to_main_menu {
-
+back_to_main_menu() { 
     activepanel="left"
     menupos=0
     subflagsmenu=false
@@ -1438,12 +1404,11 @@ function back_to_main_menu {
     fi
 
     return
-
 }
 
-# (Re)draws items of main menu and includes the picker
-function main_menu {
 
+# (Re)draws items of main menu and includes the picker
+main_menu() { 
     submenu=false
     subflagsmenu=false
 
@@ -1463,14 +1428,13 @@ function main_menu {
     write_descriptor
 
     pick_menu_item
-
 }
+
 
 # Same as main menu, only this one invokes a submenu.
 # TODO Could be consolidated into one function, with arguments too
 # decide menu type
-function sub_menu {
-
+sub_menu() { 
     submenu=true
     subflagsmenu=false
 
@@ -1489,13 +1453,12 @@ function sub_menu {
     write_descriptor
 
     pick_menu_item
-
 }
+
 
 # As above, only drawing a help menu
 # TODO could be comnsolidated into one function, as above
-function help_menu {
-
+help_menu() { 
     #submenu=true
     subflagsmenu=false
     read_descriptor $1 $2
@@ -1510,13 +1473,12 @@ function help_menu {
 
     write_help_descriptor
     pick_help_menu_item
-
 }
+
 
 # Initialise a menu, before drawing for the foirst timed
 # Will set menu item and title variable
-function init_menu {
-    if [[ "$(whoami)" != "root" ]]; then
+init_menu() {     if [[ "$(whoami)" != "root" ]]; then
       root=false
     else
       root=true
@@ -1532,13 +1494,12 @@ function init_menu {
 
     read_rightpanel_items
     draw_menu
-
 }
+
 
 # Initialises help menu before drawing for the first timed
 # TODO: This could be consolidated into the similar function above
-function init_help_menu {
-
+init_help_menu() { 
     if [[ "$(whoami)" != "root" ]]; then
       root=false
     else
@@ -1549,12 +1510,11 @@ function init_help_menu {
 
     read_descriptor $2 $2
     draw_menu
-
 }
 
-# This will be called whrn a submenu is selected
-function enter_submenu {
 
+# This will be called whrn a submenu is selected
+enter_submenu() { 
     remaininsubmenu=false;
     submenu=true
     submenutitle="$3"
@@ -1568,12 +1528,11 @@ function enter_submenu {
         #    break
         #fi
         sub_menu $1 $2
-    done
-}
+    done}
+
 
 # This will be called when help menu is selected
-function enter_helpmenu {
-
+enter_helpmenu() { 
     helpsubmenu=true
 
     if $submenu; then
@@ -1600,43 +1559,39 @@ function enter_helpmenu {
 
       help_menu
     done
-
 }
+
 
 # Right panel functions. These function aliases are core functionality,
 # so not really a part of the user aliases. This coudl change later
 # so that users can easily alter right panel
-function functright0 {
-
+function functright0 { 
     reflow_menu
-
 }
 
-function functright1 {
 
+function functright1 { 
     if [[ $subflagsmenu ]]; then
       subflagsmenu=false
     fi
  
     back_to_main_menu "read"
-
 }
 
-function functright2 {
 
+function functright2 { 
     if $root; then
       exit_la_menus "Leaving root shell"
     else
 
       exit_la_menus "Exiting..."
     fi
-
 }
+
 
 # Initialises and displays the main menu
 # This is what the launcher calls, basically
-function main {
-
+main() { 
      for (( i=1; i<=$#; i++)); do
 
       j=$((i+1))
@@ -1674,6 +1629,5 @@ function main {
 
      main_menu
 
-    done
-}
+    done}
 
