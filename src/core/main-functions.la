@@ -30,6 +30,7 @@
 
 set_menu_sizes() {
     terminal_height=$(tput lines)
+    terminal_width=$(tput cols)
 
     # echo "Terminal height: $terminal_height"
     # sleep 1
@@ -101,8 +102,24 @@ set_menu_sizes() {
 
 }
 
+check_for_size_changes(){
+    if [[ $terminal_height -ne $(tput lines) ]] || [[ $terminal_width -ne $(tput cols) ]]; then
+        reflow_menu
+        return 1
+    fi
+
+    return 0
+}
 
 set_up_menus() {
+    tick=$AUTO_REFLOW_TICK
+
+
+    # Safe value for $tick, we don't want the system to freeze...    
+    if [[ ! $tick -ge 1 ]] || [[ $tick -lt 1 ]]; then
+        tick=0.5
+    fi
+
     if [[ -f $menu_file ]]; then
         echo "Setting menus..."
         set_menu_sizes     
@@ -1022,160 +1039,182 @@ cmb_set_arg_by_number() {
 # https://stackoverflow.com/a/66500309/6078214
 #
 # This is the simplest way I have fund yet to read all sorts of special keys
+
 pick_menu_item() { 
-
-    key=""
-    read -rsN1 keytap
     
-    # loop while read can read any additional character and join all of them ## Original comment, left unchanged
-    while [ -n "$keytap" ]; 
-    do
-        key="${key}${keytap}"
-        read -sN1 -t 0.0001 keytap
+    while true; do
+        
+        key=""
+        keytap=""
+        if $AUTO_REFLOW; then
+            check_for_size_changes
+            size_changed=$?
+            if [[ $size_changed -gt 0 ]]; then
+                break
+            fi
+
+            read -rsN1 -t $tick keytap
+        else
+            read -rsN1 keytap
+        fi
+        
+        # loop while read can read any additional character and join all of them ## Original comment, left unchanged
+        while [ -n "$keytap" ]; 
+        do
+            key="${key}${keytap}"
+            read -sN1 -t 0.0001 keytap
+        done
+
+        if [[ -n $key ]]; then 
+            # TODO: Update User guide and key binding guide with F1-9 and t-# keys for tabs access and TAB key for changing panels
+            case $key in
+            $'\e[A' | $'\e0A' | "w" | "W")
+                move_up
+                ;;
+            $'\e[B' | $'\e0B' | "s" | "S")
+                move_down
+                ;;
+            $'\e[D' | $'\e0D' | "a" | "A")
+                tab_left
+                ;;
+            $'\e[C' | $'\e0C' | "d" | "D")
+                tab_right
+                ;;
+            $'\e[11~' | $'\eOP') 
+                # F1 - Tab 1
+                select_tab 1
+                ;;
+            $'\e[12~' | $'\eOQ')
+                # F2 - Tab 2
+                select_tab 2
+                ;;
+            $'\e[13~' | $'\eOR')
+                # F3 - Tab 3
+                select_tab 3
+                ;;
+            $'\e[14~' | $'\eOS') 
+                # F4 - Tab 4
+                select_tab 4
+                ;;
+            $'\e[15~')
+                # F5 - Tab 5
+                select_tab 5
+                ;;
+            $'\e[17~')
+                # F6 - Tab 6
+                select_tab 6
+                ;;
+            $'\e[18~')
+                # F7 - Tab 7
+                select_tab 7
+                ;;
+            $'\e[19~') 
+                # F8 - Tab 8
+                select_tab 8
+                ;;
+            $'\e[20~')
+                # F9 - Tab 9
+                select_tab 9
+                ;;
+            "t" | "T")
+                select_tab_by_number
+                ;;
+            $'\e[1;5C' | $'\e01;5C' | "r" | "R")
+                change_panel "right"
+                ;;
+            $'\e[1;5D' | $'\e01;5D' | "l" | "L")
+                change_panel "left"
+                ;;
+            $'\x09')
+                change_panel "swap"
+                ;;
+            [1-9])
+                if $sub_flags_menu; then
+                    cmb_set_arg_by_number "$@" $key
+                elif $help_submenu; then
+                    select_help_menu_item_by_number $key
+                else
+                    select_menu_item_by_number $key
+                fi
+                ;;
+            $'\x0a' | '')
+                # If enter is pressed
+                if $sub_flags_menu; then
+                    set_highlighted_cmb_arg "$@"
+                elif $help_submenu; then
+                    select_highlighted_help_item
+                else
+                    select_highlighted_menu_item
+                fi
+                ;;
+            "f" | "F") 
+                reflow_menu
+                ;;
+            "h" | "H")
+                if ! $help_submenu; then
+                    display_help
+                fi
+                ;;
+            "k" | "K")
+                display_hotkeys
+                ;;
+            "q" | "Q") #this handles exit function
+                functright4
+                ;;
+            "b" | "B")
+                if $help_submenu; then
+                    back_to_main_menu "read" "reflow"
+                elif $submenu || $sub_flags_menu; then
+                    back_to_main_menu
+                fi
+
+                return
+                ;;
+            "e" | "E")
+                if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                    functsetup0
+                    init_menu
+                fi
+                ;;
+            "u" | "U")
+                if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                    functsetup1
+                    init_menu
+                fi
+                ;;
+            "v" | "V")
+                if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                    functsetup3
+                    init_menu
+                fi
+                ;;
+            "m" | "M")
+                if $sub_flags_menu; then
+                    cmb_set_manual_args
+                elif ! $submenu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                    functsetup2
+                    init_menu
+                fi
+                ;;
+            "c" | "C")
+                if $sub_flags_menu; then
+                    cmb_commit_with_args
+                fi
+                ;;
+            "x" | "X")
+                if $sub_flags_menu; then
+                    cmb_clear_args
+                fi
+                ;;
+        
+            esac
+            
+            break
+
+        elif ! $AUTO_REFLOW; then
+            break
+        fi
     done
-
-    # TODO: Update User guide and key binding guide with F1-9 and t-# keys for tabs access and TAB key for changing panels
-    case $key in
-    $'\e[A' | $'\e0A' | "w" | "W")
-        move_up
-        ;;
-    $'\e[B' | $'\e0B' | "s" | "S")
-        move_down
-        ;;
-    $'\e[D' | $'\e0D' | "a" | "A")
-        tab_left
-        ;;
-    $'\e[C' | $'\e0C' | "d" | "D")
-        tab_right
-        ;;
-    $'\e[11~' | $'\eOP') 
-        # F1 - Tab 1
-        select_tab 1
-        ;;
-    $'\e[12~' | $'\eOQ')
-        # F2 - Tab 2
-        select_tab 2
-        ;;
-    $'\e[13~' | $'\eOR')
-        # F3 - Tab 3
-        select_tab 3
-        ;;
-    $'\e[14~' | $'\eOS') 
-        # F4 - Tab 4
-        select_tab 4
-        ;;
-    $'\e[15~')
-        # F5 - Tab 5
-        select_tab 5
-        ;;
-    $'\e[17~')
-        # F6 - Tab 6
-        select_tab 6
-        ;;
-    $'\e[18~')
-        # F7 - Tab 7
-        select_tab 7
-        ;;
-    $'\e[19~') 
-        # F8 - Tab 8
-        select_tab 8
-        ;;
-    $'\e[20~')
-        # F9 - Tab 9
-        select_tab 9
-        ;;
-    "t" | "T")
-        select_tab_by_number
-        ;;
-    $'\e[1;5C' | $'\e01;5C' | "r" | "R")
-        change_panel "right"
-        ;;
-    $'\e[1;5D' | $'\e01;5D' | "l" | "L")
-        change_panel "left"
-        ;;
-    $'\x09')
-        change_panel "swap"
-        ;;
-    [1-9])
-        if $sub_flags_menu; then
-            cmb_set_arg_by_number "$@" $key
-        elif $help_submenu; then
-            select_help_menu_item_by_number $key
-        else
-            select_menu_item_by_number $key
-        fi
-        ;;
-    $'\x0a' | '')
-        # If enter is pressed
-        if $sub_flags_menu; then
-            set_highlighted_cmb_arg "$@"
-        elif $help_submenu; then
-            select_highlighted_help_item
-        else
-            select_highlighted_menu_item
-        fi
-        ;;
-    "f" | "F") 
-        reflow_menu
-        ;;
-    "h" | "H")
-        if ! $help_submenu; then
-            display_help
-        fi
-        ;;
-    "k" | "K")
-        display_hotkeys
-        ;;
-    "q" | "Q") #this handles exit function
-        functright4
-        ;;
-    "b" | "B")
-        if $help_submenu; then
-            back_to_main_menu "read" "reflow"
-        elif $submenu || $sub_flags_menu; then
-            back_to_main_menu
-        fi
-
-        return
-        ;;
-    "e" | "E")
-        if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-            functsetup0
-            init_menu
-        fi
-        ;;
-    "u" | "U")
-        if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-            functsetup1
-            init_menu
-        fi
-        ;;
-    "v" | "V")
-        if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-            functsetup3
-            init_menu
-        fi
-        ;;
-    "m" | "M")
-        if $sub_flags_menu; then
-            cmb_set_manual_args
-        elif ! $submenu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-            functsetup2
-            init_menu
-        fi
-        ;;
-    "c" | "C")
-        if $sub_flags_menu; then
-            cmb_commit_with_args
-        fi
-        ;;
-    "x" | "X")
-        if $sub_flags_menu; then
-            cmb_clear_args
-        fi
-        ;;
-   
-    esac
 }
 
 
@@ -1330,6 +1369,7 @@ back_to_main_menu() {
 
 # (Re)draws items of main menu and includes the picker
 main_menu() { 
+    
     submenu=false
     sub_flags_menu=false
 

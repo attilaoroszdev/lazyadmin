@@ -55,3 +55,8 @@ DISPLAY_LINE_CONNECTORS=true
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
 DEFAULT_EDITOR="not set"
+
+
+AUTO_REFLOW=true
+
+AUTO_REFLOW_TICK=0.5
