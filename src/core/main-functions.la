@@ -713,6 +713,11 @@ infinite_tab() {
 }
 
 
+function_exists() {
+    declare -f -F $1 > /dev/null
+    return $?
+}
+
 ###################################
 # Movement and menu item handling #
 ###################################
@@ -846,10 +851,10 @@ select_menu_item_by_number() {
             esac
         fi  
     fi
-    
+    is_valid=1
     if [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
         ((key--))
-        menu_pos=$key
+       
 
         if [[ -z $function_style || $function_style == "old" ]]; then
 
@@ -862,14 +867,30 @@ select_menu_item_by_number() {
         elif [[ $function_style == "simple" ]]; then
 
             if $submenu; then
-                tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)) $tab_pos $menu_pos
+                function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1))
+                is_valid=$?
+                if [[ $is_valid == 0 ]]; then
+                    menu_pos=$key
+                    tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)) $tab_pos $menu_pos
+                fi
+                
             else
-                tab$(($tab_pos + 1))item$(($key + 1)) $tab_pos $menu_pos
+                function_exists tab$(($tab_pos + 1))item$(($key + 1)) && init_menu
+                is_valid=$?
+                if [[ $is_valid == 0 ]]; then
+                    menu_pos=$key
+                    tab$(($tab_pos + 1))item$(($key + 1)) $tab_pos $menu_pos
+                fi
+                
             fi
         fi
     fi
     
-    init_menu
+    if [[ $is_valid == 0 ]]; then
+        q
+        init_menu
+    fi
+
 }
 
 

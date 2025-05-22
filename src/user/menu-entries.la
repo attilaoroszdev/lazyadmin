@@ -82,7 +82,7 @@ _endmenu1
 
 
 # submenu itmes for tab 1, item 6
-_submenu16
+_submenu17
 1 - Analyse root :: Run ncdu /
 skip
 3 - Analyse /home :: Run ncdu /home/attila
@@ -92,7 +92,7 @@ skip
 skip
 8 - Analyse tmp directory :: Run ncdu /tmp
 9 - Analyse logs :: Run ncdu /var/log
-_endsubmenu16
+_endsubmenu17
 
 
 # Second tab
