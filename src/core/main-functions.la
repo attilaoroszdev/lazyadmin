@@ -42,6 +42,7 @@ set_menu_sizes() {
         echo
         echo "Exiting..."
         echo
+        tput cnorm
         exit 65
     fi
 
