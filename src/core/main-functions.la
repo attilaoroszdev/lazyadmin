@@ -851,11 +851,12 @@ select_menu_item_by_number() {
             esac
         fi  
     fi
+
     is_valid=1
+
     if [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
         ((key--))
        
-
         if [[ -z $function_style || $function_style == "old" ]]; then
 
             if $submenu; then
@@ -887,7 +888,6 @@ select_menu_item_by_number() {
     fi
     
     if [[ $is_valid == 0 ]]; then
-        q
         init_menu
     fi
 
