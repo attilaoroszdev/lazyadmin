@@ -70,12 +70,14 @@ _menu1
 1 - Resource monitor :: Show the output of top
 2 - Better resource monitor :: Show the output of htop (if installed)
 3 - Show sensors :: Thermal readings in real time 
-4 - Read the system logs ::  See the output of journalctl (or dmesg, if not systemd)
-5 - Browse files :: Launch Midnight Commander (f installed)
-6 - Analyse disk space :: Select your options in the submenu
-7 - Interactive ping :: Use the built-in command-builder to construct a ping command
-8 - Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
-9 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
+skip
+5 - Read the system logs ::  See the output of journalctl (or dmesg, if not systemd)
+6 - Browse files :: Launch Midnight Commander (f installed)
+7 - Analyse disk space :: Select your options in the submenu
+8 - Interactive ping :: Use the built-in command-builder to construct a ping command
+skip
+10 - Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
+11 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
 _endmenu1
 
 

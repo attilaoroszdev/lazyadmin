@@ -58,21 +58,22 @@ function tab1item3 {
     show_sensors
 }
 
-
-# Tab 1, menu item 4
-function tab1item4 { 
-    show_system_logs
-}
-
+# Tab 1, menu item 4 was skipped
 
 # Tab 1, menu item 5
 function tab1item5 { 
-    run_if_installed mc
+    show_system_logs
 }
 
 
 # Tab 1, menu item 6
 function tab1item6 { 
+    run_if_installed mc
+}
+
+
+# Tab 1, menu item 7
+function tab1item7 { 
     #To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
     enter_submenu $@ "Analyse disk space"
 }
@@ -101,54 +102,54 @@ function tab1item6 {
 # Third tab, fourth menuitem, second submenuitem: subfunct231
 # and so on
 
-# Tab 1, menu item 6, submenu item 1
-function tab1item6sub1 {     
+# Tab 1, menu item 7, submenu item 1
+function tab1item7sub1 {     
     run_if_installed ncdu /
 }
 
 
-# Tab 1, menu item 6, submenu item 2 was skipped
+# Tab 1, menu item 7, submenu item 2 was skipped
 
-# Tab 1, menu item 6, submenu item 3
-function tab1item6sub3 {     
+# Tab 1, menu item 7, submenu item 3
+function tab1item7sub3 {     
     run_if_installed ncdu ~
 }
 
 
-# Tab 1, menu item 6, submenu item 4
-function tab1item6sub4 {     
+# Tab 1, menu item 7, submenu item 4
+function tab1item7sub4 {     
     run_if_installed ncdu ~/Downloads
 }
 
 
-# Tab 1, menu item 6, submenu item 5
-function tab1item6sub5 {     
+# Tab 1, menu item 7, submenu item 5
+function tab1item7sub5 {     
     run_if_installed ncdu ~/Documents
 }
 
 
-# Tab 1, menu item 6, submenu item 6
-function tab1item6sub6 {     
+# Tab 1, menu item 7, submenu item 6
+function tab1item7sub6 {     
     run_if_installed ncdu ~/.cache
 }
 
 
-# Tab 1, menu item 6, submenu item 7 was skipped
+# Tab 1, menu item 7, submenu item 7 was skipped
 
-# Tab 1, menu item 6, submenu item 8
-function tab1item6sub8 {     
+# Tab 1, menu item 7, submenu item 8
+function tab1item7sub8 {     
     run_if_installed ncdu /tmp
 }
 
 
-# Tab 1, menu item 6, submenu item 9
-function tab1item6sub9 {     
+# Tab 1, menu item 7, submenu item 9
+function tab1item7sub9 {     
     run_if_installed ncdu /var/log
 }
 
 
-# Tab 1, menu item 7
-function tab1item7 { 
+# Tab 1, menu item 8
+function tab1item8 { 
     # Here is an example of how to invoke the flag setting submenu
     #
     # Call command_builder_function with the following arguments:
@@ -186,14 +187,16 @@ function tab1item7 {
 }
 
 
-# Tab 1, menu item 8
-function tab1item8 { 
+# Tab 1, menu item 9 was skipepd
+
+# Tab 1, menu item 10
+function tab1item10 { 
     drop_to_shell
 }
 
 
-# Tab 1, menu item 9
-function tab1item9 { 
+# Tab 1, menu item 11
+function tab1item11 { 
     drop_to_root_shell
 }
 
