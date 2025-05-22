@@ -29,14 +29,17 @@ MAIN_TITLE="Lazy Admin - v3.0alpha"
 RIGHT_PANEL=true
 
 # How many elements should the main menu hold
-# Minumum number of menu items: 5
-# Minumum number of menu items: 9
-MAX_MENU_ITEMS=9
+# Minumum number of menu items: 5, if right panel is enabled, 1 if not
+# Maxiumum number of menu items: 99
+MAX_MENU_ITEMS=16
 
 # How many elements should sub-menus hold
-# Minumum number of sub-menu items: 5
-# Minumum number of sub-menu items: 9
-MAX_SUBMENU_ITEMS=9
+# Minumum number of menu items: 5, if right panel is enabled, 1 if not
+# Maxiumum number of sub-menu items: 99
+MAX_SUBMENU_ITEMS=21
+
+# How many options can you pass to the command_builder_function
+MAX_COMMAND_BUILDER_ARGS=19
 
 # Change the size of the right panel
 RIGHT_PANEL_WIDTH=27

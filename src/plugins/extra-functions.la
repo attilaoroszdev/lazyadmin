@@ -29,6 +29,7 @@
 # Run some function or script or command or anythign as root,
 # either with or without sudo
 run_as_root() { 
+    clear
     if [[ "$(whoami)" != "root" ]]; then
 
         if [[ -z $preferred_root_command ]]; then

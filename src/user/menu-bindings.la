@@ -198,6 +198,69 @@ function tab1item9 {
 }
 
 
+
+
+# Tab 3, menu item 1
+function tab1item10 { 
+    clear
+    echo
+    echo "Hello world!"
+    echo
+    return_to_menu
+}
+
+
+# Tab 3, menu item 2
+function tab1item11 { 
+    clear
+    echo
+    echo "x == 42"
+    echo
+    return_to_menu
+}
+
+
+# Tab 3, menu item 3
+function tab1item12 { 
+    clear
+    echo
+    echo "The best way to secure yuor Window$ powered laptop is to"
+    echo "install Linux on it (or at least a BSD)"
+    echo
+    return_to_menu
+}
+
+
+# Tab 3, menu item 4
+function tab1item14 { 
+    clear
+    echo
+    echo "This is a very important script."
+    echo
+    return_to_menu
+}
+
+
+# Tab 3, menu item 5
+function tab1item15 { 
+    run_if_installed robotfindskitten
+}
+
+
+# Tab 3, menu item 6
+function tab1item16 { 
+    example_function
+}
+
+
+
+
+
+
+
+
+
+
 # Tab 2, menu item 1
 function tab2item1 { 
     update_system
