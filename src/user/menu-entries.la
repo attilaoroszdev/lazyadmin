@@ -76,13 +76,6 @@ _menu1
 7 - Interactive ping :: Use the built-in command-builder to construct a ping command
 8 - Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
 9 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
-10 - Complex script :: Run a very-very complex script
-11- Solve for x :: Solve the mysteries of the universe (all of them) for x
-12 - Make Window$ secure :: How to instantly secure any computer running Window$
-skip
-14 - Important script :: Run a very important script
-15 - Play robotfindskitten :: You don have robotfindskitten installed, right? Right?
-16 - Pointless menuitem :: This does not do anything, only pollutes the environment
 _endmenu1
 
 
@@ -97,13 +90,6 @@ skip
 skip
 8 - Analyse tmp directory :: Run ncdu /tmp
 9 - Analyse logs :: Run ncdu /var/log
-10 - Complex script :: Run a very-very complex script
-11- Solve for x :: Solve the mysteries of the universe (all of them) for x
-12 - Make Window$ secure :: How to instantly secure any computer running Window$
-13 - Important script :: Run a very important script
-14 - Play robotfindskitten :: You don have robotfindskitten installed, right? Right?
-15 - Pointless menuitem :: This does not do anything, only pollutes the environment
-16 - Pointless menuitem :: This does not do anything, only pollutes the environment
 _endsubmenu16
 
 
