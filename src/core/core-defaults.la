@@ -31,9 +31,13 @@ MAIN_HEADER_HEIGHT=4
 HELP_SUB_MENU_HEIGHT=8
 SUB_HEADER_HEIGHT=2
 ROOT_TITLE=" -- ROOT Shell"
+MIN_MENU_HEIGHT=8
+MIN_MENU_HEIGHT_SINGLE_PANEL=4
+MIN_TERMINAL_HEIGHT=14
+MIN_TERM_HEIGHT_FOR_R_PANEL=18
 
 menu_file="$USER_DIR/menu-entries.la"
-alt_menu=false # This is not yet implemented, do not change
+alt_menu=false # This is not yet fully implemented, and quite frankly, I forgot what it was meant to be``
 submenu=false 
 sub_flags_menu=false
 help_submenu=false
