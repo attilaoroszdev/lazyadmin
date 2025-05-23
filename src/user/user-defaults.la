@@ -26,7 +26,7 @@
 MAIN_TITLE="Lazy Admin - v3.0alpha"
 
 # Switch right panel on or off
-RIGHT_PANEL=true
+right_panel=true
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not

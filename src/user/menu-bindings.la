@@ -22,24 +22,26 @@
 
 function_style="simple"
 
-# fucntionstyle="simple" (default)
-# Main menu functions in the format of tab$item$
+# Main menu functions in the "simple" format are: tab#item#
 # First tab is 1, first item is 1
-# E.g.
-# Fist tab first item is: tab1item1
-# Second tab third menuitem is: tab2item3
 #
-# Backward compat:
-# function_style="old"
-# Main menu functions in the format of funct#tab#menuitem
-# First tab is 0, first item is 0
-# E.g.
-# Fist tab first item is: funct00
-# Second tab tird menuitem is: funct12
-
+# For example:
+# 1st tab 1st item is: tab1item1
+# 2nd tab 3rd  menuitem is: tab2item3
+#
+# For submenus, you need to specify the parent menu item, and the submenu item
+# number. 
+#
+# E.g. if 2nd tab 4th item has a submenu, the submenu items will be like:
+# 1st submenu item: tab2item4sub1
+# 2nd submenu item: tab2item4sub2
+# 3rd submenu item: tab2item4sub3
+# ...etc.
+#
 # You could implement your functions right here, but it is probably
-# easier and less messy to put them into suer-functions.la and call them from there.
-# That will also make it easier to reuse or reorganise in the menu.
+# easier and less messy to put them into user-functions.la and just call funcion
+# names form here. That will also make it easier to reuse or reorganise in the menu.
+
 
 # Tab 1, menu item 1
 function tab1item1 { 
