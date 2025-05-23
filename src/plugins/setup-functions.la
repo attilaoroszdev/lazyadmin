@@ -25,149 +25,127 @@
 
 check_editor() { 
     clear
-    has_nano=false
-    has_micro=false
-    has_vi=false
-    has_vim=false
-    has_emacs=false
 
     if [[ $DEFAULT_EDITOR == "not set" ]]; then
-
-        if hash nano 2>/dev/null; then
-            has_nano=true
-        fi
-
-        if hash micro 2>/dev/null; then
-            has_micro=true
-        fi
-
-        if hash vi 2>/dev/null; then
-            has_vi=true
-        fi
-
-        if hash vim 2>/dev/null; then
-            has_vim=true
-        fi
-
-        if hash emacs 2>/dev/null; then
-            has_emacs=true
-        fi
-
-        echo "Interactive setup will be implemented in a later version of Lazy Admin."
-        echo "Until then, you can just access the config files from here."
+        echo "Interactive setup might not might not be implemented in a later version."
+        echo "Until then, you can easily access the config files from here."
         echo
         echo "First you'll need to select your preferred editor."
-        echo "You can change it later by editing defaults"
+        echo "You can change it later by editing user-defaults.la (see configuration guide)"
+        echo
+        echo "These are ome of the available text editors on this system."
         echo "Pick a letter:"
         echo
+
         while true; do
-        if $has_nano; then
-            echo "n - nano"
-        fi
 
-        if $has_micro; then
-            echo "m - micro"
-        fi
+            if hash nano 2>/dev/null; then
+                echo "n - nano"
+            fi
 
-        if $has_vi; then
-            echo "v - vi"
-        fi
+            if hash micro 2>/dev/null; then
+                echo "m - micro"
+            fi
 
-        if $has_vim; then
-            echo "V - vim"
-        fi
+            if hash vi 2>/dev/null; then
+                echo "v - vi"
+            fi
 
-        if $has_emacs; then
-            echo "e - emacs"
-            echo "E - emacs --no-window"
-        fi
+            if hash vim 2>/dev/null; then
+                echo "V - vim"
+            fi
 
+            if hash emacs 2>/dev/null; then
+                echo "e - emacs"
+                echo "E - emacs --no-window"
+            fi
 
+            echo "c - Custom editor or command"
+            echo "x - Cancel"
+            tput cnorm
+            read -p "> " -n 1 editor_preference
+            tput civis
 
-        echo "c - Custom editor or command"
-        echo "x - Cancel"
-        tput cnorm
-        read -p "> " -n 1 editor_preference
-        tput civis
+            valid_editor=false
+            case $editor_preference in
+                'c')
+                    echo
+                    echo "Please type in your preferred editor command, with any parameters applicable BEFORE the editable filename"
+                    echo
+                    tput cnorm
+                    read -p "> " editor_preference
+                    tput civis
 
-        valid_editor=false
-        case $editor_preference in
-            'c')
-                echo
-                echo "Please type in your preferred editor command, with any parameters applicable BEFORE the editable filename"
-                echo
-                tput cnorm
-                read -p "> " editor_preference
-                tput civis
+                    function_exists $editor_preference
 
-                function_exists $editor_preference
-                if [[ $? == 0 ]]; then
+                    if [[ $? == 0 ]]; then
+                        valid_editor=true
+                        sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                        break
+                    else
+                        clear
+                        echo
+                        echo "That package does not seem to be installed. Try again:"
+                        echo
+                    fi
+                    
+                    ;;
+                'n')
+                    editor_preference="nano"
                     valid_editor=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
-                else
+                    ;;
+                'm')
+                    editor_preference="micro"
+                    valid_editor=true
+                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    break
+                    ;;
+                'v')
+                    editor_preference="vi"
+                    valid_editor=true
+                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    break
+                    ;;
+                'V')
+                    editor_preference="vim"
+                    valid_editor=true
+                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    break
+                    ;;
+                'e')
+                    editor_preference="emacs"
+                    valid_editor=true
+                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    break
+                    ;;
+                'E')
+                    editor_preference="emacs --no-window"
+                    valid_editor=true
+                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    break
+                    ;;
+                'x' | 'X')
+                    echo
+                    echo -e "\nOK then, bye..."
+                    echo
+                    return_to_menu
+                    break
+                    ;;
+                *) 
                     clear
+                    echo 
+                    echo "That was not an option. Try again."
                     echo
-                    echo "That package does not seem to be installed. Try again:"
-                    echo
-                fi
-                ;;
-            'n')
-                editor_preference="nano"
-                valid_editor=true
-                sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
-                break
-                ;;
-            'm')
-                editor_preference="micro"
-                valid_editor=true
-                sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
-                break
-                ;;
-            'v')
-                editor_preference="vi"
-                valid_editor=true
-                sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
-                break
-                ;;
-            'V')
-                editor_preference="vim"
-                valid_editor=true
-                sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
-                break
-                ;;
-            'e')
-                editor_preference="emacs"
-                valid_editor=true
-                sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
-                break
-                ;;
-            'E')
-                editor_preference="emacs --no-window"
-                valid_editor=true
-                sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
-                break
-                ;;
-            'x' | 'X')
-                echo
-                echo -e "\nOK then, bye..."
-                echo
-                return_to_menu
-                break
-                ;;
-            *) 
-                clear
-                echo 
-                echo "That was not an option. Try again."
-                echo
-                ;;
+                    ;;
             esac
 
         done
+
         if $valid_editor; then
             DEFAULT_EDITOR=$editor_preference
         fi
-
     fi
 }
 

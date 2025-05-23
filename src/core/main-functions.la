@@ -28,6 +28,22 @@
 # submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
 # menu_height=0
 
+menus_force_hidden=false
+tabs_dont_fit=false
+all_tabs_length=0
+right_panel_height_warning=false
+right_panel_width_warning=false
+height_warning=false
+normal_menu_height=0
+submenu_height=0
+menu_height=0
+show_right_panel=$right_panel
+max_menu_height=0
+
+# TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
+# TODO, all global variables should be UPPER_CASE, 
+# TODO Make constants `readonly`
+# TODO make local variables really local with the `local` keyword
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
@@ -35,74 +51,106 @@ set_menu_sizes() {
     # echo "Terminal height: $terminal_height"
     # sleep 1
 
-    if [[ $terminal_height -lt $MIN_TERMINAL_HEIGHT ]]; then
-        clear
-        echo
-        echo "Terminals shorter than $MIN_TERMINAL_HEIGHT characters are not currently supported."
-        echo "(This one seems to be only $terminal_height characters tall"
-        echo
-        echo "Exiting..."
-        echo
-        tput cnorm
-        exit 65
-    fi
-
-    right_panel_warning=false
-    size_warning=false
-    normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
-    submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
-    menu_height=0
-
-    show_right_panel=$RIGHT_PANEL
-
-    if [[ $terminal_height -lt $MIN_TERM_HEIGHT_FOR_R_PANEL ]]; then
-        show_right_panel=false
-        if $RIGHT_PANEL; then
-            right_panel_warning=true
-        fi
-    fi
-
-    max_menu_height=$(($terminal_height - 10))
-
-    # Got to make sure we fit inside whatever size the terminal currently is
-    if [[ $normal_menu_height -gt $max_menu_height ]]; then
-        normal_menu_height=$max_menu_height
-        size_warning=true
+    if [[ $terminal_height -lt $MIN_TERMINAL_HEIGHT ]] || [[ $terminal_width -lt $MIN_TERMINAL_WIDTH ]]; then
+        menus_force_hidden=true
+        show_force_hide_error
     else
-        size_warning=false
-    fi
+        menus_force_hidden=false
+        right_panel_height_warning=false
+        right_panel_width_warning=false
+        height_warning=false
+        normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
+        submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
+        menu_height=0
 
-    if [[ $submenu_height -gt $(($max_menu_height + 2)) ]]; then
-        submenu_height=$(($max_menu_height + 2))
-    fi
+        show_right_panel=$right_panel
 
-    if $show_right_panel; then
+        if [[ $terminal_height -lt $MIN_TERM_HEIGHT_FOR_R_PANEL ]]; then
+            show_right_panel=false
+            if $right_panel; then
+                right_panel_height_warning=true
+            fi
+        fi
+
+        if [[ $terminal_width -lt $(($RIGHT_PANEL_WIDTH * 2)) ]]; then
+            show_right_panel=false
+            if $right_panel; then
+                right_panel_width_warning=true
+            fi
+        fi
+
+        if ! $show_right_panel $$ [[ $active_panel -eq "right" ]]; then
+            active_panel="left"
+        fi
+
+        max_menu_height=$(($terminal_height - 10))
+
+        # Got to make sure we fit inside whatever size the terminal currently is
+        if [[ $normal_menu_height -gt $max_menu_height ]]; then
+            normal_menu_height=$max_menu_height
+            height_warning=true
+        else
+            height_warning=false
+        fi
+
+        if [[ $submenu_height -gt $(($max_menu_height + 2)) ]]; then
+            submenu_height=$(($max_menu_height + 2))
+        fi
+
+        if $show_right_panel; then
+            
+            if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT ]]; then
+                normal_menu_height=$MIN_MENU_HEIGHT
+            fi
+
+            if [[ $submenu_height -lt $MIN_MENU_HEIGHT ]]; then
+                submenu_height=$MIN_MENU_HEIGHT
+            fi
+
+        else
+            
+            if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
+                normal_menu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
+            fi
+
+            if [[ $submenu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
+                submenu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
+            fi
+
+        fi
         
-        if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT ]]; then
-            normal_menu_height=$MIN_MENU_HEIGHT
-        fi
-
-        if [[ $submenu_height -lt $MIN_MENU_HEIGHT ]]; then
-            submenu_height=$MIN_MENU_HEIGHT
-        fi
-
-    else
-        
-        if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
-            normal_menu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
-        fi
-
-        if [[ $submenu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
-            submenu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
-        fi
-
+        $menu_height=$normal_menu_height
     fi
-    
-    $menu_height=$normal_menu_height
 
 }
 
-check_for_size_changes(){
+show_force_hide_error() {
+    clear
+        echo
+        echo -n "Cannot display menus on this terminal. If you are in an emulator, you need to resize the window"
+        if ! $AUTO_REFLOW; then
+            echo -n ", and press 'f' to re-draw the menu; "
+        else
+            echo -n "; "
+        fi
+        
+        echo -n "or press 'q' to quit."
+        echo -e '\n'
+
+        if [[ $terminal_height -lt $MIN_TERMINAL_HEIGHT ]]; then
+            echo "Minimum supported height: $MIN_TERMINAL_HEIGHT characters."
+            echo -e "Current height: \e[01m\e[091m$terminal_height\e[00m characters"
+            echo
+        fi
+        if [[ $terminal_width -lt $MIN_TERMINAL_WIDTH ]]; then
+            echo "Minimum supported width: $MIN_TERMINAL_WIDTH characters."
+            echo -e "Current width: \e[01m\e[091m$terminal_width\e[00m characters"
+            echo
+        fi
+}
+
+
+check_for_size_changes() {
     if [[ $terminal_height -ne $(tput lines) ]] || [[ $terminal_width -ne $(tput cols) ]]; then
         reflow_menu
         return 1
@@ -182,13 +230,13 @@ read_menu_items() {
     
     menu_length=${#menu_entry[@]}
 
-    if [[ $menu_length -gt $max_menu_length ]]; then
-        for ((i = $max_menu_length; i < $menu_length; i++)); do
-            unset "menu_entry[$i]"
-        done
-    fi
+    # if [[ $menu_length -gt $max_menu_length ]]; then
+    #     for ((i = $max_menu_length; i < $menu_length; i++)); do
+    #         unset "menu_entry[$i]"
+    #     done
+    # fi
 
-    menu_length=${#menu_entry[@]}
+    # menu_length=${#menu_entry[@]}
 }
 
 
@@ -199,22 +247,30 @@ set_command_builder_items() {
 
     for i in "$@"; do
  
-        if [[ $array_counter -gt $array_offset ]] && [[ $array_counter -le $(($max_menu_height -5)) ]]; then
-            let current_flag_item=$array_counter-2
-            menu_entry[current_flag_item - 1]="$current_flag_item - Set arg. $i"
-        else
-            break
+        if [[ $array_counter -gt $array_offset ]]; then
+            if [[ $array_counter -ge $(($max_menu_height - 5)) ]]; then
+                break
+            fi
+
+            local current_flag_item=$(($array_counter-2))
+            menu_entry[$current_flag_item - 1]="$current_flag_item - Set arg. $i"
+        
         fi
 
         ((array_counter++))
 
     done
+    
+    local last_entry=""
+    
+    if [[ -n $menu_entry ]]; then
+        last_entry=${menu_entry[${#menu_entry[@]} - 1]}
+    fi
 
     #Check if entries have already been written, by checking last element
-    last_entry=${menu_entry[${#menu_entry[@]} - 1]}
-   
     if [[ "$last_entry" != "x - Delete set flags" ]]; then
-        menu_entry+=("m - Manually enter flags ")
+        menu_entry+=("m - Enter arguments manually")
+        menu_entry+=("o - Enter flag-options (no space)")
         menu_entry+=("c - Commit with flags")
         menu_entry+=("x - Delete set flags")
     fi
@@ -278,8 +334,8 @@ read_descriptor() {
 
         if [[ "$active_panel" == "right" ]]; then
             for ((n = 0; n < $menu_length; n++)); do
-                eval $(echo ${menu_entry[n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
-                menu_entry[n]="$(echo $V1)"
+                eval $(echo ${menu_entry[$n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
+                menu_entry[$n]="$(echo $V1)"
             done
 
             OLDIFS="$IFS"
@@ -294,9 +350,9 @@ read_descriptor() {
             IFS="$OLDIFS"
         else
             for ((n = 0; n < $menu_length; n++)); do
-                eval $(echo ${menu_entry[n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
-                menu_entry[n]="$(echo $V1)"
-                menu_desc_entry[n]="$(echo $V2)"
+                eval $(echo ${menu_entry[$n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
+                menu_entry[$n]="$(echo $V1)"
+                menu_desc_entry[$n]="$(echo $V2)"
             done
         fi
     fi
@@ -354,76 +410,90 @@ read_help_rightpanel_items() {
 #Display the menu tabs
 write_tab_items() {  
     # Modify top line first, draw connectors
+    tabs_dont_fit=false
+    local current_tabs_length=0
+    displayed_tab_entries=1
+
+    all_tabs_length=0 #TODO:Global
+    for ((n = 0; n <= $tab_length; n++)); do
+        all_tabs_length=$(($all_tabs_length + ${#tab_entry[$n]} + 3))
+    done
+    ((all_tabs_length++))
+
+    # Make sure tabs will fit
+    for ((n = 0; n <= $tab_length; n++)); do
+        current_tabs_length=$(($current_tabs_length + ${#tab_entry[$n]} + 3))
+        if [[ $current_tabs_length -ge $terminal_width ]]; then
+            tabs_dont_fit=true
+            ((displayed_tab_entries--))
+             if [[ $tab_pos -ge $displayed_tab_entries ]]; then
+                select_tab $displayed_tab_entries
+                reflow_menu
+            fi
+            break
+        fi
+        ((displayed_tab_entries++))
+    done
+
+
+    # Display joints if on, but not for the last item
     if $DISPLAY_LINE_CONNECTORS; then
         horizontal_connector_position=0
         tput cup $((header_height - 2)) $horizontal_connector_position
 
-        for ((n = 0; n < $tab_length; n++)); do
-
-            if [[ n -eq $tab_pos ]]; then
-                horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[$tab_pos]} + 3))
-                tput cup $((header_height - 2)) $horizontal_connector_position
-                echo -n "┯"
-            else
-                horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[n]} + 3))
-                tput cup $((header_height - 2)) $horizontal_connector_position
-                echo -n "┯"
-            fi
-
+        for ((n = 0; n < $(($displayed_tab_entries - 2)); n++)); do
+            horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[$n]} + 3))
+            tput cup $((header_height - 2)) $horizontal_connector_position
+            echo -n "┯"
         done
     fi
 
     # Then write out the tab items, with separators
     tput cup $((header_height - 1)) 1
-    for ((n = 0; n <= $tab_length; n++)); do
+    for ((n = 0; n < $displayed_tab_entries; n++)); do
        
-        if [[ n -eq $tab_pos ]]; then
-            echo -n -e "\e[00;30;47m ${tab_entry[$tab_pos]} \e[00m"
-            
-            # Do not write separator after last item
-            if [[ n -lt $tab_length ]]; then
-                echo -n "│"
-            fi
-
+        if [[ $n -eq $tab_pos ]]; then
+            echo -n -e "\e[00;30;47m ${tab_entry[$n]} \e[00m"
         else
-            echo -n " ${tab_entry[n]} "
-
-            # Do not write separator after last item
-            if [[ n -lt $tab_length ]]; then
-                echo -n "│"
-            fi       
+            echo -n " ${tab_entry[$n]} "
         fi
+
+        # Do not write separator after last item
+        if [[ $n -lt $tab_length ]]; then
+            echo -n "│"
+        fi       
+    
     done
 
     if $DISPLAY_LINE_CONNECTORS; then
-        # Then draw connectors ont he bottom line
+        # Then draw connectors ont he bottom line, but not for the last item
         horizontal_connector_position=0
         tput cup $((header_height)) $horizontal_connector_position
 
-        for ((n = 0; n < $tab_length; n++)); do
+        for ((n = 0; n < $(($displayed_tab_entries - 2)); n++)); do
+            horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[$n]} + 3))
+            tput cup $((header_height)) $horizontal_connector_position
 
-            if [[ n -eq $tab_pos ]]; then
-                horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[$tab_pos]} + 3))
-                tput cup $((header_height)) $horizontal_connector_position
-
-                if $show_right_panel && [[ $horizontal_connector_position == $(($menu_width - $active_right_panel_width)) ]]; then
-                    echo -n "┿"
-                else
-                    echo -n "┷"
-                fi
-
+            if $show_right_panel && [[ $horizontal_connector_position == $(($menu_width - $active_right_panel_width)) ]]; then
+                echo -n "┿"
             else
-                horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[n]} + 3))
-                tput cup $((header_height)) $horizontal_connector_position
-
-                if $show_right_panel && [[ $horizontal_connector_position == $(($menu_width - $active_right_panel_width)) ]]; then
-                    echo -n "┿"
-                else
-                    echo -n "┷"
-                fi
+                echo -n "┷"
             fi
         done
     fi
+
+    if $tabs_dont_fit; then
+        tput cup $((header_height - 2)) $(($terminal_width-1)) 
+        # echo -e "\e[091mm┓\e[0m"
+        echo -e "\e[091m━\e[0m"
+        tput cup $((header_height - 1)) $(($terminal_width-1))
+        echo -e "\e[091m┋\e[0m"
+        tput cup $((header_height)) $(($terminal_width-1))
+        # echo -e "\e[01m\e[091m┛\e[00m"
+        echo -e "\e[091m━\e[0m"
+    fi
+
+    check_for_warnings
 }
 
 
@@ -432,21 +502,39 @@ write_menu_items() {
     # Draw the menu items
     # If the position is right, it changes the background.
     # As the variable does not get modified, this needs no resetting
-    for ((n = 0; n < $menu_length; n++)); do
 
-        if [[ "${menu_entry[n]}" == "skip" ]]; then
-            ((n++))
-        fi
+    max_entry_lenght=$(($left_panel_width - 4))
 
-        if [[ n -eq $menu_pos ]] && [[ "$active_panel" == "left" ]]; then
-            tput cup $((n + $header_height + 2)) 2
-            echo -e "\e[00;30;47m${menu_entry[$menu_pos]}\e[00m"
-        else
-            tput cup $((n + $header_height + 2)) 2
-            echo "${menu_entry[n]}"
+    for ((n = 0; n < $max_menu_length; n++)); do
+
+        if [[ ! "${menu_entry[$n]}" == "skip" ]]; then
+         
+            menu_item_line=$(truncate_text "${menu_entry[$n]}" $max_entry_lenght)
+
+            tput cup $(($n + $header_height + 2)) 2
+
+            if [[ $n -eq $menu_pos ]] && [[ "$active_panel" == "left" ]]; then
+                echo -e "\e[00;30;47m$menu_item_line\e[00m"
+            else
+                echo "$menu_item_line"
+            fi
         fi
 
     done
+
+    tput cup $(($max_menu_length + $header_height + 3)) 1
+
+    # If the item list was truncated, display a visual clue at the bottom
+    if [[ $menu_length -gt $max_menu_length ]]; then
+        for ((i = 0; i < $(($left_panel_width-2)); i++)); do
+            echo -en "\e[01m\e[091m┅\e[00m"
+        done
+    else
+        # Reset normal line, otherwise
+        for ((i = 0; i < $(($left_panel_width-2)); i++)); do
+            echo -n "━"
+        done
+    fi
 
     cursor_pos=$(tput lines)
     tput cup $cursor_pos 0
@@ -455,24 +543,29 @@ write_menu_items() {
 
 # This is hardcoded for now.
 # Might gonna get its own resource file in a future release
+# TODO Move these into a help-entries file, or something
 write_help_menu_items() { 
     menu_length=3
     help_menu_entry[0]="1 - Lazy Admin usage guide"
     help_menu_entry[1]="2 - Configuration and scripting guide"
     help_menu_entry[2]="3 - Command builder usage guide"
 
+    max_entry_lenght=$(($left_panel_width - 4))
+
     for ((n = 0; n < $menu_length; n++)); do
-        
-        if [[ "${help_menu_entry[n]}" == "skip" ]]; then
+                
+        if [[ "${help_menu_entry[$n]}" == "skip" ]]; then
             ((n++))
         fi
 
-        if [[ n -eq $menu_pos ]] && [[ "$active_panel" == "left" ]]; then
-            tput cup $((n + $header_height + 2)) 2
-            echo -e "\e[00;30;47m${help_menu_entry[$menu_pos]}\e[00m"
+        help_item_line=$(truncate_text "${help_menu_entry[$n]}" $max_entry_lenght)
+
+        tput cup $((n + $header_height + 2)) 2
+
+        if [[ $n -eq $menu_pos ]] && [[ "$active_panel" == "left" ]]; then
+            echo -e "\e[00;30;47m$help_item_line\e[00m"
         else
-            tput cup $((n + $header_height + 2)) 2
-            echo "${help_menu_entry[n]}"
+            echo "$help_item_line"
         fi
 
     done
@@ -483,16 +576,16 @@ write_help_menu_items() {
 write_rightpanel_items() { 
     for ((n = 0; n < $right_panel_length; n++)); do
        
-        if [[ "${right_panel_entry[n]}" == "skip" ]]; then
+        if [[ "${right_panel_entry[$n]}" == "skip" ]]; then
             ((n++))
         fi
 
-        if [[ n -eq $menu_pos ]] && [[ "$active_panel" == "right" ]]; then
+        if [[ $n -eq $menu_pos ]] && [[ "$active_panel" == "right" ]]; then
             tput cup $((n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
             echo -e "\e[00;30;47m${right_panel_entry[$menu_pos]}\e[00m"
         else
             tput cup $((n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
-            echo "${right_panel_entry[n]}"
+            echo "${right_panel_entry[$n]}"
         fi
 
     done
@@ -505,6 +598,13 @@ write_rightpanel_items() {
 #Draws a line
 draw_line() { 
     #draw line with the length of the screen/window width
+
+    # line_lenght=$menu_width
+
+    # if [[ -n $1 ]] && [[ $1 -gt 0 ]] then
+    #     line_lenght=$1
+    # fi
+
     for ((i = 0; i < $menu_width; i++)); do
         echo -n "━"
     done
@@ -520,13 +620,35 @@ clear_menu() {
     done
 }
 
+# Usage clear_line $vertical_position $horizontal_positon $lenght
+clear_line() {
+
+    if [[ $# -lt 3 ]]; then
+        return 65
+    fi
+
+    start_vertical=$1
+    start_horizontal=$2
+    clear_length=$3
+
+    tput cup $start_vertical $start_horizontal
+
+    for ((i = 0; i < $clear_length; i++)); do
+        echo -n " "
+    done
+}
 
 #Draws the outline of the menu, with spaces left out for inclusion of items
-draw_menu() { 
+draw_menu() {
+    if $menus_force_hidden; then
+        show_force_hide_error
+        return 1
+    fi
+    
     tput civis
 
     if $sub_flags_menu; then
-        menu_height=$submenu_height
+        menu_height=$(($submenu_height-3))
         header_height=$SUB_HEADER_HEIGHT
         title=$sub_flags_menutitle
     else
@@ -562,38 +684,28 @@ draw_menu() {
     fi
 
     left_panel_width=$(($menu_width - $active_right_panel_width))
+    
     #clear menu area. Should be done each time tabs or submenus are changed
     clear_menu
-    #draw title
     cursor_pos=0
     tput cup $cursor_pos 0
     draw_line
     ((cursor_pos++))
-    tput cup $cursor_pos 0
-    #echo "│       "
     tput cup $cursor_pos $((menu_width / 2 - (${#title} / 2)))
 
-    #title must be set by function for submenus...
     if [[ "$root" != "true" ]]; then
         echo -e "\e[01m$title\e[00m"
     else
-        echo -e "\e[01m\e[01;31m$title\e[00m"
+        echo -e "\e[01m\e[091m$title\e[00m"
     fi
 
-    #tput cup $cursor_pos $menu_width
-    #echo "│"
     ((cursor_pos++))
     draw_line
 
     #Draw top and bottom border of menu tabs
     #Skip this for submenus
     if ! $submenu; then
-        ((cursor_pos++))
-        tput cup $cursor_pos 0
-        #echo -n "│"
-        tput cup $cursor_pos $menu_width
-        #echo "│"
-        ((cursor_pos++))
+        ((cursor_pos+=2))
         tput cup $cursor_pos 0
         draw_line
     fi
@@ -633,30 +745,73 @@ draw_menu() {
 }
 
 check_for_warnings() {
-    if $size_warning; then
-        echo -e "\e[01m\e[01;31mSome items migh be trunceted. (Need min.: "$(($MAX_MENU_ITEMS + 13))" chars.)\e[00m"
+    warning_position=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT + 2))
+    clear_line $warning_position 0 $terminal_width
+    clear_line $(($warning_position + 1)) 0 $terminal_width
+    msg=""
+    if $height_warning || $tabs_dont_fit; then
+        menus_label=""
+        tabs_label=""
+        min_height_msg=""
+        min_width_msg=""
+
+        if $height_warning; then
+            min_height_msg=" Min. H: "$(($MAX_MENU_ITEMS + 13))" ch."
+            menus_label="Menus "
+        fi
+
+        if $tabs_dont_fit; then
+            min_width_msg=" Min. W: "$all_tabs_length" ch"
+            if $height_warning; then
+                tabs_label="and tabs "
+            else
+                tabs_label="Tabs "
+            fi
+        fi
+
+        msg="$menus_label$tabs_label""won't fit.$min_height_msg$min_width_msg"
+        warning_msg=$(truncate_text "$msg" $(($terminal_width-4)))
+        tput cup $warning_position 0
+        echo -e "\e[01m\e[091m$warning_msg\e[00m"
+        ((warning_position++))
+        msg=""    
     fi
-    if $right_panel_warning; then
-        echo -e "\e[01m\e[01;31mShort terminal: Right-panel and cmd-builder disabled\e[00m"
+
+    if $right_panel_height_warning; then
+        msg="Right-panel and cmd-builder disabled. Min. H: $MIN_TERM_HEIGHT_FOR_R_PANEL ch."
+    elif $right_panel_width_warning; then
+        msg="Right-panel disabled. Min. W: "$(($RIGHT_PANEL_WIDTH * 2))" ch."
     fi
+
+    if [[ -n "$msg" ]]; then
+        warning_msg=$(truncate_text "$msg" $(($terminal_width-4)))
+        tput cup $warning_position 0
+        echo -e "\e[01m\e[091m$warning_msg\e[00m"
+    fi
+
+}
+
+truncate_text(){
+    text=$1
+    max_lenght=$2
+
+    if [[ ${#text} -gt $max_lenght ]]; then
+        text="${text:0:$(($max_lenght - 3))}..."
+    fi
+
+    echo "$text"
 }
 
 
 # Simply write a one line descriptor, as read from the menu file
 write_descriptor() { 
-    # if [[ $menu_height -lt 8 ]]; then
-    #     menu_height=8
-    # fi
 
-    # if [[ $menu_height -gt 12 ]]; then
-    #     menu_height=12
-    # fi
-
+    descriptor_line=$(truncate_text "${menu_desc_entry[$menu_pos]}" $(($terminal_width-4)))
     cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
     tput cup $cursor_pos $menu_width
     echo -e "\033[1K"
     tput cup $cursor_pos 2
-    echo "${menu_desc_entry[$menu_pos]}"
+    echo "$descriptor_line"
 }
 
 #Simply write a one line descriptor, as read from the menu file
@@ -664,7 +819,10 @@ write_help_descriptor() {
     help_menu_desc_entry[0]="Basic setup and usage guide to Lazy Admin"
     help_menu_desc_entry[1]="In-depth configuration guide"
     help_menu_desc_entry[2]="How to use the command-builder submenu"
+    
     cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
+    help_descriptor_line=$(truncate_text "${help_menu_desc_entry[$menu_pos]}" $(($terminal_width-4)))
+
     tput cup $cursor_pos $menu_width
     echo -e "\033[1K"
     tput cup $cursor_pos 2
@@ -672,7 +830,7 @@ write_help_descriptor() {
     if [[ "$active_panel" == "right" ]]; then
         echo "${menu_desc_entry[$menu_pos]}"
     else
-        echo "${help_menu_desc_entry[$menu_pos]}"
+        echo "$help_descriptor_line"
     fi
 }
 
@@ -696,7 +854,11 @@ infinite_menu() {
 
 
 infinite_tab() {     
-    limit=$(($tab_length + 1))
+    limit=$(($displayed_tab_entries - 1))
+
+    if [[ $limit -lt $tab_length ]]; then
+       ((limit++))
+    fi
 
     if [[ $tab_pos -eq $limit ]]; then
         tab_pos=0
@@ -762,28 +924,31 @@ tab_left() {
 
 
 tab_right() {
+   
     if ! $submenu && ! $sub_flags_menu && ! $help_submenu; then
         clear_menu
         menu_pos=0
         ((tab_pos++))
     fi
+
 }
 
 
 select_tab() {
     target_tab=$(($1 - 1))
-
-    if ! $submenu && ! $sub_flags_menu && ! $help_submenu; then
-        if [[ $target_tab -eq 0 || $tab_length -ge $target_tab ]]; then
-            clear_menu
-            menu_pos=0
-            tab_pos=$target_tab
+    if [[ $target_tab -lt $displayed_tab_entries ]]; then
+        if ! $submenu && ! $sub_flags_menu && ! $help_submenu; then
+            if [[ $target_tab -eq 0 || $tab_length -ge $target_tab ]]; then
+                clear_menu
+                menu_pos=0
+                tab_pos=$target_tab
+            fi
         fi
     fi
 }
 
 # TODO: Add this to help files too
-select_tab_by_number(){
+select_tab_by_number() {
     tabkey=""
     read -sN1 -t 1 tabkey
 
@@ -823,6 +988,17 @@ change_panel() {
     esac
 }
 
+toggle_right_panel() {
+    if $right_panel; then
+        right_panel=false
+    else
+        right_panel=true
+    fi
+
+    reflow_menu
+}
+
+
 
 select_menu_item_by_number() {
 
@@ -850,6 +1026,7 @@ select_menu_item_by_number() {
                 ;;
             esac
         fi  
+
     fi
 
     is_valid=1
@@ -951,7 +1128,7 @@ set_highlighted_cmb_arg() {
         functright$menu_pos
     else
         max_length_offset=0
-        max_cmb_height=$(($MAX_COMMAND_BUILDER_ARGS + 2))
+        max_cmb_height=$(($MAX_SUBMENU_ITEMS + 2))
         if [[ $# -gt $max_cmb_height ]]; then
             let lenght_diff=$#-$max_cmb_height
             let max_length_offset=$max_length_offset+$lenght_diff
@@ -965,12 +1142,16 @@ set_highlighted_cmb_arg() {
             set_args=$set_args' '${@:$add_arg:1}
         else
             let manual_flags=$args_to_set+1
-            let commit_flags=$args_to_set+2
-            let delete_flags=$args_to_set+3
+            let option_flags=$args_to_set+2
+            let commit_flags=$args_to_set+3
+            let delete_flags=$args_to_set+4
 
             case $menu_pos in
             $manual_flags)
                 cmb_set_manual_args
+                ;;
+            $option_flags)
+                cmb_set_manual_args "nospace"
                 ;;
             $commit_flags)
                 cmb_commit_with_args
@@ -985,12 +1166,16 @@ set_highlighted_cmb_arg() {
 
 
 cmb_set_manual_args() {
+
+    local space=" "
+    if [[ "$1" -eq "nospace" ]]; then
+        space=""
+    fi
     echo
     tput cnorm
-    echo "Type your arguments here, and press enter "
-    echo
+    echo "Type your parameters here, and press <Enter>"
     read -p "> " line_args
-    set_args=$set_args$line_args
+    set_args=$set_args$space$line_args
     tput civis
     clear
     draw_menu
@@ -1089,16 +1274,16 @@ pick_menu_item() {
         if [[ -n $key ]]; then 
             # TODO: Update User guide and key binding guide with F1-9 and t-# keys for tabs access and TAB key for changing panels
             case $key in
-            $'\e[A' | $'\e0A' | "w" | "W")
+            $'\e[A' | $'\e0A' | "w")
                 move_up
                 ;;
-            $'\e[B' | $'\e0B' | "s" | "S")
+            $'\e[B' | $'\e0B' | "s")
                 move_down
                 ;;
-            $'\e[D' | $'\e0D' | "a" | "A")
+            $'\e[D' | $'\e0D' | "a")
                 tab_left
                 ;;
-            $'\e[C' | $'\e0C' | "d" | "D")
+            $'\e[C' | $'\e0C' | "d")
                 tab_right
                 ;;
             $'\e[11~' | $'\eOP') 
@@ -1137,13 +1322,16 @@ pick_menu_item() {
                 # F9 - Tab 9
                 select_tab 9
                 ;;
-            "t" | "T")
+            "t")
                 select_tab_by_number
                 ;;
-            $'\e[1;5C' | $'\e01;5C' | "r" | "R")
+            "R")
+                toggle_right_panel
+                ;;
+            $'\e[1;5C' | $'\e01;5C' | "r")
                 change_panel "right"
                 ;;
-            $'\e[1;5D' | $'\e01;5D' | "l" | "L")
+            $'\e[1;5D' | $'\e01;5D' | "l")
                 change_panel "left"
                 ;;
             $'\x09')
@@ -1168,21 +1356,21 @@ pick_menu_item() {
                     select_highlighted_menu_item
                 fi
                 ;;
-            "f" | "F") 
+            "f") 
                 reflow_menu
                 ;;
-            "h" | "H")
+            "h")
                 if ! $help_submenu; then
                     display_help
                 fi
                 ;;
-            "k" | "K")
+            "k")
                 display_hotkeys
                 ;;
-            "q" | "Q") #this handles exit function
+            "q") #this handles exit function
                 functright4
                 ;;
-            "b" | "B")
+            "b")
                 if $help_submenu; then
                     back_to_main_menu "read" "reflow"
                 elif $submenu || $sub_flags_menu; then
@@ -1191,25 +1379,25 @@ pick_menu_item() {
 
                 return
                 ;;
-            "e" | "E")
+            "e")
                 if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
                     functsetup0
                     init_menu
                 fi
                 ;;
-            "u" | "U")
+            "u")
                 if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
                     functsetup1
                     init_menu
                 fi
                 ;;
-            "v" | "V")
+            "v")
                 if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
                     functsetup3
                     init_menu
                 fi
                 ;;
-            "m" | "M")
+            "m")
                 if $sub_flags_menu; then
                     cmb_set_manual_args
                 elif ! $submenu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
@@ -1217,12 +1405,17 @@ pick_menu_item() {
                     init_menu
                 fi
                 ;;
-            "c" | "C")
+            "o")
+                if $sub_flags_menu; then
+                    cmb_set_manual_args "nospace"
+                fi
+                ;;
+            "c")
                 if $sub_flags_menu; then
                     cmb_commit_with_args
                 fi
                 ;;
-            "x" | "X")
+            "x")
                 if $sub_flags_menu; then
                     cmb_clear_args
                 fi
@@ -1259,6 +1452,12 @@ pick_menu_item() {
 # -c 5 --whatever_flag -f 8
 #
 # the second menu entry. Selecting it will apply all the flags to the built chain
+
+# TODO: Descriptor is pointless here. Instad, move the active command up in that spot
+# TODO: Fix resizing this menu correctly. Size should be dynamic and it shoudl always expand to the maximum extent of the menu or the ternminal, whichever comes first
+# TODO the visual truncation warning should also appear here on the bottom line
+# ToDo: MOVE THE FIXED ITEMS INTO THE RIGHT PANEL!!!!!!!!! OH YEAH!!!
+
 command_builder_function() { 
     menu_entry=()
     set_args=""
@@ -1302,7 +1501,11 @@ command_builder_function() {
 
         # ~~TODO~~: Got to make sure this does not go ovber the screen limit. 
         # 7 years leter: No, that's the user's problem, terminal emulators can be resized
-        echo "Active command: "$submenu_command $set_args
+        # 1 Week later: Nah, I got it.
+
+        cmd_msg="Active command: $submenu_command $set_args"
+        cmd_msg=$(truncate_text "$cmd_msg" $(($terminal_width-2)))
+        echo "$cmd_msg"
 
         pick_menu_item "$@"
 
@@ -1317,7 +1520,9 @@ command_builder_function() {
 reflow_menu() { 
     clear
     set_menu_sizes
-    init_menu
+    if ! menus_force_hidden; then
+        init_menu
+    fi
 }
 
 
@@ -1393,21 +1598,22 @@ main_menu() {
     
     submenu=false
     sub_flags_menu=false
+    if ! $menus_force_hidden; then
+        read_tab_items
+        read_menu_items
+        read_descriptor
+        infinite_menu
+        infinite_tab
+        write_tab_items
+        write_menu_items
 
-    read_tab_items
-    read_menu_items
-    read_descriptor
-    infinite_menu
-    infinite_tab
-    write_tab_items
-    write_menu_items
+        if $show_right_panel; then
+            write_rightpanel_items
+        fi
 
-    if $show_right_panel; then
-        write_rightpanel_items
+        #Write basic description
+        write_descriptor
     fi
-
-    #Write basic description
-    write_descriptor
     pick_menu_item
 }
 
@@ -1415,42 +1621,42 @@ main_menu() {
 # Same as main menu, only this one invokes a submenu.
 # decide menu type
 submenu() { 
-
-    if [[ $1 != "help" ]]; then
-        submenu=true
-    fi
-   
-    sub_flags_menu=false
-
-    if [[ $1 != "help" ]]; then
-        read_tab_items
-        read_menu_items $1 $2
-    fi
+    if ! $menus_force_hidden; then
+        if [[ $1 != "help" ]]; then
+            submenu=true
+        fi
     
-    read_descriptor $1 $2
-    infinite_menu
+        sub_flags_menu=false
 
-    if [[ $1 != "help" ]]; then
-        write_menu_items
-    else
-        write_help_menu_items
-    fi
+        if [[ $1 != "help" ]]; then
+            read_tab_items
+            read_menu_items $1 $2
+        fi
+        
+        read_descriptor $1 $2
+        infinite_menu
 
-    if $show_right_panel; then
-
-        if [[ $1 == "help" ]]; then
-            read_help_rightpanel_items
+        if [[ $1 != "help" ]]; then
+            write_menu_items
+        else
+            write_help_menu_items
         fi
 
-        write_rightpanel_items
-    fi
+        if $show_right_panel; then
 
-    if [[ $1 != "help" ]]; then
-        write_descriptor
-    else
-        write_help_descriptor
-    fi
+            if [[ $1 == "help" ]]; then
+                read_help_rightpanel_items
+            fi
 
+            write_rightpanel_items
+        fi
+
+        if [[ $1 != "help" ]]; then
+            write_descriptor
+        else
+            write_help_descriptor
+        fi
+    fi
     pick_menu_item
 }
 
@@ -1579,9 +1785,12 @@ main() {
         esac
     done
 
-    init_menu
+    if ! menus_force_hidden; then
+        init_menu
+    fi
 
     while true; do
+
         main_menu
     done
 }
