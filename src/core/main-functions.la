@@ -30,6 +30,7 @@
 
 menus_force_hidden=false
 tabs_dont_fit=false
+all_tabs_length=0
 right_panel_height_warning=false
 right_panel_width_warning=false
 height_warning=false
@@ -39,9 +40,9 @@ menu_height=0
 show_right_panel=$right_panel
 max_menu_height=0
 
-# TODO: When resizing/reflowing and some tabs get eliminated, if active tab was the current, change it to last one
-# TODO: When resizing/reflowing OR hiding right panel by R and right panel was active, change to left panel
-# TODO find and declare all global variables here
+# TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
+# TODO, all global variables should be UPPER_CASE, 
+# TODO Make constants `readonly`
 # TODO make local variables really local with the `local` keyword
 set_menu_sizes() {
     terminal_height=$(tput lines)
@@ -76,6 +77,10 @@ set_menu_sizes() {
             if $right_panel; then
                 right_panel_width_warning=true
             fi
+        fi
+
+        if ! $show_right_panel $$ [[ $active_panel -eq "right" ]]; then
+            active_panel="left"
         fi
 
         max_menu_height=$(($terminal_height - 10))
@@ -242,22 +247,30 @@ set_command_builder_items() {
 
     for i in "$@"; do
  
-        if [[ $array_counter -gt $array_offset ]] && [[ $array_counter -le $(($max_menu_height -5)) ]]; then
-            let current_flag_item=$array_counter-2
-            menu_entry[current_flag_item - 1]="$current_flag_item - Set arg. $i"
-        else
-            break
+        if [[ $array_counter -gt $array_offset ]]; then
+            if [[ $array_counter -ge $(($max_menu_height - 5)) ]]; then
+                break
+            fi
+
+            local current_flag_item=$(($array_counter-2))
+            menu_entry[$current_flag_item - 1]="$current_flag_item - Set arg. $i"
+        
         fi
 
         ((array_counter++))
 
     done
+    
+    local last_entry=""
+    
+    if [[ -n $menu_entry ]]; then
+        last_entry=${menu_entry[${#menu_entry[@]} - 1]}
+    fi
 
     #Check if entries have already been written, by checking last element
-    last_entry=${menu_entry[${#menu_entry[@]} - 1]}
-   
     if [[ "$last_entry" != "x - Delete set flags" ]]; then
-        menu_entry+=("m - Manually enter flags ")
+        menu_entry+=("m - Enter arguments manually")
+        menu_entry+=("o - Enter flag-options (no space)")
         menu_entry+=("c - Commit with flags")
         menu_entry+=("x - Delete set flags")
     fi
@@ -398,7 +411,7 @@ read_help_rightpanel_items() {
 write_tab_items() {  
     # Modify top line first, draw connectors
     tabs_dont_fit=false
-    current_tabs_length=0
+    local current_tabs_length=0
     displayed_tab_entries=1
 
     all_tabs_length=0 #TODO:Global
@@ -412,7 +425,11 @@ write_tab_items() {
         current_tabs_length=$(($current_tabs_length + ${#tab_entry[$n]} + 3))
         if [[ $current_tabs_length -ge $terminal_width ]]; then
             tabs_dont_fit=true
-             ((displayed_tab_entries--))
+            ((displayed_tab_entries--))
+             if [[ $tab_pos -ge $displayed_tab_entries ]]; then
+                select_tab $displayed_tab_entries
+                reflow_menu
+            fi
             break
         fi
         ((displayed_tab_entries++))
@@ -631,7 +648,7 @@ draw_menu() {
     tput civis
 
     if $sub_flags_menu; then
-        menu_height=$submenu_height
+        menu_height=$(($submenu_height-3))
         header_height=$SUB_HEADER_HEIGHT
         title=$sub_flags_menutitle
     else
@@ -931,7 +948,7 @@ select_tab() {
 }
 
 # TODO: Add this to help files too
-select_tab_by_number(){
+select_tab_by_number() {
     tabkey=""
     read -sN1 -t 1 tabkey
 
@@ -1111,7 +1128,7 @@ set_highlighted_cmb_arg() {
         functright$menu_pos
     else
         max_length_offset=0
-        max_cmb_height=$(($MAX_COMMAND_BUILDER_ARGS + 2))
+        max_cmb_height=$(($MAX_SUBMENU_ITEMS + 2))
         if [[ $# -gt $max_cmb_height ]]; then
             let lenght_diff=$#-$max_cmb_height
             let max_length_offset=$max_length_offset+$lenght_diff
@@ -1125,12 +1142,16 @@ set_highlighted_cmb_arg() {
             set_args=$set_args' '${@:$add_arg:1}
         else
             let manual_flags=$args_to_set+1
-            let commit_flags=$args_to_set+2
-            let delete_flags=$args_to_set+3
+            let option_flags=$args_to_set+2
+            let commit_flags=$args_to_set+3
+            let delete_flags=$args_to_set+4
 
             case $menu_pos in
             $manual_flags)
                 cmb_set_manual_args
+                ;;
+            $option_flags)
+                cmb_set_manual_args "nospace"
                 ;;
             $commit_flags)
                 cmb_commit_with_args
@@ -1145,12 +1166,16 @@ set_highlighted_cmb_arg() {
 
 
 cmb_set_manual_args() {
+
+    local space=" "
+    if [[ "$1" -eq "nospace" ]]; then
+        space=""
+    fi
     echo
     tput cnorm
-    echo "Type your arguments here, and press enter "
-    echo
+    echo "Type your parameters here, and press <Enter>"
     read -p "> " line_args
-    set_args=$set_args$line_args
+    set_args=$set_args$space$line_args
     tput civis
     clear
     draw_menu
@@ -1380,6 +1405,11 @@ pick_menu_item() {
                     init_menu
                 fi
                 ;;
+            "o")
+                if $sub_flags_menu; then
+                    cmb_set_manual_args "nospace"
+                fi
+                ;;
             "c")
                 if $sub_flags_menu; then
                     cmb_commit_with_args
@@ -1422,6 +1452,12 @@ pick_menu_item() {
 # -c 5 --whatever_flag -f 8
 #
 # the second menu entry. Selecting it will apply all the flags to the built chain
+
+# TODO: Descriptor is pointless here. Instad, move the active command up in that spot
+# TODO: Fix resizing this menu correctly. Size should be dynamic and it shoudl always expand to the maximum extent of the menu or the ternminal, whichever comes first
+# TODO the visual truncation warning should also appear here on the bottom line
+# ToDo: MOVE THE FIXED ITEMS INTO THE RIGHT PANEL!!!!!!!!! OH YEAH!!!
+
 command_builder_function() { 
     menu_entry=()
     set_args=""
@@ -1465,7 +1501,11 @@ command_builder_function() {
 
         # ~~TODO~~: Got to make sure this does not go ovber the screen limit. 
         # 7 years leter: No, that's the user's problem, terminal emulators can be resized
-        echo "Active command: "$submenu_command $set_args
+        # 1 Week later: Nah, I got it.
+
+        cmd_msg="Active command: $submenu_command $set_args"
+        cmd_msg=$(truncate_text "$cmd_msg" $(($terminal_width-2)))
+        echo "$cmd_msg"
 
         pick_menu_item "$@"
 

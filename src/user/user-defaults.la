@@ -38,8 +38,6 @@ MAX_MENU_ITEMS=11
 # Maxiumum number of sub-menu items: 99
 MAX_SUBMENU_ITEMS=13
 
-# How many options can you pass to the command_builder_function
-MAX_COMMAND_BUILDER_ARGS=10
 
 # Change the size of the right panel
 RIGHT_PANEL_WIDTH=27

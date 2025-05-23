@@ -186,7 +186,7 @@ function tab1item8 {
     #
     # Note 2: The command builder function can be used inside a submenu as well
 
-    command_builder_function "Ping any host with flags" "ping" -n -q -v --help '-c 5' -c
+    command_builder_function "Ping any host with flags" "ping" -n -q -v --help '-c 5' -c -n -q -v --help '-c 5' -c
 }
 
 
