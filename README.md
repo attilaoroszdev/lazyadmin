@@ -1,5 +1,5 @@
 [![GitHub top language](https://img.shields.io/github/languages/top/attilaoroszdev/lazyadmin)](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html)
-[![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/lazyadmin](https://github.com/attilaoroszdev/lazyadmin/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/issues)
 [![GitHub License](https://img.shields.io/github/license/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/blob/main/LICENSE)
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/releases)
