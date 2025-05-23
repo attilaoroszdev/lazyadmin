@@ -30,6 +30,9 @@
 
 menus_force_hidden=false
 
+# TODO: When resizing/reflowing and some tabs get eliminated, if active tab was the current, change it to last one
+# TODO: When resizing/reflowing OR hiding right panel by R and right panel was active, change to left panel
+
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
@@ -103,11 +106,14 @@ show_force_hide_error() {
         echo
         echo -n "Cannot display menus on this terminal. If you are in an emulator, you need to resize the window"
         if ! $AUTO_REFLOW; then
-            echo -n ", and press f to re-draw the menu"
+            echo -n ", and press 'f' to re-draw the menu."
         else
             echo -n "."
         fi
-        echo -e "\n"
+        
+        echo -e "\n\nYou can also press 'q' to quit."
+        echo
+
         if [[ $terminal_height -lt $MIN_TERMINAL_HEIGHT ]]; then
             echo "Minimum supported height: $MIN_TERMINAL_HEIGHT characters."
             echo -e "Current height: \e[01m\e[01;31m$terminal_height\e[00m characters"
@@ -898,7 +904,7 @@ select_menu_item_by_number() {
                 ;;
             esac
         fi  
-        
+
     fi
 
     is_valid=1
