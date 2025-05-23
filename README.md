@@ -1,5 +1,5 @@
 [![GitHub top language](https://img.shields.io/github/languages/top/attilaoroszdev/lazyadmin)](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html)
-[![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/lazyadmin](https://github.com/attilaoroszdev/lazyadmin/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/issues)
 [![GitHub License](https://img.shields.io/github/license/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/blob/main/LICENSE)
 [![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/lazyadmin)](https://github.com/attilaoroszdev/lazyadmin/releases)
@@ -8,12 +8,6 @@
 
 Lazy Admin will draw a pseudo graphical menu on your terminal, or terminal emulator, using nothing but `bash`, and `sed`.
 
-
-[![GitHub top language](https://img.shields.io/github/languages/top/attilaoroszdev/GD_To-Do_3x)](https://docs.godotengine.org/en/3.5/tutorials/scripting/gdscript/gdscript_basics.html)
-[![GitHub contributors](https://img.shields.io/github/contributors/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/graphs/contributors)
-[![GitHub issues](https://img.shields.io/github/issues/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/issues)
-[![GitHub License](https://img.shields.io/github/license/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/blob/main/LICENSE)
-[![GitHub release (with filter)](https://img.shields.io/github/v/release/attilaoroszdev/GD_To-Do_3x)](https://github.com/attilaoroszdev/GD_To-Do_3x/releases)
 
 ## Why Lazy Admin?
 
