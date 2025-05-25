@@ -157,56 +157,44 @@ _endmenu6
 
 # In the main menus
 _rightpanel
-f - Reflow Menu
-h - Get Help
-k - Show key bindings
+f :: Reflow Menu :: Redraw the Lazy Admin UI
+h :: Get Help :: Display the help menu
+k :: Show key bindings :: Display the different key bindings
 skip
-q - Quit
+q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
 _endrightpanel
 
-# Descriptions of menuitems in main menu in the same order as the items above
-_rightpaneldesc
-Redraw the Lazy Admin UI
-Display the help menu
-Display the different key bindings
+
+_cmbrightpanel
+m :: Misc. arguments :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
+c :: Run command :: Run the current command with all the set arguments and flag-options
+x :: Delete set flags :: Remove everything and start over
 skip
-Quit Lazy Admin, and return to your normal shell... and life...
-_endrightpaneldesc
+divider
+skip
+f :: Reflow Menu :: Redraw the Lazy Admin UI
+h :: Get Help :: Display the help menu
+k :: Show key bindings :: Display the different key bindings
+b :: Back to Main Menu :: Return to main menu
+q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
+_endcmbrightpanel
 
 
 # In the submenus (contains back link) 
 _subrightpanel
-f - Reflow menu
-h - Get Help
-k - Show key bindings
-b - Back to Main Menu
-q - Quit
+f :: Reflow Menu :: Redraw the Lazy Admin UI
+h :: Get Help :: Display the help menu
+k :: Show key bindings :: Display the different key bindings
+b :: Back to Main Menu :: Return to main menu
+q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
 _endsubrightpanel
-
-# Descriptions of menuitems in submenus in the same order as the items above
-_subrightpaneldesc
-Redraw the Lazy Admin UI
-Display the help menu
-Display the different key bindings
-Return to main menu
-Quit Lazy Admin, and return to your normal shell... and life...
-_endsubrightpaneldesc
 
 
 # Rightpanel items in help menus
 _helprightpanel
-f - Reflow Menu
+f :: Reflow Menu :: Redraw the Lazy Admin UI
 skip
-k - Show key bindings
-b - Back to Main Menu
-q - Quit
+k :: Show key bindings :: Display the different key bindings
+b :: Back to Main Menu :: Return to main menu
+q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
 _endhelprightpanel
-
-# Descriptions of menuitems in main menu in the same order as the items above
-_rightpaneldesc
-Redraw the Lazy Admin UI
-skip
-Display the different key bindings
-Return to parent menu
-Quit Lazy Admin, and return to your normal shell... and life...
-_endrightpaneldesc

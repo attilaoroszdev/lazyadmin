@@ -40,6 +40,33 @@ menu_height=0
 show_right_panel=$right_panel
 max_menu_height=0
 
+
+declare -a RIGHT_PANEL_ITEMS_KEYS
+declare -a SUBMENU_RIGHT_PANEL_ITEMS_KEYS
+declare -a CMB_RIGHT_PANEL_ITEMS_KEYS
+declare -a HELP_RIGHT_PANEL_ITEMS_KEYS
+
+declare -a RIGHT_PANEL_ITEMS
+declare -a SUBMENU_RIGHT_PANEL_ITEMS
+declare -a CMB_RIGHT_PANEL_ITEMS
+declare -a HELP_RIGHT_PANEL_ITEMS
+
+declare -a RIGHT_PANEL_ITEMS_DESC
+declare -a SUBMENU_RIGHT_PANEL_ITEMS_DESC
+declare -a CMB_RIGHT_PANEL_ITEMS_DESC
+declare -a HELP_RIGHT_PANEL_ITEMS_DESC
+
+
+declare -a RIGHT_PANEL_ITEM_ROWS
+declare -a SUBMENU_RIGHT_PANEL_ITEM_ROWS
+declare -a CMB_RIGHT_PANEL_ITEM_ROWS
+declare -a HELP_RIGHT_PANEL_ITEM_ROWS
+
+
+
+declare -i RIGHT_PANEL_LENGTH
+declare -i CMB_RIGHT_PANEL_LENGTH
+
 # TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
 # TODO, all global variables should be UPPER_CASE, 
 # TODO Make constants `readonly`
@@ -210,14 +237,18 @@ read_menu_items() {
         IFS=$'\n'
         menu_entry=($(cat $menu_file | sed -n '/'_submenu$sub_parent$sub_item'/{:a;n;/'_endsubmenu$sub_parent$sub_item'/q;p;ba}'))
 
-        if $help_submenu; then
+        
+        if $sub_flags_menu; then
+            menu_height=$($submenu_height+1)
+            max_menu_length=$(($submenu_height - 2))
+        elif $help_submenu; then
             menu_height=$HELP_SUB_MENU_HEIGHT
             max_menu_length=$((HELP_SUB_MENU_HEIGHT - 2))
         else
             menu_height=$submenu_height
+            max_menu_length=$(($submenu_height - 3))
         fi
 
-        max_menu_length=$(($submenu_height - 3))
         IFS="$OLDIFS"
     else
         OLDIFS="$IFS"
@@ -267,13 +298,13 @@ set_command_builder_items() {
         last_entry=${menu_entry[${#menu_entry[@]} - 1]}
     fi
 
-    #Check if entries have already been written, by checking last element
-    if [[ "$last_entry" != "x - Delete set flags" ]]; then
-        menu_entry+=("m - Enter arguments manually")
-        menu_entry+=("o - Enter flag-options (no space)")
-        menu_entry+=("c - Commit with flags")
-        menu_entry+=("x - Delete set flags")
-    fi
+    # #Check if entries have already been written, by checking last element
+    # if [[ "$last_entry" != "x - Delete set flags" ]]; then
+    #     menu_entry+=("m - Enter arguments manually")
+    #     menu_entry+=("o - Enter flag-options (no space)")
+    #     menu_entry+=("c - Commit with flags")
+    #     menu_entry+=("x - Delete set flags")
+    # fi
 
     menu_length=${#menu_entry[@]}
 }
@@ -384,17 +415,43 @@ read_tab_items() {
 
 
 read_rightpanel_items() {     
-    OLDIFS="$IFS"
-    IFS=$'\n'
+    # OLDIFS="$IFS"
+    # IFS=$'\n'
 
-    if $submenu; then
-        right_panel_entry=($(cat $menu_file | sed -n '/'_subrightpanel'/{:a;n;/'_endsubrightpanel'/q;p;ba}'))
-    else
-        right_panel_entry=($(cat $menu_file | sed -n '/'_rightpanel'/{:a;n;/'_endrightpanel'/q;p;ba}'))
-    fi
+    # RIGHT_PANEL_ITEM_ROWS=($(cat $menu_file | sed -n '/'_rightpanel'/{:a;n;/'_endrightpanel'/q;p;ba}'))
 
-    IFS="$OLDIFS"
-    right_panel_length=${#right_panel_entry[@]}
+    declare -a menu_file_contents
+    
+
+    while IFS= read -r line; do
+        if [[ ! "$line" == "#"* ]] && [[ -n "$line" ]]; then
+            menu_file_contents+=("$line")
+        fi
+    done < $menu_file
+    
+    # echo "menu files cxontents raw: ${menu_file_contents[@]}"
+
+
+    for ((n = 0; n <= ${#menu_file_contents[@]}; n++)); do
+        echo ${menu_file_contents[$n]}
+    done
+
+    sleep 5
+
+    # TODO: Now proceed from item to item to test if it contains the correct thing, then save appropriately
+    # TODO: Menu should only be read once
+    # TODO: Do the same with regular menu items, only porepend thenm with TabName :: for later grouping
+
+
+
+    # SUBMENU_RIGHT_PANEL_ITEM_ROWS=($(cat $menu_file | sed -n '/'_subrightpanel'/{:a;n;/'_endsubrightpanel'/q;p;ba}'))
+    # CMB_RIGHT_PANEL_ITEM_ROWS=($(cat $menu_file | sed -n '/'_cmbrightpanel'/{:a;n;/'_endcmbrightpanel'/q;p;ba}'))
+    # HELP_RIGHT_PANEL_ITEM_ROWS=($(cat $menu_file | sed -n '/'_helprightpanel'/{:a;n;/'_endhelprightpanel'/q;p;ba}'))
+
+    # RIGHT_PANEL_LENGTH=${#RIGHT_PANEL_ITEM_ROWS[@]}
+    # CMB_RIGHT_PANEL_LENGTH=${#CMB_RIGHT_PANEL_ITEM_ROWS[@]}
+      
+    # IFS="$OLDIFS"
 }
 
 
@@ -522,7 +579,13 @@ write_menu_items() {
 
     done
 
-    tput cup $(($max_menu_length + $header_height + 3)) 1
+    local -i line_offset=3
+
+    if $sub_flags_menu; then
+        line_offset=4
+    fi
+
+    tput cup $(($max_menu_length + $header_height + $line_offset)) 1
 
     # If the item list was truncated, display a visual clue at the bottom
     if [[ $menu_length -gt $max_menu_length ]]; then
@@ -572,24 +635,80 @@ write_help_menu_items() {
 }
 
 
-# Draw show_right_panel items
 write_rightpanel_items() { 
-    for ((n = 0; n < $right_panel_length; n++)); do
-       
-        if [[ "${right_panel_entry[$n]}" == "skip" ]]; then
-            ((n++))
+   
+    local -i items_length=$RIGHT_PANEL_LENGTH
+    # local -1 keys
+    # local -a entries
+    # local -a descriptions
+
+    # if $sub_flags_menu; then
+    #     items_length=("${CMB_RIGHT_PANEL_LENGTH[@]}")
+    #     keys=("${CMB_RIGHT_PANEL_ITEMS_KEYS[@]}")
+    #     entries=("${CMB_RIGHT_PANEL_ITEMS[@]}")
+    #     descriptions=("${CMB_RIGHT_PANEL_ITEMS_DESC[@]}")
+    # elif $submenu; then
+    #     keys=("${SUBMENU_RIGHT_PANEL_ITEMS_KEYS[@]}")
+    #     entries=("${SUBMENU_RIGHT_PANEL_ITEMS[@]}")
+    #     descriptions=("${SUBMENU_RIGHT_PANEL_ITEMS_DESC[@]}")
+    # elif $help_submenu; then
+    #     keys=("${HELP_RIGHT_PANEL_ITEMS_KEYS[@]}")
+    #     entries=("${HELP_RIGHT_PANEL_ITEMS[@]}")
+    #     descriptions=("${HELP_RIGHT_PANEL_ITEMS_DESC[@]}")
+    # else
+    #     keys=("${RIGHT_PANEL_ITEMS_KEYS[@]}")
+    #     entries=("${RIGHT_PANEL_ITEMS[@]}")
+    #     descriptions=("${RIGHT_PANEL_ITEMS_DESC[@]}")
+    # fi
+
+    local -a current_item_rows
+
+    if $sub_flags_menu; then
+        items_length=("${CMB_RIGHT_PANEL_LENGTH[@]}")
+        current_item_rows=("${CMB_RIGHT_PANEL_ITEM_ROWS[@]}")
+    elif $submenu; then
+        current_item_rows=("${SUBMENU_RIGHT_PANEL_ITEM_ROWS[@]}")
+    elif $help_submenu; then
+        current_item_rows=("${HELP_RIGHT_PANEL_ITEM_ROWS[@]}")
+    else
+        current_item_rows=("${RIGHT_PANEL_ITEM_ROWS[@]}")
+    fi
+
+    OLD_IFS=$IFS
+    IFS="::"
+
+
+
+    
+    # echo "Items length: $items_length"
+
+    for ((n = 0; n < $items_length; n++)); do
+        
+        local -a current_row
+        read -a current_row <<< "${current_item_rows[$n]}"
+
+        if [[ "${current_row[0]}" == "skip" ]]; then
+            continue    
+        elif  [[ "${current_row[0]}" == "divider" ]]; then
+            tput cup $(($n + $header_height +2)) $(($menu_width - $active_right_panel_width))
+            draw_divider_line $active_right_panel_width "right"
+            continue
         fi
 
+        tput cup $(($n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
+
+        local displayed_item="${current_row[0]}""-""${current_row[2]}"
+
+        local current_item=$(truncate_text "$displayed_item" $(($active_right_panel_width-4)))
+
         if [[ $n -eq $menu_pos ]] && [[ "$active_panel" == "right" ]]; then
-            tput cup $((n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
-            echo -e "\e[00;30;47m${right_panel_entry[$menu_pos]}\e[00m"
+            echo -e "\e[00;30;47m$current_item\e[00m"
         else
-            tput cup $((n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
-            echo "${right_panel_entry[$n]}"
+            echo -e "$current_item"
         fi
 
     done
-
+    IFS=$OLD_IFS
     cursor_pos=$(tput lines)
     tput cup $cursor_pos 0
 }
@@ -599,16 +718,45 @@ write_rightpanel_items() {
 draw_line() { 
     #draw line with the length of the screen/window width
 
-    # line_lenght=$menu_width
+    local -i line_lenght=$menu_width
 
-    # if [[ -n $1 ]] && [[ $1 -gt 0 ]] then
-    #     line_lenght=$1
-    # fi
+    if [[ -n $1 ]] && [[ $1 -gt 0 ]] then
+        line_lenght=$1
+    fi
 
-    for ((i = 0; i < $menu_width; i++)); do
+    for ((i = 0; i < $line_lenght; i++)); do
         echo -n "━"
     done
     #cursor goes to next row
+}
+
+draw_divider_line() {
+    local -i line_lenght
+
+    if [[ $2 -eq "right" ]]; then
+        line_lenght=$(($active_right_panel_width-1))
+    else
+        if $show_right_panel; then
+            line_lenght==$(($left_panel_width-1))
+        else
+            line_lenght==$menu_width
+        fi
+    fi
+
+    if [[ $2 -eq "right" ]]; then
+        echo -n "├"
+    fi
+
+    for ((i = 0; i < $(($line_lenght-1)); i++)); do
+        echo -n "╶"
+    done
+    echo "╶"
+
+    # if [[ $2 -eq "left" ]] && $show_right_panel; then
+    #     echo -n "┤"
+    # fi
+
+
 }
 
 
@@ -648,7 +796,7 @@ draw_menu() {
     tput civis
 
     if $sub_flags_menu; then
-        menu_height=$(($submenu_height-3))
+        menu_height=$(($submenu_height-1))
         header_height=$SUB_HEADER_HEIGHT
         title=$sub_flags_menutitle
     else
@@ -805,7 +953,6 @@ truncate_text(){
 
 # Simply write a one line descriptor, as read from the menu file
 write_descriptor() { 
-
     descriptor_line=$(truncate_text "${menu_desc_entry[$menu_pos]}" $(($terminal_width-4)))
     cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
     tput cup $cursor_pos $menu_width
@@ -1482,12 +1629,12 @@ command_builder_function() {
     #Best avoid confusion
     clear
     set_command_builder_items "$@"
-    read_rightpanel_items
+    # read_rightpanel_items
     draw_menu
 
     while $sub_flags_menu; do
         set_command_builder_items "$@"
-        read_rightpanel_items
+        # read_rightpanel_items
         infinite_menu
         write_menu_items
 
@@ -1495,10 +1642,9 @@ command_builder_function() {
             write_rightpanel_items
         fi
 
-        write_flags_descriptor
-        echo
-        echo
-
+        
+        tput cup $(($header_height + $menu_height + $DESCRIPTOR_HEIGHT)) 2
+        
         # ~~TODO~~: Got to make sure this does not go ovber the screen limit. 
         # 7 years leter: No, that's the user's problem, terminal emulators can be resized
         # 1 Week later: Nah, I got it.
@@ -1582,7 +1728,7 @@ back_to_main_menu() {
         read_descriptor
     fi
 
-    read_rightpanel_items
+    # read_rightpanel_items
     clear_menu
 
     if [[ $2 == "reflow" ]]; then
