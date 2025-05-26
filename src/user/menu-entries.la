@@ -148,53 +148,48 @@ v - Edit default values :: Edit default menu length, number of tabs, etc.
 _endmenu6
 
 
+[:right_panel_items:]
+
 # Contents of the right panel. Only change this if you alter right panel functionality 
-
-# Simplified menu-style is not currently implemented for the right panel
-# Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
-# menu positions for the other entries are identical (needed for aliases, when using enter for selection)
-# This is necessary, for "b -Back to Main Menu" is added in the submenu function
-
-# In the main menus
-_rightpanel
-f :: Reflow Menu :: Redraw the Lazy Admin UI
-h :: Get Help :: Display the help menu
-k :: Show key bindings :: Display the different key bindings
-skip
-q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
-_endrightpanel
+# After specifying the type of right panel (Main, Sub, Cmb, or Help), the next columns should specify 
+# the shortcut key (mandatory)
 
 
-_cmbrightpanel
-m :: Misc. arguments :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
-c :: Run command :: Run the current command with all the set arguments and flag-options
-x :: Delete set flags :: Remove everything and start over
-skip
-divider
-skip
-f :: Reflow Menu :: Redraw the Lazy Admin UI
-h :: Get Help :: Display the help menu
-k :: Show key bindings :: Display the different key bindings
-b :: Back to Main Menu :: Return to main menu
-q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
-_endcmbrightpanel
+# Right panel items for main menu
+Main :: f :: Reflow Menu :: Redraw the Lazy Admin UI
+Main :: h :: Get Help :: Display the help menu
+Main :: k :: Show key bindings :: Display the different key bindings
+Main :: skip
+Main :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
 
 
-# In the submenus (contains back link) 
-_subrightpanel
-f :: Reflow Menu :: Redraw the Lazy Admin UI
-h :: Get Help :: Display the help menu
-k :: Show key bindings :: Display the different key bindings
-b :: Back to Main Menu :: Return to main menu
-q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
-_endsubrightpanel
+# Right panel items for command builder
+Cmb :: m :: Misc. arguments :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
+Cmb :: c :: Run command :: Run the current command with all the set arguments and flag-options
+Cmb :: x :: Delete set flags :: Remove everything and start over
+Cmb :: skip
+Cmb :: divider
+Cmb :: skip
+Cmb :: f :: Reflow Menu :: Redraw the Lazy Admin UI
+Cmb :: h :: Get Help :: Display the help menu
+Cmb :: k :: Show key bindings :: Display the different key bindings
+Cmb :: b :: Back to Main Menu :: Return to main menu
+Cmb :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
+
+
+# Right panel items for sub-menus
+Sub :: f :: Reflow Menu :: Redraw the Lazy Admin UI
+Sub :: h :: Get Help :: Display the help menu
+Sub :: k :: Show key bindings :: Display the different key bindings
+Sub :: b :: Back to Main Menu :: Return to main menu
+Sub :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
 
 
 # Rightpanel items in help menus
-_helprightpanel
-f :: Reflow Menu :: Redraw the Lazy Admin UI
-skip
-k :: Show key bindings :: Display the different key bindings
-b :: Back to Main Menu :: Return to main menu
-q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
-_endhelprightpanel
+Help :: f :: Reflow Menu :: Redraw the Lazy Admin UI
+Help :: skip
+Help :: k :: Show key bindings :: Display the different key bindings
+Help :: b :: Back to Main Menu :: Return to main menu
+Help :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
+
+[:end_right_panel_items:]
