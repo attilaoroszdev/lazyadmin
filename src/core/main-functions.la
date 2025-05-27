@@ -1431,11 +1431,9 @@ cmb_clear_args() {
 }
 
 cmb_set_arg_by_number() {
-    # echo "All arts passed are: $@"
+
     key=${!#}
 
-    # echo "Key set to: $key"
-    # set -- "${@:1:$#-1}"
     read_second_digit=false
     if [[ $MAX_COMMAND_BUILDER_ARGS -gt 9 ]] && [[ $key -le $(($MAX_COMMAND_BUILDER_ARGS/10)) ]]; then
         read_second_digit=true
@@ -1501,16 +1499,16 @@ pick_menu_item() {
         if [[ -n $key ]]; then 
             # TODO: Update User guide and key binding guide with F1-9 and t-# keys for tabs access and TAB key for changing panels
             case $key in
-            $'\e[A' | $'\e0A' | "w")
+            $'\e[A' | $'\e0A')
                 move_up
                 ;;
-            $'\e[B' | $'\e0B' | "s")
+            $'\e[B' | $'\e0B')
                 move_down
                 ;;
-            $'\e[D' | $'\e0D' | "a")
+            $'\e[D' | $'\e0D')
                 tab_left
                 ;;
-            $'\e[C' | $'\e0C' | "d")
+            $'\e[C' | $'\e0C')
                 tab_right
                 ;;
             $'\e[11~' | $'\eOP') 
@@ -1548,21 +1546,18 @@ pick_menu_item() {
             $'\e[20~')
                 # F9 - Tab 9
                 select_tab 9
-                ;;
-            "t")
-                select_tab_by_number
-                ;;
-            "R")
-                toggle_right_panel
-                ;;
-            $'\e[1;5C' | $'\e01;5C' | "r")
+                ;; 
+            $'\e[1;5C' | $'\e01;5C')
                 change_panel "right"
                 ;;
-            $'\e[1;5D' | $'\e01;5D' | "l")
+            $'\e[1;5D' | $'\e01;5D')
                 change_panel "left"
                 ;;
             $'\x09')
                 change_panel "swap"
+                ;;
+            [a-zA-Z])
+                shortkey_command "$key"
                 ;;
             [1-9])
                 if $sub_flags_menu; then
@@ -1575,79 +1570,19 @@ pick_menu_item() {
                 ;;
             $'\x0a' | '')
                 # If enter is pressed
-                if $sub_flags_menu; then
-                    set_highlighted_cmb_arg "$@"
-                elif $help_submenu; then
-                    select_highlighted_help_item
+                if [[ $active_panel == "right" ]]; then
+                    shortkey_command ${RIGHT_PANEL_ITEM_KEYS[$menu_pos]}
                 else
-                    select_highlighted_menu_item
+                    if $sub_flags_menu; then
+                        set_highlighted_cmb_arg "$@"
+                    elif $help_submenu; then
+                        select_highlighted_help_item
+                    else
+                        select_highlighted_menu_item
+                    fi
                 fi
                 ;;
-            "f") 
-                reflow_menu
-                ;;
-            "h")
-                if ! $help_submenu; then
-                    display_help
-                fi
-                ;;
-            "k")
-                display_hotkeys
-                ;;
-            "q") #this handles exit function
-                functright4
-                ;;
-            "b")
-                if $help_submenu; then
-                    back_to_main_menu "read" "reflow"
-                elif $submenu || $sub_flags_menu; then
-                    back_to_main_menu
-                fi
 
-                return
-                ;;
-            "e")
-                if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-                    functsetup0
-                    init_menu
-                fi
-                ;;
-            "u")
-                if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-                    functsetup1
-                    init_menu
-                fi
-                ;;
-            "v")
-                if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-                    functsetup3
-                    init_menu
-                fi
-                ;;
-            "m")
-                if $sub_flags_menu; then
-                    cmb_set_manual_args
-                elif ! $submenu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
-                    functsetup2
-                    init_menu
-                fi
-                ;;
-            "o")
-                if $sub_flags_menu; then
-                    cmb_set_manual_args "nospace"
-                fi
-                ;;
-            "c")
-                if $sub_flags_menu; then
-                    cmb_commit_with_args
-                fi
-                ;;
-            "x")
-                if $sub_flags_menu; then
-                    cmb_clear_args
-                fi
-                ;;
-        
             esac
             
             break
@@ -1658,7 +1593,99 @@ pick_menu_item() {
     done
 }
 
+shortkey_command(){
+    case $1 in
+        "r")
+            change_panel "right"
+            ;;
+        "l")
+            change_panel "left"
+            ;;
+        "w")
+            move_up
+            ;;
+       "s")
+            move_down
+            ;;
+       "a")
+            tab_left
+            ;;
+       "d")
+            tab_right
+            ;;
+        "t")
+            select_tab_by_number
+            ;;
+        "R")
+            toggle_right_panel
+            ;;
+        "f") 
+            reflow_menu
+            ;;
+        "h")
+            if ! $help_submenu; then
+                display_help
+            fi
+            ;;
+        "k")
+            display_hotkeys
+            ;;
+        "q") #this handles exit function
+            functright4
+            ;;
+        "b")
+            if $help_submenu; then
+                back_to_main_menu "read" "reflow"
+            elif $submenu || $sub_flags_menu; then
+                back_to_main_menu
+            fi
 
+            return
+            ;;
+        "e")
+            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                functsetup0
+                init_menu
+            fi
+            ;;
+        "u")
+            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                functsetup1
+                init_menu
+            fi
+            ;;
+        "v")
+            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                functsetup3
+                init_menu
+            fi
+            ;;
+        "m")
+            if $sub_flags_menu; then
+                cmb_set_manual_args
+            elif ! $submenu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+                functsetup2
+                init_menu
+            fi
+            ;;
+        "o")
+            if $sub_flags_menu; then
+                cmb_set_manual_args "nospace"
+            fi
+            ;;
+        "c")
+            if $sub_flags_menu; then
+                cmb_commit_with_args
+            fi
+            ;;
+        "x")
+            if $sub_flags_menu; then
+                cmb_clear_args
+            fi
+            ;;
+    esac
+
+}
 
 # This fnction will
 # construct a submenu from the supplied arguments, from which
