@@ -37,6 +37,11 @@ MIN_TERMINAL_HEIGHT=14
 MIN_TERM_HEIGHT_FOR_R_PANEL=18
 MIN_TERMINAL_WIDTH=40
 
+readonly MENU_DELIMITER=" :: "
+readonly SHORT_DELIMITER="::"
+readonly MAIN_MENU_KEY="Main"
+readonly COMMAND_BUILDER_KEY="CMB"
+
 menu_file="$USER_DIR/menu-entries.la"
 alt_menu=false # This is not yet fully implemented, and quite frankly, I forgot what it was meant to be``
 submenu=false 

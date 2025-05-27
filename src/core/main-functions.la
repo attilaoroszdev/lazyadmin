@@ -27,7 +27,6 @@
 # normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
 # submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
 # menu_height=0
-
 menus_force_hidden=false
 tabs_dont_fit=false
 all_tabs_length=0
@@ -40,32 +39,19 @@ menu_height=0
 show_right_panel=$right_panel
 max_menu_height=0
 
+declare -a TAB_ITEM_ROWS
+declare -a TAB_ITEM_KEYS
+declare -a TAB_ITEM_ENTRIES
 
-declare -a RIGHT_PANEL_ITEMS_KEYS
-declare -a SUBMENU_RIGHT_PANEL_ITEMS_KEYS
-declare -a CMB_RIGHT_PANEL_ITEMS_KEYS
-declare -a HELP_RIGHT_PANEL_ITEMS_KEYS
-
-declare -a RIGHT_PANEL_ITEMS
-declare -a SUBMENU_RIGHT_PANEL_ITEMS
-declare -a CMB_RIGHT_PANEL_ITEMS
-declare -a HELP_RIGHT_PANEL_ITEMS
-
-declare -a RIGHT_PANEL_ITEMS_DESC
-declare -a SUBMENU_RIGHT_PANEL_ITEMS_DESC
-declare -a CMB_RIGHT_PANEL_ITEMS_DESC
-declare -a HELP_RIGHT_PANEL_ITEMS_DESC
-
+declare -a MENU_ITEM_ROWS
+declare -a RIGHT_PANEL_ITEM_ENTRIES
+declare -a RIGHT_PANEL_ITEM_DESCRIPTIONS
 
 declare -a RIGHT_PANEL_ITEM_ROWS
-declare -a SUBMENU_RIGHT_PANEL_ITEM_ROWS
-declare -a CMB_RIGHT_PANEL_ITEM_ROWS
-declare -a HELP_RIGHT_PANEL_ITEM_ROWS
+declare -a RIGHT_PANEL_ITEM_KEYS
+declare -a RIGHT_PANEL_ITEM_ENTRIES
+declare -a RIGHT_PANEL_ITEM_DESCRIPTIONS
 
-
-
-declare -i RIGHT_PANEL_LENGTH
-declare -i CMB_RIGHT_PANEL_LENGTH
 
 # TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
 # TODO, all global variables should be UPPER_CASE, 
@@ -74,9 +60,6 @@ declare -i CMB_RIGHT_PANEL_LENGTH
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
-
-    # echo "Terminal height: $terminal_height"
-    # sleep 1
 
     if [[ $terminal_height -lt $MIN_TERMINAL_HEIGHT ]] || [[ $terminal_width -lt $MIN_TERMINAL_WIDTH ]]; then
         menus_force_hidden=true
@@ -146,7 +129,7 @@ set_menu_sizes() {
 
         fi
         
-        $menu_height=$normal_menu_height
+        menu_height=$normal_menu_height
     fi
 
 }
@@ -188,15 +171,10 @@ check_for_size_changes() {
 
 set_up_menus() {
     tick=$AUTO_REFLOW_TICK
-
-
-    # Safe value for $tick, we don't want the system to freeze...    
-    if [[ ! $tick -ge 1 ]] || [[ $tick -lt 1 ]]; then
-        tick=0.5
-    fi
-
+ 
     if [[ -f $menu_file ]]; then
         echo "Setting menus..."
+        parse_menu_file
         set_menu_sizes     
     else
         clear
@@ -414,38 +392,130 @@ read_tab_items() {
 }
 
 
-read_rightpanel_items() {     
-    OLD_IFS="$IFS"
-    IFS=
+parse_menu_file() {
 
-    RIGHT_PANEL_ITEM_ROWS=()
     local -a menu_file_contents
+        
+    OLD_IFS=$IFS
+    IFS=
     
     while read -r line; do
         if [[ ! "$line" == "#"* ]] && [[ -n "$line" ]]; then
             menu_file_contents+=("$line")
         fi
-    done < $menu_file
+    done < "$menu_file"
 
-    IFS="$OLD_IFS"
+    IFS=$OLD_IFS
 
-    local -a toggle_on=false
-
+    local tab_items_toggle=false
+    local menu_items_toggle=false
+    local right_menus_toggle=false
+    
+   
     for ((n = 0; n <= ${#menu_file_contents[@]}; n++)); do
-        if $toggle_on; then
-            if [[ "${menu_file_contents[$n]}" == "[:end_right_panel_items:]" ]]; then
-                break
+
+        if $tab_items_toggle; then
+            if [[ "${menu_file_contents[$n]}" == "[:end_tab_order:]" ]]; then
+                tab_items_toggle=false
+                continue
             else
-                RIGHT_PANEL_ITEM_ROWS+=("${menu_file_contents[$n]}")
+                local tmp="${menu_file_contents[$n]}"
+                tmp="${tmp//"$MENU_DELIMITER"/"$SHORT_DELIMITER"}"
+                TAB_ITEM_ROWS+=("$tmp")
+                unset tmp
+            fi
+        else
+            if [[ "${menu_file_contents[$n]}" == "[:tab_order:]" ]]; then
+                tab_items_toggle=true
+            fi
+        fi
+
+        if $menu_items_toggle; then
+            if [[ "${menu_file_contents[$n]}" == "[:end_menu_items:]" ]]; then
+                menu_items_toggle=false
+                continue
+            else
+                local tmp="${menu_file_contents[$n]}"
+                tmp="${tmp//"$MENU_DELIMITER"/"$SHORT_DELIMITER"}"
+                MENU_ITEM_ROWS+=("$tmp")
+                unset tmp
+            fi
+        else
+            if [[ "${menu_file_contents[$n]}" == "[:menu_items:]" ]]; then
+                menu_items_toggle=true
+            fi
+        fi
+
+        if $right_menus_toggle; then
+            if [[ "${menu_file_contents[$n]}" == "[:end_right_panel_items:]" ]]; then
+                continue
+            else
+                local tmp="${menu_file_contents[$n]}"
+                tmp="${tmp//"$MENU_DELIMITER"/"$SHORT_DELIMITER"}"
+                RIGHT_PANEL_ITEM_ROWS+=("$tmp")
+                unset tmp
             fi
         else
             if [[ "${menu_file_contents[$n]}" == "[:right_panel_items:]" ]]; then
-                toggle_on=true
+                right_menus_toggle=true
             fi
         fi
     done
-   
+ 
+}
 
+
+read_rightpanel_items() {    
+  
+    local menu_type_key
+
+    if $sub_flags_menu; then
+        menu_type_key="$COMMAND_BUILDER_KEY"
+    else
+        menu_type_key="$MAIN_MENU_KEY"
+    fi    
+
+    OLD_IFS=$IFS
+    IFS="$SHORT_DELIMITER"
+
+    RIGHT_PANEL_ITEM_KEYS=()
+    RIGHT_PANEL_ITEM_ENTRIES=()
+    RIGHT_PANEL_ITEM_DESCRIPTIONS=()
+    
+    
+    for ((n = 0; n < "${#RIGHT_PANEL_ITEM_ROWS[@]}"; n++)); do
+        local -a current_row
+        read -ra current_row <<< "${RIGHT_PANEL_ITEM_ROWS[$n]}"
+
+        local menu_type="${current_row[0]}"
+        local shortkey="${current_row[2]}"
+        local menu_item="${current_row[4]}"
+        local description="${current_row[6]}"
+        local should_skip=false
+    
+        if  [[ "$menu_type" == "$menu_type_key" ]]; then  
+           
+            if [[ "$shortkey" == "skip" ]]; then
+                should_skip=true
+            elif [[ "$shortkey" == "b" ]] && ! $submenu; then
+                should_skip=true
+            elif [[ "$shortkey" == "h" ]] && $help_submenu; then
+                should_skip=true
+            fi
+
+            if $should_skip; then
+                RIGHT_PANEL_ITEM_KEYS+=("skip")
+                RIGHT_PANEL_ITEM_ENTRIES+=("")
+                RIGHT_PANEL_ITEM_DESCRIPTIONS+=("")
+            else
+                RIGHT_PANEL_ITEM_KEYS+=("$shortkey")
+                RIGHT_PANEL_ITEM_ENTRIES+=("$shortkey - $menu_item")
+                RIGHT_PANEL_ITEM_DESCRIPTIONS+=("$description")
+            fi
+        fi
+    done
+
+    IFS=$OLD_IFS
     # TODO: Now proceed from item to item to test if it contains the correct thing, then save appropriately
     # TODO: Menu should only be read once
     # TODO: Do the same with regular menu items, only porepend thenm with TabName :: for later grouping
@@ -634,56 +704,86 @@ write_help_menu_items() {
 
 
 write_rightpanel_items() { 
-   
-    local -i items_length
-    local -a current_item_rows
-    local menu_type_key="Main"
+   local menu_type_key
 
     if $sub_flags_menu; then
-        menu_type_key="CMB"
-    elif $submenu; then
-        menu_type_key="Sub"
-    elif $help_submenu; then
-        menu_type_key="Help"
-    fi
+        
+        menu_type_key="$COMMAND_BUILDER_KEY"
+    else
+        menu_type_key="$MAIN_MENU_KEY"
+    fi  
+
+    
 
     OLD_IFS=$IFS
-    IFS=" :: "
-    local -i idx=0
-    for ((n = 0; n < ${#RIGHT_PANEL_ITEM_ROWS[@]}; n++)); do
+    IFS="$SHORT_DELIMITER"
+     
+    for ((n = 0; n < ${#RIGHT_PANEL_ITEM_ENTRIES[@]}; n++)); do
+        local shortkey="${RIGHT_PANEL_ITEM_KEYS[$n]}"
         
-        local -a current_row
-        read -a current_row <<< "${RIGHT_PANEL_ITEM_ROWS[$n]}"
 
-        if  [[ "${current_row[0]}" == "$menu_type_key" ]]; then   
-            
-            if [[ "${current_row[2]}" == "skip" ]]; then
-                continue    
-            elif  [[ "${current_row[2]}" == "divider" ]]; then
-                tput cup $(($idx + $header_height +2)) $(($menu_width - $active_right_panel_width))
-                draw_divider_line $active_right_panel_width "right"
-                continue
-            fi
+        if [[ "$shortkey" == "skip" ]]; then
+            continue
+        elif [[ "$shortkey" == "divider" ]]; then
+            tput cup $(($n + $header_height +2)) $(($menu_width - $active_right_panel_width))
+            draw_divider_line $active_right_panel_width "right"
+            continue
+        else
+            tput cup $(($n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
+            local current_item="${RIGHT_PANEL_ITEM_ENTRIES[$n]}"
+            current_item=$(truncate_text "$current_item" $(($active_right_panel_width-4)))
 
-            tput cup $(($idx + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
-
-            local displayed_item="${current_row[2]} - ${current_row[4]}"
-            local current_item=$(truncate_text "$displayed_item" $(($active_right_panel_width-4)))
-
-            if [[ $n -eq $menu_pos ]] && [[ "$active_panel" == "right" ]]; then
+            if [[ $n == $menu_pos ]] && [[ "$active_panel" == "right" ]]; then
                 echo -e "\e[00;30;47m$current_item\e[00m"
             else
                 echo -e "$current_item"
             fi
-            ((idx++))
+        fi
+    done
+
+    IFS=$OLD_IFS
+    cursor_pos=$(tput lines)
+    tput cup $cursor_pos 0
+}
+
+ write_right_panel_descriptor() { 
+    
+    local menu_type_key
+    
+    if $sub_flags_menu; then
+        menu_type_key="$COMMAND_BUILDER_KEY"
+    else
+        menu_type_key="$MAIN_MENU_KEY"
+    fi    
+
+    OLD_IFS=$IFS
+    IFS="$SHORT_DELIMITER"
+    local -i idx=0
+
+    local -a rp_item_descriptions=()
+    for item in "${RIGHT_PANEL_ITEM_ROWS[@]}"; do
+
+        local -a current_row
+        read -ra current_row <<< "$item"
+
+        local menu_type=${current_row[0]}
+        local description=${current_row[6]}
+
+        if [[ "$menu_type" == "$menu_type_key" ]]; then  
+            rp_item_descriptions+=("$description")
         fi
     done
 
     IFS=$OLD_IFS
 
-    cursor_pos=$(tput lines)
-    tput cup $cursor_pos 0
+    descriptor_line=$(truncate_text "${rp_item_descriptions[$menu_pos]}" $(($terminal_width-4)))
+    cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
+    tput cup $cursor_pos $menu_width
+    echo -e "\033[1K"
+    tput cup $cursor_pos 2
+    echo "$descriptor_line"
 }
+                      
 
 
 #Draws a line
@@ -922,12 +1022,16 @@ truncate_text(){
 
 # Simply write a one line descriptor, as read from the menu file
 write_descriptor() { 
-    descriptor_line=$(truncate_text "${menu_desc_entry[$menu_pos]}" $(($terminal_width-4)))
-    cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
-    tput cup $cursor_pos $menu_width
-    echo -e "\033[1K"
-    tput cup $cursor_pos 2
-    echo "$descriptor_line"
+    if [[ $active_panel == "right" ]]; then
+        write_right_panel_descriptor
+    else
+        descriptor_line=$(truncate_text "${menu_desc_entry[$menu_pos]}" $(($terminal_width-4)))
+        cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
+        tput cup $cursor_pos $menu_width
+        echo -e "\033[1K"
+        tput cup $cursor_pos 2
+        echo "$descriptor_line"
+    fi
 }
 
 #Simply write a one line descriptor, as read from the menu file
@@ -951,22 +1055,7 @@ write_help_descriptor() {
 }
 
 
-# Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
-infinite_menu() { 
-    if [[ "$active_panel" == "right" ]]; then
-        limit=$right_panel_length
-    else
-        limit=$menu_length
-    fi
 
-    if [[ $menu_pos -ge $limit ]]; then
-        menu_pos=0
-    fi
-
-    if [[ $menu_pos -lt 0 ]]; then
-        menu_pos=$(($limit - 1))
-    fi
-}
 
 
 infinite_tab() {     
@@ -1006,12 +1095,15 @@ move_up() {
         ((menu_pos--))
     fi
 
-    #Check for right panel too
-    if [[ "$active_panel" == "right" ]] && [[ "${right_panel_entry[$menu_pos - 1]}" == "skip" ]]; then
-        ((menu_pos--))
+    # Alo in right panel
+    if [[ "$active_panel" == "right" ]]; then 
+        while [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos - 1]}" == "skip" ]] || [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos - 1]}" == "divider" ]]; do
+           ((menu_pos--))
+        done
     fi
 
     ((menu_pos--))
+    infinite_menu
 }
 
 
@@ -1022,13 +1114,32 @@ move_down() {
     fi
 
     #Chexck for right panel too
-    if [[ "$active_panel" == "right" ]] && [[ "${right_panel_entry[$menu_pos + 1]}" == "skip" ]]; then
-        ((menu_pos++))
+    if [[ "$active_panel" == "right" ]]; then 
+        while [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos + 1]}" == "skip" ]] || [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos + 1]}" == "divider" ]]; do
+           ((menu_pos++))
+        done
     fi
-
+    
     ((menu_pos++))
+    infinite_menu
 }
 
+# Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
+infinite_menu() { 
+    if [[ "$active_panel" == "right" ]]; then
+        limit=${#RIGHT_PANEL_ITEM_KEYS[@]}
+    else
+        limit=$menu_length
+    fi
+
+    if [[ $menu_pos -ge $limit ]]; then
+        menu_pos=0
+    fi
+
+    if [[ $menu_pos -lt 0 ]]; then
+        menu_pos=$(($limit - 1))
+    fi
+}
 
 tab_left() {
     if ! $submenu && ! $sub_flags_menu && ! $help_submenu; then
@@ -1601,16 +1712,19 @@ command_builder_function() {
     # read_rightpanel_items
     draw_menu
 
+    read_rightpanel_items
+
+    
+
     while $sub_flags_menu; do
-        set_command_builder_items "$@"
-        # read_rightpanel_items
-        infinite_menu
-        write_menu_items
 
         if $show_right_panel; then
             write_rightpanel_items
         fi
-
+        set_command_builder_items "$@"
+        # read_rightpanel_items
+        # infinite_menu
+        write_menu_items
         
         tput cup $(($header_height + $menu_height + $DESCRIPTOR_HEIGHT)) 2
         
@@ -1697,6 +1811,11 @@ back_to_main_menu() {
         read_descriptor
     fi
 
+
+    read_rightpanel_items
+    write_rightpanel_items
+
+
     # read_rightpanel_items
     clear_menu
 
@@ -1717,7 +1836,7 @@ main_menu() {
         read_tab_items
         read_menu_items
         read_descriptor
-        infinite_menu
+        # infinite_menu
         infinite_tab
         write_tab_items
         write_menu_items
@@ -1749,7 +1868,7 @@ submenu() {
         fi
         
         read_descriptor $1 $2
-        infinite_menu
+        # infinite_menu
 
         if [[ $1 != "help" ]]; then
             write_menu_items
@@ -1758,11 +1877,6 @@ submenu() {
         fi
 
         if $show_right_panel; then
-
-            if [[ $1 == "help" ]]; then
-                read_help_rightpanel_items
-            fi
-
             write_rightpanel_items
         fi
 
@@ -1837,6 +1951,10 @@ enter_helpmenu() {
 
     init_menu "help"
 
+    if $show_right_panel; then
+        write_rightpanel_items
+    fi
+
     while $help_submenu; do
         submenu "help"
     done
@@ -1882,6 +2000,8 @@ function functright4 {
 # Initialises and displays the main menu
 # This is what the launcher calls, basically
 main() { 
+    set_up_menus
+
     for ((i = 1; i <= $#; i++)); do
         j=$((i + 1))
 
@@ -1905,9 +2025,7 @@ main() {
     fi
 
     while true; do
-
         main_menu
     done
 }
 
-set_up_menus

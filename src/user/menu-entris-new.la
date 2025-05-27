@@ -38,124 +38,6 @@ _endmenutype
 
 # The tabs displayed at the top. Change names here as desired
 # The last one should remain setup, unless you with to disable that functionality
-_menutab
-System
-Packages
-Third tab
-Fourth Tab
-Fifth Tab
-Setup
-_endmenutab
-
-
-# (Hint: In "old" menustyle, tab numbers start from 0
-# In "simple" menu style (default), tab numbers start from 1
-# The default is "simple")
-# 
-# Syntax: 
-# _menu# (where # is the tab number)
-# Menu item 1 :: Menu item 1 desription (Appears at the bottom when item is highlighted)
-# Menu item 2 :: Menu item 1 desription
-# Menu item 3 :: Menu item 1 desription
-# skip
-# Menu item 5 :: Menu item 1 desription
-# Menu item 6 :: Menu item 1 desription
-# _endmenu# (same number as above)
-#
-# Adding `skip` to a line will leave that line empty, useful for visual/logical separation
-
-
-# First tab
-_menu1
-1 - Resource monitor :: Show the output of top
-2 - Better resource monitor :: Show the output of htop (if installed)
-3 - Show sensors :: Thermal readings in real time 
-skip
-5 - Read the system logs ::  See the output of journalctl (or dmesg, if not systemd)
-6 - Browse files :: Launch Midnight Commander (f installed)
-7 - Analyse disk space :: Select your options in the submenu
-8 - Interactive ping :: Use the built-in command-builder to construct a ping command
-skip
-10 - Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
-11 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
-_endmenu1
-
-
-# submenu itmes for tab 1, item 6
-_submenu17
-1 - Analyse root :: Run ncdu /
-skip
-3 - Analyse /home :: Run ncdu /home/attila
-4 - Anaylise ~/Downloads :: Run ncdu ~/Downloads
-5 - Analyse ~/Documents :: ncdu ~/Documents
-6 - Analyse ~/.cache :: Run ncdu ~/.cache
-skip
-8 - Analyse tmp directory :: Run ncdu /tmp
-9 - Analyse logs :: Run ncdu /var/log
-_endsubmenu17
-
-
-# Second tab
-_menu2
-1 - Update system :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
-1 - Quick update system :: No silly questions, just do it already. (apt update && apt upgrade -y)
-3 - Clean up apt :: apt autoremove && apt clean
-skip
-5 - Install package(s) :: apt install <whatever>
-6 - Remove package(s) :: apt (--purge) remove <whatever>
-7 - List package(s) :: apt list <whatever>
-8 - Search package(s) :: apt search <whatever>
-9 - Show package details :: apt show <whatever>
-_endmenu2
-
-
-# Third Tab
-_menu3
-1 - Complex script :: Run a very-very complex script
-2 - Solve for x :: Solve the mysteries of the universe (all of them) for x
-3 - Make Window$ secure :: How to instantly secure any computer running Window$
-4 - Important script :: Run a very important script
-5 - Play robotfindskitten :: You don have robotfindskitten installed, right? Right?
-6 - Pointless menuitem :: This does not do anything, only pollutes the environment
-_endmenu3
-
-
-# Fourth tab
-_menu4
-Nothing here yet :: Write your own menus here
-_endmenu4
-
-
-# Fifth tab
-_menu5
-Nothing here yet :: Write your own menus here
-_endmenu5
-
-
-
-
-################
-# System menus #
-################
-
-# Keep these on the LAST TAB to preserve hotkeys
-# Sixth tab. (If you add or remove some tabs, change this accordingly)
-_menu6
-e - Edit menu entries :: Interactively change menu entries
-u - Edit user functions :: Add user defined scripts and functions
-m - Bind functions to menus :: Bind scripts and pre-defined functions to menu items
-v - Edit default values :: Edit default menu length, number of tabs, etc.
-_endmenu6
-
-
-
-
-##############
-# User menus #
-##############
-
-# The tabs displayed at the top. Change names here as desired
-# The last one should remain setup, unless you with to disable that functionality
 
 [:tab_order:]
 Tab 1 :: System
@@ -230,13 +112,14 @@ Tab 6 :: Edit default values :: Edit default menu length, number of tabs, etc.
 
 
 
-
-
 [:right_panel_items:]
 
 # Contents of the right panel. Only change this if you alter right panel functionality 
-# After specifying the type of right panel (Main, Sub, Cmb, or Help), the next columns should specify 
+# After specifying the type of right panel (Main, Sub, CMB, or Help), the next columns should specify 
 # the shortcut key (mandatory)
+#
+# Items with the shortkey 'h' will always be skipped in Help menus, and anything with the shorkey 'b'
+# will nto be showing in top-level menus
 
 
 # Right panel items for main menu
@@ -251,13 +134,5 @@ Main :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and lif
 CMB :: m :: Misc. arguments :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
 CMB :: c :: Run command :: Run the current command with all the set arguments and flag-options
 CMB :: x :: Delete set flags :: Remove everything and start over
-CMB :: skip
-CMB :: divider
-CMB :: skip
-CMB :: f :: Reflow Menu :: Redraw the Lazy Admin UI
-CMB :: h :: Get Help :: Display the help menu
-CMB :: k :: Show key bindings :: Display the different key bindings
-CMB :: b :: Back to Main Menu :: Return to main menu
-CMB :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
 
 [:end_right_panel_items:]
