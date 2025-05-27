@@ -44,14 +44,16 @@ declare -a TAB_ITEM_KEYS
 declare -a TAB_ITEM_ENTRIES
 
 declare -a MENU_ITEM_ROWS
-declare -a RIGHT_PANEL_ITEM_ENTRIES
-declare -a RIGHT_PANEL_ITEM_DESCRIPTIONS
+declare -a MENU_ITEM_ENTRIES
+declare -a MENU_ITEM_DESCRIPTIONS
+declare -a MENU_ITEM_COMMANDS
 
 declare -a RIGHT_PANEL_ITEM_ROWS
 declare -a RIGHT_PANEL_ITEM_KEYS
 declare -a RIGHT_PANEL_ITEM_ENTRIES
 declare -a RIGHT_PANEL_ITEM_DESCRIPTIONS
 
+declare -i NUMBER_OF_TABS
 
 # TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
 # TODO, all global variables should be UPPER_CASE, 
@@ -175,6 +177,7 @@ set_up_menus() {
     if [[ -f $menu_file ]]; then
         echo "Setting menus..."
         parse_menu_file
+        read_tab_items
         set_menu_sizes     
     else
         clear
@@ -196,57 +199,6 @@ find_menu_type() {
 }
 
 
-#This function will read the menu entries from the menu entries file as set in defaults
-read_menu_items() { 
-    menu_item=$tab_pos
-    sub_parent=$1
-    sub_item=$2
-
-    if [[ $menu_type == "simple" ]]; then
-        ((menu_item++))
-        ((sub_parent++))
-        ((sub_item++))
-    fi
-
-    menu_entry=""
-
-    if $submenu; then
-        OLDIFS="$IFS"
-        IFS=$'\n'
-        menu_entry=($(cat $menu_file | sed -n '/'_submenu$sub_parent$sub_item'/{:a;n;/'_endsubmenu$sub_parent$sub_item'/q;p;ba}'))
-
-        
-        if $sub_flags_menu; then
-            menu_height=$($submenu_height+1)
-            max_menu_length=$(($submenu_height - 2))
-        elif $help_submenu; then
-            menu_height=$HELP_SUB_MENU_HEIGHT
-            max_menu_length=$((HELP_SUB_MENU_HEIGHT - 2))
-        else
-            menu_height=$submenu_height
-            max_menu_length=$(($submenu_height - 3))
-        fi
-
-        IFS="$OLDIFS"
-    else
-        OLDIFS="$IFS"
-        IFS=$'\n'
-        menu_entry=($(cat $menu_file | sed -n '/'_menu$menu_item'/{:a;n;/'_endmenu$menu_item'/q;p;ba}'))
-        menu_height=$normal_menu_height
-        max_menu_length=$(($normal_menu_height - 3))
-        IFS="$OLDIFS"
-    fi
-    
-    menu_length=${#menu_entry[@]}
-
-    # if [[ $menu_length -gt $max_menu_length ]]; then
-    #     for ((i = $max_menu_length; i < $menu_length; i++)); do
-    #         unset "menu_entry[$i]"
-    #     done
-    # fi
-
-    # menu_length=${#menu_entry[@]}
-}
 
 
 set_command_builder_items() {     
@@ -368,30 +320,6 @@ read_descriptor() {
 }
 
 
-# Load the items shown in the tab
-read_tab_items() {     
-    OLDIFS="$IFS"
-    IFS=$'\n'
-
-    if $alt_menu; then
-        tab_entry=($(cat $menu_file | sed -n '/'_submenutab$tab_pos$menu_pos'/{:a;n;/'_endsubmenutab$tab_pos$menu_pos'/q;p;ba}'))
-    else
-        tab_entry=($(cat $menu_file | sed -n '/'_menutab'/{:a;n;/'_endmenutab'/q;p;ba}'))
-    fi
-
-    IFS="$OLDIFS"
-    tab_length=$((${#tab_entry[@]} - 1))
-
-    if [[ $tab_length -gt 9 ]]; then
-        for ((i = 10; i < $tab_length + 1; i++)); do
-            unset "tab_entry[$i]"
-        done
-
-        tab_length=9
-    fi
-}
-
-
 parse_menu_file() {
 
     local -a menu_file_contents
@@ -465,6 +393,123 @@ parse_menu_file() {
 }
 
 
+
+
+read_menu_items() { 
+    menu_item=$tab_pos
+    sub_parent=$1
+    sub_item=$2
+
+    if [[ $menu_type == "simple" ]]; then
+        ((menu_item++))
+        ((sub_parent++))
+        ((sub_item++))
+    fi
+
+    menu_entry=""
+
+    if $submenu; then
+        OLDIFS="$IFS"
+        IFS=$'\n'
+        menu_entry=($(cat $menu_file | sed -n '/'_submenu$sub_parent$sub_item'/{:a;n;/'_endsubmenu$sub_parent$sub_item'/q;p;ba}'))
+
+        
+        if $sub_flags_menu; then
+            menu_height=$($submenu_height+1)
+            max_menu_length=$(($submenu_height - 2))
+        elif $help_submenu; then
+            menu_height=$HELP_SUB_MENU_HEIGHT
+            max_menu_length=$((HELP_SUB_MENU_HEIGHT - 2))
+        else
+            menu_height=$submenu_height
+            max_menu_length=$(($submenu_height - 3))
+        fi
+
+        IFS="$OLDIFS"
+    else
+        OLDIFS="$IFS"
+        IFS=$'\n'
+        menu_entry=($(cat $menu_file | sed -n '/'_menu$menu_item'/{:a;n;/'_endmenu$menu_item'/q;p;ba}'))
+        menu_height=$normal_menu_height
+        max_menu_length=$(($normal_menu_height - 3))
+        IFS="$OLDIFS"
+    fi
+    
+    menu_length=${#menu_entry[@]}
+
+}
+
+# Load the items shown in the tab
+read_tab_items() {
+    OLD_IFS=$IFS
+    IFS="$SHORT_DELIMITER"
+    TAB_ITEM_KEYS=()
+    TAB_ITEM_ENTRIES=()
+
+    for ((n = 0; n < "${#TAB_ITEM_ROWS[@]}"; n++)); do
+        local -a current_row
+        read -ra current_row <<< "${TAB_ITEM_ROWS[$n]}"
+    
+        TAB_ITEM_KEYS+=("${current_row[0]}")
+        TAB_ITEM_ENTRIES+=("${current_row[2]}")
+    done
+
+    IFS="$OLD_IFS"
+    NUMBER_OF_TABS=$((${#TAB_ITEM_ENTRIES[@]} - 1))
+
+    # No more than 9 tabs for now. Don't ask why, I cannot remember
+    if [[ $NUMBER_OF_TABS -gt 9 ]]; then
+        for ((i = 10; i < $NUMBER_OF_TABS + 1; i++)); do
+            unset "TAB_ITEM_KEYS[$i]"
+            unset "TAB_ITEM_ENTRIES[$i]"
+        done
+
+        NUMBER_OF_TABS=9
+    fi
+
+}
+
+read_menu_items_NEW() {
+    menu_item=(($tab_pos + 1))
+    sub_parent=(($1 + 1)
+    sub_item=(($2 + 1)
+
+    if [[ $menu_type == "simple" ]]; then
+        ((menu_item++))
+        ((sub_parent++))
+        ((sub_item++))
+    fi
+
+    for ((n = 0; n < "${#MENU_ITEM_ROWS[@]}"; n++)); do
+        local -a current_row
+        read -ra current_row <<< "${MENU_ITEM_ROWS[$n]}"
+
+        local tab_key="${current_row[0]}"
+
+        if [[ $tab_key == "${TAB_ITEM_KEYS[$tab_pos]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$tab_pos]}" ]]; then
+            local menu_item="${current_row[2]}"
+            local description="${current_row[4]}"
+            local command="${current_row[6]}"
+            
+            if [[ $menu_item == "skip "]]; then
+                MENU_ITEM_ENTRIES+=("skip")
+                MENU_ITEM_DESCRIPTIONS+=("")
+                MENU_ITEM_COMMANDS+=("")
+            else
+                MENU_ITEM_ENTRIES+=("$n - $menu_item")
+                MENU_ITEM_DESCRIPTIONS+=("$description")
+                MENU_ITEM_COMMANDS+=("$command")
+            fi
+
+        fi 
+    done
+
+}
+
+
+
+
+
 read_rightpanel_items() {    
   
     local menu_type_key
@@ -516,9 +561,7 @@ read_rightpanel_items() {
     done
 
     IFS=$OLD_IFS
-    # TODO: Now proceed from item to item to test if it contains the correct thing, then save appropriately
-    # TODO: Menu should only be read once
-    # TODO: Do the same with regular menu items, only porepend thenm with TabName :: for later grouping
+    # TODO: Now proceed from item to item to test if it contains the correct thing, then save appropriately (WUT??)
 
 }
 
@@ -540,14 +583,14 @@ write_tab_items() {
     displayed_tab_entries=1
 
     all_tabs_length=0 #TODO:Global
-    for ((n = 0; n <= $tab_length; n++)); do
-        all_tabs_length=$(($all_tabs_length + ${#tab_entry[$n]} + 3))
+    for ((n = 0; n <= $NUMBER_OF_TABS; n++)); do
+        all_tabs_length=$(($all_tabs_length + ${#TAB_ITEM_ENTRIES[$n]} + 3))
     done
     ((all_tabs_length++))
 
     # Make sure tabs will fit
-    for ((n = 0; n <= $tab_length; n++)); do
-        current_tabs_length=$(($current_tabs_length + ${#tab_entry[$n]} + 3))
+    for ((n = 0; n <= $NUMBER_OF_TABS; n++)); do
+        current_tabs_length=$(($current_tabs_length + ${#TAB_ITEM_ENTRIES[$n]} + 3))
         if [[ $current_tabs_length -ge $terminal_width ]]; then
             tabs_dont_fit=true
             ((displayed_tab_entries--))
@@ -567,7 +610,7 @@ write_tab_items() {
         tput cup $((header_height - 2)) $horizontal_connector_position
 
         for ((n = 0; n < $(($displayed_tab_entries - 2)); n++)); do
-            horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[$n]} + 3))
+            horizontal_connector_position=$(($horizontal_connector_position + ${#TAB_ITEM_ENTRIES[$n]} + 3))
             tput cup $((header_height - 2)) $horizontal_connector_position
             echo -n "┯"
         done
@@ -578,13 +621,13 @@ write_tab_items() {
     for ((n = 0; n < $displayed_tab_entries; n++)); do
        
         if [[ $n -eq $tab_pos ]]; then
-            echo -n -e "\e[00;30;47m ${tab_entry[$n]} \e[00m"
+            echo -n -e "\e[00;30;47m ${TAB_ITEM_ENTRIES[$n]} \e[00m"
         else
-            echo -n " ${tab_entry[$n]} "
+            echo -n " ${TAB_ITEM_ENTRIES[$n]} "
         fi
 
         # Do not write separator after last item
-        if [[ $n -lt $tab_length ]]; then
+        if [[ $n -lt $NUMBER_OF_TABS ]]; then
             echo -n "│"
         fi       
     
@@ -596,7 +639,7 @@ write_tab_items() {
         tput cup $((header_height)) $horizontal_connector_position
 
         for ((n = 0; n < $(($displayed_tab_entries - 2)); n++)); do
-            horizontal_connector_position=$(($horizontal_connector_position + ${#tab_entry[$n]} + 3))
+            horizontal_connector_position=$(($horizontal_connector_position + ${#TAB_ITEM_ENTRIES[$n]} + 3))
             tput cup $((header_height)) $horizontal_connector_position
 
             if $show_right_panel && [[ $horizontal_connector_position == $(($menu_width - $active_right_panel_width)) ]]; then
@@ -1061,7 +1104,7 @@ write_help_descriptor() {
 infinite_tab() {     
     limit=$(($displayed_tab_entries - 1))
 
-    if [[ $limit -lt $tab_length ]]; then
+    if [[ $limit -lt $NUMBER_OF_TABS ]]; then
        ((limit++))
     fi
 
@@ -1165,7 +1208,7 @@ select_tab() {
     target_tab=$(($1 - 1))
     if [[ $target_tab -lt $displayed_tab_entries ]]; then
         if ! $submenu && ! $sub_flags_menu && ! $help_submenu; then
-            if [[ $target_tab -eq 0 || $tab_length -ge $target_tab ]]; then
+            if [[ $target_tab -eq 0 || $NUMBER_OF_TABS -ge $target_tab ]]; then
                 clear_menu
                 menu_pos=0
                 tab_pos=$target_tab
@@ -1261,17 +1304,7 @@ select_menu_item_by_number() {
     if [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
         ((key--))
        
-        if [[ -z $function_style || $function_style == "old" ]]; then
-
-            if $submenu; then
-                subfunct$tab_pos$main_menu_pos$key $tab_pos $menu_pos
-            else
-                funct$tab_pos$key $tab_pos $menu_pos
-            fi
-
-        elif [[ $function_style == "simple" ]]; then
-
-            if $submenu; then
+        if $submenu; then
                 function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1))
                 is_valid=$?
                 if [[ $is_valid == 0 ]]; then
@@ -1287,8 +1320,8 @@ select_menu_item_by_number() {
                     tab$(($tab_pos + 1))item$(($key + 1)) $tab_pos $menu_pos
                 fi
                 
-            fi
         fi
+       
     fi
     
     if [[ $is_valid == 0 ]]; then
@@ -1643,19 +1676,19 @@ shortkey_command(){
             return
             ;;
         "e")
-            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $NUMBER_OF_TABS ]]; then
                 functsetup0
                 init_menu
             fi
             ;;
         "u")
-            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $NUMBER_OF_TABS ]]; then
                 functsetup1
                 init_menu
             fi
             ;;
         "v")
-            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+            if ! $submenu && ! $sub_flags_menu && ! $help_submenu && [[ $tab_pos == $NUMBER_OF_TABS ]]; then
                 functsetup3
                 init_menu
             fi
@@ -1663,7 +1696,7 @@ shortkey_command(){
         "m")
             if $sub_flags_menu; then
                 cmb_set_manual_args
-            elif ! $submenu && ! $help_submenu && [[ $tab_pos == $tab_length ]]; then
+            elif ! $submenu && ! $help_submenu && [[ $tab_pos == $NUMBER_OF_TABS ]]; then
                 functsetup2
                 init_menu
             fi
@@ -1860,7 +1893,7 @@ main_menu() {
     submenu=false
     sub_flags_menu=false
     if ! $menus_force_hidden; then
-        read_tab_items
+        
         read_menu_items
         read_descriptor
         # infinite_menu
@@ -1890,7 +1923,6 @@ submenu() {
         sub_flags_menu=false
 
         if [[ $1 != "help" ]]; then
-            read_tab_items
             read_menu_items $1 $2
         fi
         
@@ -1929,6 +1961,7 @@ init_menu() {
     fi
 
     clear
+    r
     if [[ $1 != "help" ]]; then
         find_menu_type
         read_menu_items $1 $2
