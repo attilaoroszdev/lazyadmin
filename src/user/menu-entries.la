@@ -170,60 +170,60 @@ Tab 6 :: Setup
 [:menu_items:]
 
 # First tab
-Tab 1 :: Resource monitor :: Show the output of top :: 
-Tab 1 :: Better resource monitor :: Show the output of htop (if installed)
-Tab 1 :: Show sensors :: Thermal readings in real time 
+Tab 1 :: Resource monitor        :: Show the output of top                    :: top
+Tab 1 :: Better resource monitor :: Show the output of htop (if installed)    :: htop
+Tab 1 :: Show sensors            :: Thermal readings in real time 
 Tab 1 :: skip
-Tab 1 :: Read the system logs ::  See the output of journalctl (or dmesg, if not systemd)
-Tab 1 :: Browse files :: Launch Midnight Commander (f installed)
-Tab 1 :: Analyse disk space :: Select your options in the submenu
+Tab 1 :: Read the system logs    :: Show journalctl (or dmesg, if no systemd)
+Tab 1 :: Browse files            :: Launch Midnight Commander (f installed)
+Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu "Tab 1" 7
     # Submenu items for the 7th entry
-    -- 1 - Analyse root :: Run ncdu /
-    -- skip
-    -- 3 - Analyse /home :: Run ncdu /home/attila
-    -- 4 - Anaylise ~/Downloads :: Run ncdu ~/Downloads
-    -- 5 - Analyse ~/Documents :: ncdu ~/Documents
-    -- 6 - Analyse ~/.cache :: Run ncdu ~/.cache
-    -- skip
-    -- 8 - Analyse tmp directory :: Run ncdu /tmp
-    -- 9 - Analyse logs :: Run ncdu /var/log
-Tab 1 :: Interactive ping :: Use the built-in command-builder to construct a ping command
+    -- :: Analyse root           :: Run ncdu /
+    -- :: skip
+    -- :: Analyse /home          :: Run ncdu /home/attila
+    -- :: Anaylise ~/Downloads   :: Run ncdu ~/Downloads
+    -- :: Analyse ~/Documents    :: ncdu ~/Documents
+    -- :: Analyse ~/.cache       :: Run ncdu ~/.cache
+    -- :: skip
+    -- :: Analyse tmp directory  :: Run ncdu /tmp
+    -- :: Analyse logs           :: Run ncdu /var/log
+    # End of submenu items
+Tab 1 :: Interactive ping        :: Built-in command-builder constructing a ping command :: 
 Tab 1 :: skip
-Tab 1 :: Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
-Tab 1 :: Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
+Tab 1 :: Drop to shell           :: Drop to a bash shell. Type 'exit' to return to menu  ::  
+Tab 1 :: Drop to root shell      :: Drop to a shell as root. Be careful, this is real!   ::
 
 
 # Second tab
-
-Tab 2 :: Update system :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
-Tab 2 :: Quick update system :: No silly questions, just do it already. (apt update && apt upgrade -y)
-Tab 2 :: Clean up apt :: apt autoremove && apt clean
+Tab 2 :: Update system        :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
+Tab 2 :: Quick update system  :: No silly questions, just do it already. (apt update && apt upgrade -y)
+Tab 2 :: Clean up apt         :: apt autoremove && apt clean
 Tab 2 :: skip
-Tab 2 :: Install package(s) :: apt install <whatever>
-Tab 2 :: Remove package(s) :: apt (--purge) remove <whatever>
-Tab 2 :: List package(s) :: apt list <whatever>
-Tab 2 :: Search package(s) :: apt search <whatever>
+Tab 2 :: Install package(s)   :: apt install <whatever>
+Tab 2 :: Remove package(s)    :: apt (--purge) remove <whatever>
+Tab 2 :: List package(s)      :: apt list <whatever>
+Tab 2 :: Search package(s)    :: apt search <whatever>
 Tab 2 :: Show package details :: apt show <whatever>
 
 
-Tab 3 :: Complex script :: Run a very-very complex script
-Tab 3 :: Solve for x :: Solve the mysteries of the universe (all of them) for x
-Tab 3 :: Make Window$ secure :: How to instantly secure any computer running Window$
-Tab 3 :: Important script :: Run a very important script
-Tab 3 :: Play robotfindskitten :: You don have robotfindskitten installed, right? Right?
-Tab 3 :: Pointless menuitem :: This does not do anything, only pollutes the environment
+Tab 3 :: Complex script         :: Run a very-very complex script
+Tab 3 :: Solve for x            :: Solve the mysteries of the universe (all of them) for x
+Tab 3 :: Make Window$ secure    :: How to instantly secure any computer running Window$
+Tab 3 :: Important script       :: Run a very important script
+Tab 3 :: Play robotfindskitten  :: You don have robotfindskitten installed, right? Right?
+Tab 3 :: Pointless menuitem     :: This does not do anything, only pollutes the environment
 
 
 Tab 4 :: Nothing here yet :: Write your own menus here
 
-
 Tab 5 :: Nothing here yet :: Write your own menus here
 
 
-Tab 6 :: Edit menu entries :: Interactively change menu entries
-Tab 6 :: Edit user functions :: Add user defined scripts and functions
-Tab 6 :: Bind functions to menus :: Bind scripts and pre-defined functions to menu items
-Tab 6 :: Edit default values :: Edit default menu length, number of tabs, etc.
+# Setup is currently on Tab 6. Either notation will work
+Setup :: Edit menu entries       :: Interactively change menu entries
+Setup :: Edit user functions     :: Add user defined scripts and functions
+Setup :: Bind functions to menus :: Bind scripts and pre-defined functions to menu items
+Setup :: Edit default values     :: Edit default menu length, number of tabs, etc.
 
 [:end_menu_items:]
 
@@ -240,24 +240,24 @@ Tab 6 :: Edit default values :: Edit default menu length, number of tabs, etc.
 
 
 # Right panel items for main menu
-Main :: f :: Reflow Menu :: Redraw the Lazy Admin UI
-Main :: h :: Get Help :: Display the help menu
-Main :: k :: Show key bindings :: Display the different key bindings
-Main :: b :: Back to Main Menu :: Return to main menu
-Main :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
+Main :: f :: Reflow Menu        :: Redraw the Lazy Admin UI
+Main :: h :: Get Help           :: Display the help menu
+Main :: k :: Show key bindings  :: Display the different key bindings
+Main :: b :: Back to Main Menu  :: Return to main menu
+Main :: q :: Quit               :: Quit Lazy Admin, and return to your normal shell... and life...
 
 
 # Right panel items for command builder
-CMB :: m :: Misc. arguments :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
-CMB :: c :: Run command :: Run the current command with all the set arguments and flag-options
+CMB :: m :: Misc. arguments  :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
+CMB :: c :: Run command      :: Run the current command with all the set arguments and flag-options
 CMB :: x :: Delete set flags :: Remove everything and start over
 CMB :: skip
 CMB :: divider
 CMB :: skip
-CMB :: f :: Reflow Menu :: Redraw the Lazy Admin UI
-CMB :: h :: Get Help :: Display the help menu
+CMB :: f :: Reflow Menu       :: Redraw the Lazy Admin UI
+CMB :: h :: Get Help          :: Display the help menu
 CMB :: k :: Show key bindings :: Display the different key bindings
 CMB :: b :: Back to Main Menu :: Return to main menu
-CMB :: q :: Quit :: Quit Lazy Admin, and return to your normal shell... and life...
+CMB :: q :: Quit              :: Quit Lazy Admin, and return to your normal shell... and life...
 
 [:end_right_panel_items:]

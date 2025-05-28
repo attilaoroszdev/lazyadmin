@@ -77,7 +77,7 @@ function tab1item6 {
 # Tab 1, menu item 7
 function tab1item7 { 
     #To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
-    enter_submenu $@ "Analyse disk space"
+    enter_submenu "Tab 1" 7
 
 }
 
