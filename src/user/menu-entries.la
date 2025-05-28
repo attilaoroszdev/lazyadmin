@@ -176,7 +176,7 @@ Tab 1 :: Show sensors            :: Thermal readings in real time
 Tab 1 :: skip
 Tab 1 :: Read the system logs    :: Show journalctl (or dmesg, if no systemd)
 Tab 1 :: Browse files            :: Launch Midnight Commander (f installed)
-Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu "Tab 1" 7
+Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu 7
     # Submenu items for the 7th entry
     -- :: Analyse root           :: Run ncdu /
     -- :: skip

@@ -33,11 +33,6 @@ right_panel=true
 # Maxiumum number of menu items: 99
 MAX_MENU_ITEMS=11
 
-# How many elements should sub-menus hold
-# Minumum number of menu items: 5, if right panel is enabled, 1 if not
-# Maxiumum number of sub-menu items: 99
-MAX_SUBMENU_ITEMS=13
-
 
 # Change the size of the right panel
 RIGHT_PANEL_WIDTH=27

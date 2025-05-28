@@ -34,7 +34,6 @@ right_panel_height_warning=false
 right_panel_width_warning=false
 height_warning=false
 normal_menu_height=0
-submenu_height=0
 menu_height=0
 show_right_panel=$right_panel
 max_menu_height=0
@@ -72,7 +71,7 @@ set_menu_sizes() {
         right_panel_width_warning=false
         height_warning=false
         normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
-        submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
+
         menu_height=0
 
         show_right_panel=$right_panel
@@ -105,9 +104,7 @@ set_menu_sizes() {
             height_warning=false
         fi
 
-        if [[ $submenu_height -gt $(($max_menu_height + 2)) ]]; then
-            submenu_height=$(($max_menu_height + 2))
-        fi
+       
 
         if $show_right_panel; then
             
@@ -115,18 +112,10 @@ set_menu_sizes() {
                 normal_menu_height=$MIN_MENU_HEIGHT
             fi
 
-            if [[ $submenu_height -lt $MIN_MENU_HEIGHT ]]; then
-                submenu_height=$MIN_MENU_HEIGHT
-            fi
-
         else
             
             if [[ $normal_menu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
                 normal_menu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
-            fi
-
-            if [[ $submenu_height -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
-                submenu_height=$MIN_MENU_HEIGHT_SINGLE_PANEL
             fi
 
         fi
@@ -482,51 +471,6 @@ read_tab_items() {
 
 
 
-read_menu_items_OLD() { 
-    menu_item=$tab_pos
-    sub_parent=$1
-    sub_item=$2
-
-    if [[ $menu_type == "simple" ]]; then
-        ((menu_item++))
-        ((sub_parent++))
-        ((sub_item++))
-    fi
-
-    menu_entry=""
-
-    if $is_submenu; then
-        OLDIFS="$IFS"
-        IFS=$'\n'
-        menu_entry=($(cat $menu_file | sed -n '/'_submenu$sub_parent$sub_item'/{:a;n;/'_endsubmenu$sub_parent$sub_item'/q;p;ba}'))
-
-        
-        if $sub_flags_menu; then
-            menu_height=$($submenu_height+1)
-            max_menu_length=$(($submenu_height - 2))
-        elif $help_submenu; then
-            menu_height=$HELP_SUB_MENU_HEIGHT
-            max_menu_length=$((HELP_SUB_MENU_HEIGHT - 2))
-        else
-            menu_height=$submenu_height
-            max_menu_length=$(($submenu_height - 3))
-        fi
-
-        IFS="$OLDIFS"
-    else
-        OLDIFS="$IFS"
-        IFS=$'\n'
-        menu_entry=($(cat $menu_file | sed -n '/'_menu$menu_item'/{:a;n;/'_endmenu$menu_item'/q;p;ba}'))
-        menu_height=$normal_menu_height
-        max_menu_length=$(($normal_menu_height - 3))
-        IFS="$OLDIFS"
-    fi
-    
-    menu_length=${#menu_entry[@]}
-
-}
-
-
 read_submenu_items(){
     OLD_IFS=$IFS
     IFS="$MENU_DELIMITER"
@@ -552,7 +496,6 @@ read_submenu_items(){
             sub_key="${sub_key%"${sub_key##*[![:space:]]}"}"  # Remove trailing whitespace
         
             if [[ "$sub_key" == "--" ]]; then
-                echo "${current_row[2]} is submenu row"
                 add_row_to_menu_items $idx "${current_row[@]}"
                 ((idx++))
             else
@@ -936,7 +879,8 @@ write_help_menu_items() {
 
 
 write_rightpanel_items() { 
-   local menu_type_key
+    local menu_type_key
+    clear_right_panel
 
     if $sub_flags_menu; then
         menu_type_key="$COMMAND_BUILDER_KEY"
@@ -1059,32 +1003,46 @@ draw_divider_line() {
 
 #clear menu area
 clear_menu() { 
+    # echo "Clear menu called"
     for ((n = 1; n < $menu_height; n++)); do
-        tput cup $((n + $header_height)) $(($menu_width - $active_right_panel_width - 1))
-        echo -e "\033[1K"
+        clear_line $((n + $header_height)) $(($menu_width - $active_right_panel_width - 1)) "left"
+    done
+
+    # echo "Menu cleared"
+    # sleep 5
+}
+
+clear_right_panel() {
+    for ((n = 0; n < (($menu_height-2)); n++)); do
+        clear_line $(($n + $header_height +2)) $(($menu_width - $active_right_panel_width + 1)) "right"
     done
 }
 
-# Usage clear_line $vertical_position $horizontal_positon $lenght
+# Usage clear_line $line_number $from_column "left|right"
 clear_line() {
 
     if [[ $# -lt 3 ]]; then
         return 65
     fi
 
-    start_vertical=$1
-    start_horizontal=$2
-    clear_length=$3
+    line_number=$1
+    from_column=$2
+    direction=$3
 
-    tput cup $start_vertical $start_horizontal
-
-    for ((i = 0; i < $clear_length; i++)); do
-        echo -n " "
-    done
+    tput cup $line_number $from_column
+    if [[ $direction == "left" ]]; then
+        echo -e "\e[1K"
+    else
+        echo -e "\e[K"
+    fi 
 }
 
 #Draws the outline of the menu, with spaces left out for inclusion of items
 draw_menu() {
+
+    echo "Draw menu called"
+    sleep 2
+
     if $menus_force_hidden; then
         show_force_hide_error
         return 1
@@ -1092,27 +1050,18 @@ draw_menu() {
     
     tput civis
 
+
+    menu_height=$normal_menu_height
+    header_height=$MAIN_HEADER_HEIGHT
+
     if $sub_flags_menu; then
-        menu_height=$(($submenu_height-1))
-        header_height=$SUB_HEADER_HEIGHT
         title=$sub_flags_menutitle
     else
         if $is_submenu; then
-
-            if $help_submenu; then
-                menu_height=$HELP_SUB_MENU_HEIGHT
-            else
-                menu_height=$submenu_height
-            fi
-
-            header_height=$SUB_HEADER_HEIGHT
             title=$submenu_title
         else
-            menu_height=$normal_menu_height
-            header_height=$MAIN_HEADER_HEIGHT
             title=$MAIN_TITLE
         fi
-
     fi
 
     if $root; then
@@ -1149,11 +1098,11 @@ draw_menu() {
 
     #Draw top and bottom border of menu tabs
     #Skip this for submenus
-    if ! $is_submenu; then
-        ((cursor_pos+=2))
-        tput cup $cursor_pos 0
-        draw_line
-    fi
+    # if ! $is_submenu; then
+    ((cursor_pos+=2))
+    tput cup $cursor_pos 0
+    draw_line
+    # fi
 
     # If rigth panel is on, draw its separator
     if $show_right_panel; then
@@ -1191,8 +1140,8 @@ draw_menu() {
 
 check_for_warnings() {
     warning_position=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT + 2))
-    clear_line $warning_position 0 $terminal_width
-    clear_line $(($warning_position + 1)) 0 $terminal_width
+    clear_line $warning_position 0 "right"
+    clear_line $(($warning_position + 1)) 0 "right"
     msg=""
     if $height_warning || $tabs_dont_fit; then
         menus_label=""
@@ -1462,11 +1411,7 @@ select_menu_item_by_number() {
     # Only read second digit if it makes sense, otherwise avoid the delay
     read_second_digit=false
 
-    if $is_submenu && [[ $MAX_SUBMENU_ITEMS -gt 9 ]] && [[ $key -le $(($MAX_SUBMENU_ITEMS / 10)) ]]; then
-        if ! $help_submenu; then
-            read_second_digit=true
-        fi
-    elif [[ $MAX_MENU_ITEMS -gt 9 ]] && [[ $key -le $(($MAX_MENU_ITEMS/10)) ]]; then
+    if [[ $MAX_MENU_ITEMS -gt 9 ]] && [[ $key -le $(($MAX_MENU_ITEMS/10)) ]]; then
         read_second_digit=true
     fi
 
@@ -1484,9 +1429,32 @@ select_menu_item_by_number() {
 
     fi
 
-    is_valid=1
+    local is_valid=1
+    local is_navigation=false
 
-    if [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
+
+    if [[ -n "${MENU_ITEM_COMMANDS[(($key-1))]}" ]]; then
+        local command_item=${MENU_ITEM_COMMANDS[(($key-1))]}
+        local command_function="${command_item%% *}"
+        local command_args="${command_item#* }"
+
+        is_valid=true
+
+        "$command_function" "$command_args"
+
+        case "$command_function" in
+            "enter_submenu")
+                is_navigation=true
+                ;;
+            "back_to_main_menu")
+                is_navigation=true
+                ;;
+            "command_builder_function")
+                is_navigation=true
+                ;;
+        esac
+
+    elif [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
         ((key--))
        
         if $is_submenu; then
@@ -1497,8 +1465,8 @@ select_menu_item_by_number() {
                     tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)) $tab_pos $menu_pos
                 fi
                 
-            else
-                function_exists tab$(($tab_pos + 1))item$(($key + 1)) && init_menu
+        else
+                function_exists tab$(($tab_pos + 1))item$(($key + 1))
                 is_valid=$?
                 if [[ $is_valid == 0 ]]; then
                     menu_pos=$key
@@ -1509,7 +1477,7 @@ select_menu_item_by_number() {
        
     fi
     
-    if [[ $is_valid == 0 ]]; then
+    if [[ $is_valid == 0 ]] && ! $is_navigation; then
         init_menu
     fi
 
@@ -1532,25 +1500,52 @@ select_highlighted_menu_item() {
         functright$menu_pos
     else
 
-        if [[ -z $function_style || $function_style == "old" ]]; then
+        local is_valid=1
+        local is_navigation=false
 
+        if [[ -n "${MENU_ITEM_COMMANDS[(($menu_pos))]}" ]]; then
+            local command_item=${MENU_ITEM_COMMANDS[(($menu_pos))]}
+            local command_function="${command_item%% *}"
+            local command_args="${command_item#* }"
+
+            is_valid=true
+            
+            "$command_function" "$command_args"
+
+            case "$command_function" in
+                "enter_submenu")
+                    is_navigation=true
+                    ;;
+                "back_to_main_menu")
+                    is_navigation=true
+                    ;;
+                "command_builder_function")
+                    is_navigation=true
+                    ;;
+            esac
+
+        else
             if $is_submenu; then
-                subfunct$tab_pos$main_menu_pos$menu_pos $tab_pos $menu_pos
+                function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1))
+                is_valid=$?
+                if [[ $is_valid == 0 ]]; then
+                    tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($menu_pos + 1)) $tab_pos $menu_pos
+                fi
             else
-                funct$tab_pos$menu_pos $tab_pos $menu_pos
-            fi
-
-        elif [[ $function_style == "simple" ]]; then
-
-            if $is_submenu; then
-                tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($menu_pos + 1)) $tab_pos $menu_pos
-            else
-                tab$(($tab_pos + 1))item$(($menu_pos + 1)) $tab_pos $menu_pos
+             function_exists tab$(($tab_pos + 1))item$(($key + 1))
+                is_valid=$?
+                if [[ $is_valid == 0 ]]; then
+                    tab$(($tab_pos + 1))item$(($menu_pos + 1)) $tab_pos $menu_pos
+                fi
             fi
         fi
+        
     fi
 
-    init_menu
+    if [[ $is_valid == 0 ]] && ! $is_navigation; then
+        init_menu
+    fi
+
 }
 
 
@@ -1573,7 +1568,7 @@ set_highlighted_cmb_arg() {
         functright$menu_pos
     else
         max_length_offset=0
-        max_cmb_height=$(($MAX_SUBMENU_ITEMS + 2))
+        max_cmb_height=$MAX_MENU_ITEMS
         if [[ $# -gt $max_cmb_height ]]; then
             let lenght_diff=$#-$max_cmb_height
             let max_length_offset=$max_length_offset+$lenght_diff
@@ -2132,9 +2127,6 @@ init_menu() {
     read_descriptor $2 $2
     
     read_rightpanel_items
-
-
-    
     draw_menu
 
 
@@ -2150,14 +2142,16 @@ enter_submenu() {
 
     local submenu_title
 
-    if [[ -z "$3" ]]; then
-        submenu_title=${MENU_ITEM_ENTRIES[(($2-1))]}
+    if [[ -z "$2" ]]; then
+        submenu_title=${MENU_ITEM_ENTRIES[(($1-1))]}
         submenu_title="${submenu_title#* - }"
     else
-        submenu_title="$3"
+        submenu_title="$2"
     fi
 
-    read_submenu_items "$1" "$2"
+    echo "Enter-submenu called, \$1=='$1', \$2=='$2', title: $submenu_title"
+
+    read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" "$1"
     clear_menu
     write_menu_items
     

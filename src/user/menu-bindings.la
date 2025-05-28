@@ -75,11 +75,11 @@ function tab1item6 {
 
 
 # Tab 1, menu item 7
-function tab1item7 { 
-    #To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
-    enter_submenu "Tab 1" 7
+# function tab1item7 { 
+#     #To invoke a submenu, you can use the enter_submenu function, as defined in `main-functions.la`. Give the menu title as a first argument, enclosd in ""
+#     enter_submenu 7
 
-}
+# }
 
 
 # submenu functions. These will have a similar naming system, except
