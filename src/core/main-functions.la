@@ -877,7 +877,7 @@ write_help_menu_items() {
     done
 }
 
-
+# TODO Somehow rightpanel flashes whent hsi is called, left panel does not, when those items are written. What gives?
 write_rightpanel_items() { 
     local menu_type_key
     clear_right_panel
@@ -1267,7 +1267,11 @@ move_up() {
 
     ((menu_pos--))
     infinite_menu
-    write_menu_items
+    if [[ "$active_panel" == "left" ]]; then
+        write_menu_items
+    else
+        write_rightpanel_items
+    fi
 }
 
 
@@ -1286,7 +1290,11 @@ move_down() {
     
     ((menu_pos++))
     infinite_menu
-    write_menu_items
+    if [[ "$active_panel" == "left" ]]; then
+        write_menu_items
+    else
+        write_rightpanel_items
+    fi
 }
 
 # Causes the selector to jump to the "other end" of the menu, if reaching either the top or the bottom
@@ -1346,6 +1354,7 @@ select_tab() {
                 tab_pos=$target_tab
                 read_menu_items
                 write_menu_items
+
             fi
         fi
     fi
@@ -1390,6 +1399,9 @@ change_panel() {
             fi
         fi
     esac
+
+    write_menu_items
+    write_rightpanel_items
 }
 
 toggle_right_panel() {
@@ -2136,7 +2148,7 @@ init_menu() {
 }
 
 
-
+# TODO Right panel does not refresh when entering
 # This will be called whrn a submenu is selected
 enter_submenu() {
 
