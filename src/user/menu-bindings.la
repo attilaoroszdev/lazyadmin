@@ -95,55 +95,6 @@ function tab1item8 {
 # Tab 1, menu item 9 was skipepd
 
 
-# Tab 2, menu item 1
-function tab2item1 { 
-    update_system
-}
-
-
-# Tab 2, menu item 2
-function tab2item2 { 
-    upgrade_without_asking
-}
-
-
-# Tab 2, menu item 3
-function tab2item3 { 
-    clean_up_apt
-}
-
-
-# Tab 2, menu item 4 was skipped
-
-# Tab 2, menu item 5
-function tab2item5 { 
-    install_packages
-}
-
-
-# Tab 2, menu item 6
-function tab2item6 { 
-    remove_packages
-}
-
-
-# Tab 2, menu item 7
-function tab2item7 { 
-    list_packages
-}
-
-
-# Tab 2, menu item 8
-function tab2item8 { 
-    search_packages
-}
-
-
-# Tab 2, menu item 9
-function tab2item9 { 
-    show_packages
-}
-
 
 ####################################################
 #                                                  #
@@ -152,68 +103,7 @@ function tab2item9 {
 ####################################################
 
 # Tab 3, menu item 1
-function tab3item1 { 
-    clear
-    echo
-    echo "Hello world!"
-    echo
-    return_to_menu
-}
 
-
-# Tab 3, menu item 2
-function tab3item2 { 
-    clear
-    echo
-    echo "x == 42"
-    echo
-    return_to_menu
-}
-
-
-# Tab 3, menu item 3
-function tab3item3 { 
-    clear
-    echo
-    echo "The best way to secure yuor Window$ powered laptop is to"
-    echo "install Linux on it (or at least a BSD)"
-    echo
-    return_to_menu
-}
-
-
-# Tab 3, menu item 4
-function tab3item4 { 
-    clear
-    echo
-    echo "This is a very important script."
-    echo
-    return_to_menu
-}
-
-
-# Tab 3, menu item 5
-function tab3item5 { 
-    run_if_valid robotfindskitten
-}
-
-
-# Tab 3, menu item 6
-function tab3item6 { 
-    example_function
-}
-
-
-# Tab 4, menu item 1
-function tab4item1 { 
-    dummy_function
-}
-
-
-# Tab 5, menu item 1
-function tab5item1 { 
-    dummy_function
-}
 
 
 ########################

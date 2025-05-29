@@ -130,7 +130,6 @@ check_editor() {
                     echo
                     echo -e "\nOK then, bye..."
                     echo
-                    return_to_menu
                     break
                     ;;
                 *) 

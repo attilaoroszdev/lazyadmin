@@ -61,7 +61,8 @@ declare SUBMENU_TITLE=""
 # TODO Make constants `readonly`
 # TODO make local variables really local with the `local` keyword
 # TODO remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
-
+# TODO: When returning to submenu from external function (lkike ncdu), the app title is not printer on the top row
+# TODO: Displaying the title shoudl beoptional (able to turn off from user functions, gain two extra rows on very small terminals)
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)

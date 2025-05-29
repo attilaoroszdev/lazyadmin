@@ -195,26 +195,27 @@ Tab 1 :: skip
 Tab 1 :: Drop to shell           :: Drop to a bash shell. Type 'exit' to return to menu  :: drop_to_shell
 Tab 1 :: Drop to root shell      :: Drop to a shell as root. Be careful, this is real!   :: drop_to_root_shell
 
-
 # Second tab
 # Tab :: Menu item text       :: Longer description text                     :: Fucntion or command to run
-Tab 2 :: Update system        :: With interactyive options. (Uses apt)
-Tab 2 :: Quick update system  :: No questions (apt update && apt upgrade -y) 
-Tab 2 :: Clean up apt         :: apt autoremove && apt clean
+Tab 2 :: Update system        :: With interactyive options. (Uses apt)       :: /d update_system
+Tab 2 :: Quick update system  :: No questions (apt update && apt upgrade -y) :: /d upgrade_without_asking
+Tab 2 :: Clean up apt         :: apt autoremove && apt clean                 :: /d clean_up_apt
 Tab 2 :: skip
-Tab 2 :: Install package(s)   :: apt install <whatever>
-Tab 2 :: Remove package(s)    :: apt (--purge) remove <whatever>
-Tab 2 :: List package(s)      :: apt list <whatever>
-Tab 2 :: Search package(s)    :: apt search <whatever>
-Tab 2 :: Show package details :: apt show <whatever>
+Tab 2 :: Install package(s)   :: apt install <whatever>                      :: /d install_packages
+Tab 2 :: Remove package(s)    :: apt (--purge) remove <whatever>             :: /d remove_packages
+Tab 2 :: List package(s)      :: apt list <whatever>                         :: /d list_packages
+Tab 2 :: Search package(s)    :: apt search <whatever>                       :: /d search_packages 
+Tab 2 :: Show package details :: apt show <whatever>                         :: /d show_packages
+
+
 
 # Tab :: Menu item text       :: Longer description text                                    :: Fucntion or command to run
-Tab 3 :: Complex script         :: Run a very-very complex script
-Tab 3 :: Solve for x            :: Solve the mysteries of the universe (all of them) for x
-Tab 3 :: Make Window$ secure    :: How to instantly secure any computer running Window$
-Tab 3 :: Important script       :: Run a very important script
-Tab 3 :: Play robotfindskitten  :: You don have robotfindskitten installed, right? Right?
-Tab 3 :: Pointless menuitem     :: This does not do anything, only pollutes the environment
+Tab 3 :: Complex script         :: Run a very-very complex script                           :: /c /d echo -e "\nHello World!"
+Tab 3 :: Solve for x            :: Solve the mysteries of the universe (all of them) for x  :: /c /d echo -e "\nx == 42"
+Tab 3 :: Make Window$ secure    :: How to instantly secure any computer running Window$     :: /c /d echo -e "\nJust install Linux, or some BSD."
+Tab 3 :: Important script       :: Run a very important script                              :: /c /d echo -e "\n"This is a very important script."" 
+Tab 3 :: Play robotfindskitten  :: You don have robotfindskitten installed, right? Right?   :: /v robotfindskitten 
+Tab 3 :: Pointless menuitem     :: This does not do anything, only pollutes the environment :: example_function
 
 
 # Tab :: Menu item text   :: Longer description text  
