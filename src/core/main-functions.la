@@ -54,10 +54,15 @@ declare -a RIGHT_PANEL_ITEM_DESCRIPTIONS
 
 declare -i NUMBER_OF_TABS
 
+declare SUBMENU_TITLE=""
+
 # TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
 # TODO, all global variables should be UPPER_CASE, 
 # TODO Make constants `readonly`
 # TODO make local variables really local with the `local` keyword
+# TODO remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
+
+# TODO: REsizing stopped working, it no longer shows the red lines, or cuts off menu items
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
@@ -180,12 +185,6 @@ set_up_menus() {
     fi
 }
 
-find_menu_type() {     
-    OLDIFS="$IFS"
-    IFS=$'\n'
-    menu_type=($(cat $menu_file | sed -n '/'_menutype'/{:a;n;/'_endmenutype'/q;p;ba}'))
-    IFS="$OLDIFS"
-}
 
 
 
@@ -504,13 +503,16 @@ read_submenu_items(){
 
         elif [[ $tab_key == "${TAB_ITEM_KEYS[$tab_pos]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$tab_pos]}" ]]; then
             submenu_toggle=true
-            ((n+=submenu_position))
+            ((n+=$submenu_position-1))
             continue
         fi
 
     done
 
     IFS="OLD_IFS"
+
+     menu_length=${#MENU_ITEM_ENTRIES[@]}
+
     
 }
 
@@ -678,6 +680,7 @@ write_tab_items() {
     # Display joints if on, but not for the last item
     if $DISPLAY_LINE_CONNECTORS; then
         horizontal_connector_position=0
+
         tput cup $((header_height - 2)) $horizontal_connector_position
 
         for ((n = 0; n < $(($displayed_tab_entries - 2)); n++)); do
@@ -688,7 +691,9 @@ write_tab_items() {
     fi
 
     # Then write out the tab items, with separators
+    clear_line $((header_height - 1)) 1 "right"
     tput cup $((header_height - 1)) 1
+    
     for ((n = 0; n < $displayed_tab_entries; n++)); do
        
         if [[ $n -eq $tab_pos ]]; then
@@ -880,7 +885,7 @@ write_help_menu_items() {
 # TODO Somehow rightpanel flashes whent hsi is called, left panel does not, when those items are written. What gives?
 write_rightpanel_items() { 
     local menu_type_key
-    clear_right_panel
+    # clear_right_panel
 
     if $sub_flags_menu; then
         menu_type_key="$COMMAND_BUILDER_KEY"
@@ -896,7 +901,7 @@ write_rightpanel_items() {
 
         if [[ "$shortkey" == "skip" ]]; then
             continue
-        elif [[ "$shortkey" == "divider" ]]; then
+        elif [[ "$shortkey" == "---" ]]; then
             tput cup $(($n + $header_height +2)) $(($menu_width - $active_right_panel_width))
             draw_divider_line $active_right_panel_width "right"
             continue
@@ -1014,7 +1019,7 @@ clear_menu() {
 
 clear_right_panel() {
     for ((n = 0; n < (($menu_height-2)); n++)); do
-        clear_line $(($n + $header_height +2)) $(($menu_width - $active_right_panel_width + 1)) "right"
+        clear_line $((n + $header_height +2)) $(($menu_width - $active_right_panel_width + 1)) "right"
     done
 }
 
@@ -1040,16 +1045,12 @@ clear_line() {
 #Draws the outline of the menu, with spaces left out for inclusion of items
 draw_menu() {
 
-    echo "Draw menu called"
-    sleep 2
-
     if $menus_force_hidden; then
         show_force_hide_error
         return 1
     fi
     
     tput civis
-
 
     menu_height=$normal_menu_height
     header_height=$MAIN_HEADER_HEIGHT
@@ -1087,9 +1088,12 @@ draw_menu() {
     ((cursor_pos++))
     tput cup $cursor_pos $((menu_width / 2 - (${#title} / 2)))
 
+    
     if [[ "$root" != "true" ]]; then
+        # Print it in bold
         echo -e "\e[01m$title\e[00m"
     else
+        # Print it in bold and red
         echo -e "\e[01m\e[091m$title\e[00m"
     fi
 
@@ -1243,10 +1247,6 @@ infinite_tab() {
 }
 
 
-function_exists() {
-    declare -f -F $1 > /dev/null
-    return $?
-}
 
 ###################################
 # Movement and menu item handling #
@@ -1260,7 +1260,7 @@ move_up() {
 
     # Alo in right panel
     if [[ "$active_panel" == "right" ]]; then 
-        while [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos - 1]}" == "skip" ]] || [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos - 1]}" == "divider" ]]; do
+        while [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos - 1]}" == "skip" ]] || [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos - 1]}" == "---" ]]; do
            ((menu_pos--))
         done
     fi
@@ -1283,7 +1283,7 @@ move_down() {
 
     #Chexck for right panel too
     if [[ "$active_panel" == "right" ]]; then 
-        while [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos + 1]}" == "skip" ]] || [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos + 1]}" == "divider" ]]; do
+        while [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos + 1]}" == "skip" ]] || [[ "${RIGHT_PANEL_ITEM_KEYS[$menu_pos + 1]}" == "---" ]]; do
            ((menu_pos++))
         done
     fi
@@ -1415,10 +1415,107 @@ toggle_right_panel() {
 }
 
 
+check_and_run(){
+        local is_valid=false
+        local is_navigation=false
+        local delayed_return=false
+        local validate_first=false
+        # local redraw_on_return=false
+        local clear_before_running=false
+
+        local command_item="$1"
+        local command_function=""
+        local command_args=""
+
+        while true; do
+            if [[ "$command_item" =~ " " ]]; then
+                command_function="${command_item%% *}"
+
+                if [[ "$command_function" == "/c" ]]; then
+                    clear_before_running=true
+                    command_item="${command_item:3}"
+                    continue
+                elif [[ "$command_function" == "/d" ]]; then
+                    delayed_return=true
+                    command_item="${command_item:3}"
+                    continue
+                elif [[ "$command_function" == "/v" ]]; then
+                    
+                    validate_first=true
+                    command_item="${command_item:3}"
+                    continue
+                else
+                    command_args="${command_item#* }"
+                    break
+                fi
+
+            else
+                command_function="$command_item"
+                command_args=""
+                break
+            fi
+        done
+        
+        is_valid=true
+      
+        case "$command_function" in
+            "enter_submenu")
+                is_navigation=true
+                ;;
+            "back_to_main_menu")
+                is_navigation=true
+                ;;
+            "command_builder_function")
+                is_navigation=true
+                ;;
+        esac
+
+        if $validate_first && ! $is_navigation; then
+            is_valid=false
+            if [[ $(validate_item $command_function) == 0 ]]; then
+                is_valid=true
+            else
+                clear
+                echo 
+                echo "The specified command: '$command_function' is not a valid function or package name"
+                echo
+                return_to_menu
+            fi
+        fi
+
+        # TODO: When args contain a ':'' character, everything breaks!
+        # "eval: line 1488: unexpected EOF while looking for matching `"'
+        if $is_valid; then
+
+            if $clear_before_running; then
+                clear
+            fi
+
+            if [[ -n "$command_args" ]]; then
+                eval "$command_function $command_args"
+            else
+                "$command_function"
+            fi      
+
+            if $delayed_return; then
+                is_valid=false
+                return_to_menu
+            fi
+
+        fi
+
+        if $is_navigation || ! $is_valid; then
+            return 65
+        else
+            return 0
+        fi
+    
+}
+
 
 select_menu_item_by_number() {
 
-    key=$1
+    local key=$1
 
     # Only read second digit if it makes sense, otherwise avoid the delay
     read_second_digit=false
@@ -1438,59 +1535,39 @@ select_menu_item_by_number() {
                 ;;
             esac
         fi  
-
     fi
 
     local is_valid=1
-    local is_navigation=false
+    ((key--))
 
+    if [[ -n "${MENU_ITEM_COMMANDS[$key]}" ]]; then
+        menu_pos=$key
 
-    if [[ -n "${MENU_ITEM_COMMANDS[(($key-1))]}" ]]; then
-        local command_item=${MENU_ITEM_COMMANDS[(($key-1))]}
-        local command_function="${command_item%% *}"
-        local command_args="${command_item#* }"
-
-        is_valid=true
-
-        "$command_function" "$command_args"
-
-        case "$command_function" in
-            "enter_submenu")
-                is_navigation=true
-                ;;
-            "back_to_main_menu")
-                is_navigation=true
-                ;;
-            "command_builder_function")
-                is_navigation=true
-                ;;
-        esac
+        check_and_run "${MENU_ITEM_COMMANDS[$key]}"
+        is_valid=$?
 
     elif [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
-        ((key--))
        
         if $is_submenu; then
-                function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1))
-                is_valid=$?
-                if [[ $is_valid == 0 ]]; then
-                    menu_pos=$key
-                    tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)) $tab_pos $menu_pos
-                fi
-                
+            is_valid=$(function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)))
+
+            if [[ $is_valid == 0 ]]; then
+                menu_pos=$key
+                tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)) $tab_pos $menu_pos
+            fi
         else
-                function_exists tab$(($tab_pos + 1))item$(($key + 1))
-                is_valid=$?
-                if [[ $is_valid == 0 ]]; then
-                    menu_pos=$key
-                    tab$(($tab_pos + 1))item$(($key + 1)) $tab_pos $menu_pos
-                fi
-                
+            is_valid=$(function_exists tab$(($tab_pos + 1))item$(($key + 1)))
+
+            if [[ $is_valid == 0 ]]; then
+                menu_pos=$key
+                tab$(($tab_pos + 1))item$(($key + 1)) $tab_pos $menu_pos
+            fi
         fi
-       
     fi
     
-    if [[ $is_valid == 0 ]] && ! $is_navigation; then
-        init_menu
+
+    if [[ $is_valid == 0 ]]; then
+        reflow_menu
     fi
 
 }
@@ -1513,39 +1590,20 @@ select_highlighted_menu_item() {
     else
 
         local is_valid=1
-        local is_navigation=false
 
         if [[ -n "${MENU_ITEM_COMMANDS[(($menu_pos))]}" ]]; then
-            local command_item=${MENU_ITEM_COMMANDS[(($menu_pos))]}
-            local command_function="${command_item%% *}"
-            local command_args="${command_item#* }"
-
-            is_valid=true
-            
-            "$command_function" "$command_args"
-
-            case "$command_function" in
-                "enter_submenu")
-                    is_navigation=true
-                    ;;
-                "back_to_main_menu")
-                    is_navigation=true
-                    ;;
-                "command_builder_function")
-                    is_navigation=true
-                    ;;
-            esac
-
+            check_and_run "${MENU_ITEM_COMMANDS[(($menu_pos))]}"
+            is_valid=$?
         else
             if $is_submenu; then
-                function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1))
-                is_valid=$?
+                
+                is_valid=$(function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($menu_pos + 1)))
                 if [[ $is_valid == 0 ]]; then
                     tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($menu_pos + 1)) $tab_pos $menu_pos
                 fi
             else
-             function_exists tab$(($tab_pos + 1))item$(($key + 1))
-                is_valid=$?
+             
+                is_valid=$(function_exists tab$(($tab_pos + 1))item$(($menu_pos + 1)))
                 if [[ $is_valid == 0 ]]; then
                     tab$(($tab_pos + 1))item$(($menu_pos + 1)) $tab_pos $menu_pos
                 fi
@@ -1554,7 +1612,7 @@ select_highlighted_menu_item() {
         
     fi
 
-    if [[ $is_valid == 0 ]] && ! $is_navigation; then
+    if [[ $is_valid == 0 ]]; then
         init_menu
     fi
 
@@ -2002,7 +2060,7 @@ reflow_menu() {
     clear
     set_menu_sizes
     if ! menus_force_hidden; then
-        init_menu
+        init_menu "reflow"
     fi
 }
 
@@ -2044,7 +2102,7 @@ exit_la_menus() {
 # help menu or command builder
 back_to_main_menu() { 
     active_panel="left"
-    menu_pos=0
+    menu_pos=$main_menu_pos
     sub_flags_menu=false
     help_submenu=false
 
@@ -2056,13 +2114,14 @@ back_to_main_menu() {
         main_menu_pos=$old_main_menu_pos
     else
         is_submenu=false
+        write_tab_items
     fi
 
     read_menu_items
     read_rightpanel_items
 
     clear_menu
-
+    clear_right_panel
     write_menu_items
     write_rightpanel_items
 
@@ -2107,12 +2166,6 @@ submenu() {
             write_rightpanel_items
         fi
 
-        # if [[ $1 != "help" ]]; then
-        #     # write_descriptor
-        #     echo
-        # else
-        #     write_help_descriptor
-        # fi
     fi
     pick_menu_item
 }
@@ -2132,15 +2185,22 @@ init_menu() {
     clear
     
     if [[ $1 != "help" ]]; then
-        find_menu_type
-        read_menu_items $1 $2
-       
+        if [[ $1 != "reflow" ]]; then
+            if $is_submenu; then
+                local submenu_pos=($main_menu_pos+1)
+                read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" "$submenu_pos"
+            else
+                read_menu_items
+            fi
+        fi
     fi
-    read_descriptor $2 $2
-    
+
+    if $is_submenu; then
+        write_submenu_title
+    fi
+
     read_rightpanel_items
     draw_menu
-
 
     write_tab_items
     write_menu_items
@@ -2148,40 +2208,47 @@ init_menu() {
 }
 
 
-# TODO Right panel does not refresh when entering
+write_submenu_title() {
+    
+    tput cup $((header_height - 2))
+    draw_line
+    clear_line $((header_height - 1)) 1 "right"
+    tput cup $header_height
+    draw_line
+    tput cup $((header_height - 1)) $((menu_width / 2 - (${#SUBMENU_TITLE} / 2)))
+    echo "$SUBMENU_TITLE"
+    
+}
+
 # This will be called whrn a submenu is selected
 enter_submenu() {
-
-    local submenu_title
-
-    if [[ -z "$2" ]]; then
-        submenu_title=${MENU_ITEM_ENTRIES[(($1-1))]}
-        submenu_title="${submenu_title#* - }"
-    else
-        submenu_title="$2"
-    fi
-
-    echo "Enter-submenu called, \$1=='$1', \$2=='$2', title: $submenu_title"
-
-    read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" "$1"
-    clear_menu
-    write_menu_items
-    
-    remain_in_submenu=false
-    is_submenu=true
-    
     main_menu_pos="$menu_pos"
     menu_pos=0
 
-    # init_menu $1 $2
+    if [[ -z "$2" ]]; then
+        SUBMENU_TITLE=${MENU_ITEM_ENTRIES[(($1-1))]}
+        SUBMENU_TITLE="${SUBMENU_TITLE#* - }"
+    else
+        SUBMENU_TITLE="$2"
+    fi
 
-    # while $is_submenu; do
-    #     submenu $1 $2
-    # done
+    is_submenu=true
+    remain_in_submenu=false
+
+
+    read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" "$1"
+    clear_menu
+    clear_right_panel
+    write_menu_items
+    read_rightpanel_items
+    write_rightpanel_items
+    write_submenu_title
+
 }
 
 
 # This will be called when help menu is selected
+# TODO: Help menus still need to bne implemented
 enter_helpmenu() { 
     help_submenu=true
 
@@ -2247,6 +2314,40 @@ function functright4 {
 }
 
 
+function_exists() {
+    declare -f -F $1 > /dev/null
+    echo $?
+}
+
+package_exists() {
+    if hash "$1" 2>/dev/null; then
+        echo 0
+    else
+        echo 1
+    fi
+
+}
+
+validate_item() { 
+    if [[ $(function_exists "$1") == 0 ]]; then
+        echo 0
+    elif [[ $(package_exists "$1") == 0 ]]; then
+        echo 0
+    else
+        echo 65
+    fi
+}
+
+return_to_menu() { 
+    echo
+    echo "Press any key to return to menu"
+    read -n 1 -s key_press
+    clear
+    init_menu
+}
+
+
+
 # Initialises and displays the main menu
 # This is what the launcher calls, basically
 main() { 
@@ -2278,4 +2379,5 @@ main() {
         pick_menu_item
     done
 }
+
 

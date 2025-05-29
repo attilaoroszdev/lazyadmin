@@ -170,33 +170,36 @@ Tab 6 :: Setup
 [:menu_items:]
 
 # First tab
-Tab 1 :: Resource monitor        :: Show the output of top                    :: top
-Tab 1 :: Better resource monitor :: Show the output of htop (if installed)    :: htop
-Tab 1 :: Show sensors            :: Thermal readings in real time 
+
+# Tab :: Menu item text          :: Longer description text                   :: Fubcntion or command to run
+Tab 1 :: Resource monitor        :: Show the output of top                    :: /v top
+Tab 1 :: Better resource monitor :: Show the output of htop (if installed)    :: /v htop
+Tab 1 :: Show sensors            :: Thermal readings in real time             :: show_sensors
 Tab 1 :: skip
-Tab 1 :: Read the system logs    :: Show journalctl (or dmesg, if no systemd)
-Tab 1 :: Browse files            :: Launch Midnight Commander (f installed)
-Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu 7
-    # Submenu items for the 7th entry
-    -- :: Analyse root           :: Run ncdu /
+Tab 1 :: Read the system logs    :: Show journalctl (or dmesg, if no systemd) :: show_system_logs  
+Tab 1 :: Browse files            :: Launch Midnight Commander (f installed)   :: /v mc
+Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu 7 "Submenu: Analyse Disk Space"
+# Submenu items for the 7th entry
+    -- :: Analyse root           :: Run ncdu /           :: /v ncdu /
     -- :: skip
-    -- :: Analyse /home          :: Run ncdu /home/attila
-    -- :: Anaylise ~/Downloads   :: Run ncdu ~/Downloads
-    -- :: Analyse ~/Documents    :: ncdu ~/Documents
-    -- :: Analyse ~/.cache       :: Run ncdu ~/.cache
+    -- :: Analyse /home          :: Run ncdu ~           :: /v ncdu $HOME
+    -- :: Anaylise ~/Downloads   :: Run ncdu ~/Downloads :: /v ncdu $HOME/Downloads
+    -- :: Analyse ~/Documents    :: ncdu ~/Documents     :: /v ncdu $HOME/Documents
+    -- :: Analyse ~/.cache       :: Run ncdu ~/.cache    :: /v ncdu $HOME/.cache
     -- :: skip
-    -- :: Analyse tmp directory  :: Run ncdu /tmp
-    -- :: Analyse logs           :: Run ncdu /var/log
-    # End of submenu items
-Tab 1 :: Interactive ping        :: Built-in command-builder constructing a ping command :: 
+    -- :: Analyse tmp directory  :: Run ncdu /tmp        :: /v ncdu /tmp
+    -- :: Analyse logs           :: Run ncdu /var/log    :: /v ncdu /var/log
+# End of submenu items
+Tab 1 :: Interactive ping        :: Built-in command-builder constructing a ping command 
 Tab 1 :: skip
-Tab 1 :: Drop to shell           :: Drop to a bash shell. Type 'exit' to return to menu  ::  
-Tab 1 :: Drop to root shell      :: Drop to a shell as root. Be careful, this is real!   ::
+Tab 1 :: Drop to shell           :: Drop to a bash shell. Type 'exit' to return to menu  :: drop_to_shell
+Tab 1 :: Drop to root shell      :: Drop to a shell as root. Be careful, this is real!   :: drop_to_root_shell
 
 
 # Second tab
-Tab 2 :: Update system        :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
-Tab 2 :: Quick update system  :: No silly questions, just do it already. (apt update && apt upgrade -y)
+# Tab :: Menu item text       :: Longer description text                     :: Fucntion or command to run
+Tab 2 :: Update system        :: With interactyive options. (Uses apt)
+Tab 2 :: Quick update system  :: No questions (apt update && apt upgrade -y) 
 Tab 2 :: Clean up apt         :: apt autoremove && apt clean
 Tab 2 :: skip
 Tab 2 :: Install package(s)   :: apt install <whatever>
@@ -205,7 +208,7 @@ Tab 2 :: List package(s)      :: apt list <whatever>
 Tab 2 :: Search package(s)    :: apt search <whatever>
 Tab 2 :: Show package details :: apt show <whatever>
 
-
+# Tab :: Menu item text       :: Longer description text                                    :: Fucntion or command to run
 Tab 3 :: Complex script         :: Run a very-very complex script
 Tab 3 :: Solve for x            :: Solve the mysteries of the universe (all of them) for x
 Tab 3 :: Make Window$ secure    :: How to instantly secure any computer running Window$
@@ -214,6 +217,7 @@ Tab 3 :: Play robotfindskitten  :: You don have robotfindskitten installed, righ
 Tab 3 :: Pointless menuitem     :: This does not do anything, only pollutes the environment
 
 
+# Tab :: Menu item text   :: Longer description text  
 Tab 4 :: Nothing here yet :: Write your own menus here
 
 Tab 5 :: Nothing here yet :: Write your own menus here
@@ -240,6 +244,7 @@ Setup :: Edit default values     :: Edit default menu length, number of tabs, et
 
 
 # Right panel items for main menu
+#ID :: key :: Menu item text    :: Longer description text 
 Main :: f :: Reflow Menu        :: Redraw the Lazy Admin UI
 Main :: h :: Get Help           :: Display the help menu
 Main :: k :: Show key bindings  :: Display the different key bindings
@@ -252,7 +257,7 @@ CMB :: m :: Misc. arguments  :: Set you own argumanent(s) manually. 1st arg. wil
 CMB :: c :: Run command      :: Run the current command with all the set arguments and flag-options
 CMB :: x :: Delete set flags :: Remove everything and start over
 CMB :: skip
-CMB :: divider
+CMB :: ---
 CMB :: skip
 CMB :: f :: Reflow Menu       :: Redraw the Lazy Admin UI
 CMB :: h :: Get Help          :: Display the help menu

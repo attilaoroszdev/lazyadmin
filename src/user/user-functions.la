@@ -218,7 +218,8 @@ show_system_logs() {
 
 
 show_sensors() { 
-    if hash $1 2>/dev/null; then
+      
+    if [[ $(validate_item sensors) == 0 ]]; then
         watch -n 0.1 sensors
     else
         echo "lm_sensors does not seem to be instaleld."
@@ -226,4 +227,6 @@ show_sensors() {
         echo "Then come back here"
         return_to_menu
     fi
+
+
 }

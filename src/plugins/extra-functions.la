@@ -270,30 +270,30 @@ drop_to_root_shell() {
 }
 
 
-return_to_menu() { 
-    echo
-    echo "Press any key to return to menu"
-    read -n 1 -s key_press
-    clear
-}
+# return_to_menu() { 
+#     echo
+#     echo "Press any key to return to menu"
+#     read -n 1 -s key_press
+#     clear
+# }
 
 
-run_if_installed() { 
-    clear
+# run_if_installed() { 
+#     clear
 
-    if hash $1 2>/dev/null; then
-        echo
-        $@
-        echo
-        clear
-        return 0
-    else
-        echo
-        echo "$1 does not seem to be instaleld. PLease install $1 and try again"
-        echo
-        echo "Press any key to return to menu"
-        read -n 1 -s key_press
-        clear
-        return 65
-    fi
-}
+#     if hash $1 2>/dev/null; then
+#         echo
+#         $@
+#         echo
+#         clear
+#         return 0
+#     else
+#         echo
+#         echo "$1 does not seem to be instaleld. PLease install $1 and try again"
+#         echo
+#         echo "Press any key to return to menu"
+#         read -n 1 -s key_press
+#         clear
+#         return 65
+#     fi
+# }

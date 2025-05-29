@@ -43,35 +43,6 @@ function_style="simple"
 # names form here. That will also make it easier to reuse or reorganise in the menu.
 
 
-# Tab 1, menu item 1
-function tab1item1 { 
-    run_if_installed top
-}
-
-
-# Tab 1, menu item 2
-function tab1item2 { 
-    run_if_installed htop
-}
-
-
-# Tab 1, menu item 3
-function tab1item3 { 
-    show_sensors
-}
-
-# Tab 1, menu item 4 was skipped
-
-# Tab 1, menu item 5
-function tab1item5 { 
-    show_system_logs
-}
-
-
-# Tab 1, menu item 6
-function tab1item6 { 
-    run_if_installed mc
-}
 
 
 # Tab 1, menu item 7
@@ -80,75 +51,6 @@ function tab1item6 {
 #     enter_submenu 7
 
 # }
-
-
-# submenu functions. These will have a similar naming system, except
-# they would be extended by submenu position as well,
-#
-# fucntionstyle="simple" (default)
-#
-# Tab and menuitem are marked (in which submenu we are),
-# then sub-item number follows, starting from 1 like so:
-# tab$item$sub$
-# E.g.
-# First tab, first menu item, first submenuu-item: tab1item1sub1
-# Third tab, fourth menu item, second submenu item: tab3item4sub2
-#
-# Backward compat:
-# function_style="old"
-#
-# Similar to main menus, only one digit more, starting from 0, like
-# subfunct$$$
-# or sunfunct$(tab_position)$(mainmenu_position)$(submenu_position)
-#E.g. F
-# First tab first menuitem, first submenuitem: subfunct000
-# Third tab, fourth menuitem, second submenuitem: subfunct231
-# and so on
-
-# Tab 1, menu item 7, submenu item 1
-function tab1item7sub1 {     
-    run_if_installed ncdu /
-}
-
-
-# Tab 1, menu item 7, submenu item 2 was skipped
-
-# Tab 1, menu item 7, submenu item 3
-function tab1item7sub3 {     
-    run_if_installed ncdu ~
-}
-
-
-# Tab 1, menu item 7, submenu item 4
-function tab1item7sub4 {     
-    run_if_installed ncdu ~/Downloads
-}
-
-
-# Tab 1, menu item 7, submenu item 5
-function tab1item7sub5 {     
-    run_if_installed ncdu ~/Documents
-}
-
-
-# Tab 1, menu item 7, submenu item 6
-function tab1item7sub6 {     
-    run_if_installed ncdu ~/.cache
-}
-
-
-# Tab 1, menu item 7, submenu item 7 was skipped
-
-# Tab 1, menu item 7, submenu item 8
-function tab1item7sub8 {     
-    run_if_installed ncdu /tmp
-}
-
-
-# Tab 1, menu item 7, submenu item 9
-function tab1item7sub9 {     
-    run_if_installed ncdu /var/log
-}
 
 
 # Tab 1, menu item 8
@@ -191,17 +93,6 @@ function tab1item8 {
 
 
 # Tab 1, menu item 9 was skipepd
-
-# Tab 1, menu item 10
-function tab1item10 { 
-    drop_to_shell
-}
-
-
-# Tab 1, menu item 11
-function tab1item11 { 
-    drop_to_root_shell
-}
 
 
 # Tab 2, menu item 1
@@ -303,7 +194,7 @@ function tab3item4 {
 
 # Tab 3, menu item 5
 function tab3item5 { 
-    run_if_installed robotfindskitten
+    run_if_valid robotfindskitten
 }
 
 
