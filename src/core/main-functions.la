@@ -62,7 +62,6 @@ declare SUBMENU_TITLE=""
 # TODO make local variables really local with the `local` keyword
 # TODO remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
 
-# TODO: REsizing stopped working, it no longer shows the red lines, or cuts off menu items
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
@@ -326,8 +325,7 @@ parse_menu_file() {
     local tab_items_toggle=false
     local menu_items_toggle=false
     local right_menus_toggle=false
-    
-   
+      
     for ((n = 0; n <= ${#menu_file_contents[@]}; n++)); do
 
         if $tab_items_toggle; then
@@ -335,11 +333,12 @@ parse_menu_file() {
                 tab_items_toggle=false
                 continue
             else
-                # local tmp="${menu_file_contents[$n]}"
-                # tmp="${tmp//"$MENU_DELIMITER"/"$MENU_DELIMITER"}"
-                # TAB_ITEM_ROWS+=("$tmp")
-                # unset tmp
-                TAB_ITEM_ROWS+=("${menu_file_contents[$n]}")
+                local tmp="${menu_file_contents[$n]}"
+                tmp="${tmp//"$MENU_DELIMITER"/"$SAFE_DELIMITER"}"
+                TAB_ITEM_ROWS+=("$tmp")
+                unset tmp
+                # TAB_ITEM_ROWS+=("${menu_file_contents[$n]}")
+                
             fi
         else
             if [[ "${menu_file_contents[$n]}" == "[:tab_order:]" ]]; then
@@ -352,10 +351,11 @@ parse_menu_file() {
                 menu_items_toggle=false
                 continue
             else
-                # local tmp="${menu_file_contents[$n]}"
-                # tmp="${tmp//"$MENU_DELIMITER"/"$MENU_DELIMITER"}"
-                MENU_ITEM_ROWS+=("${menu_file_contents[$n]}")
-                # unset tmp
+                local tmp="${menu_file_contents[$n]}"
+                tmp="${tmp//"$MENU_DELIMITER"/"$SAFE_DELIMITER"}"
+                MENU_ITEM_ROWS+=("$tmp")
+                # MENU_ITEM_ROWS+=("${menu_file_contents[$n]}")
+                unset tmp
             fi
         else
             if [[ "${menu_file_contents[$n]}" == "[:menu_items:]" ]]; then
@@ -367,10 +367,11 @@ parse_menu_file() {
             if [[ "${menu_file_contents[$n]}" == "[:end_right_panel_items:]" ]]; then
                 continue
             else
-                # local tmp="${menu_file_contents[$n]}"
-                # tmp="${tmp//"$MENU_DELIMITER"/"$MENU_DELIMITER"}"
-                RIGHT_PANEL_ITEM_ROWS+=("${menu_file_contents[$n]}")
-                # unset tmp
+                local tmp="${menu_file_contents[$n]}"
+                tmp="${tmp//"$MENU_DELIMITER"/"$SAFE_DELIMITER"}"
+                # RIGHT_PANEL_ITEM_ROWS+=("${menu_file_contents[$n]}")
+                RIGHT_PANEL_ITEM_ROWS+=("$tmp")
+                unset tmp
             fi
         else
             if [[ "${menu_file_contents[$n]}" == "[:right_panel_items:]" ]]; then
@@ -378,7 +379,8 @@ parse_menu_file() {
             fi
         fi
     done
- 
+
+
 }
 
 
@@ -429,11 +431,9 @@ read_menu_items_OLD() {
 }
 
 # Load the items shown in the tab
-# TODO: Remove all unnecessary read and write calls
-# TODO: Menus should always be the same height in submenus and flags menu as well and hel too, main title should always be visible
 read_tab_items() {
     OLD_IFS=$IFS
-    IFS="$MENU_DELIMITER"
+    IFS="$SAFE_DELIMITER"
     TAB_ITEM_KEYS=()
     TAB_ITEM_ENTRIES=()
 
@@ -445,7 +445,7 @@ read_tab_items() {
         key="${key#"${key%%[![:space:]]*}"}"  # Remove leading whitespace
         key="${key%"${key##*[![:space:]]}"}"  # Remove trailing whitespace
 
-        local title="${current_row[2]}"
+        local title="${current_row[1]}"
         title="${title#"${title%%[![:space:]]*}"}"  # Remove leading whitespace
         title="${title%"${title##*[![:space:]]}"}"  # Remove trailing whitespace
 
@@ -472,7 +472,7 @@ read_tab_items() {
 
 read_submenu_items(){
     OLD_IFS=$IFS
-    IFS="$MENU_DELIMITER"
+    IFS="$SAFE_DELIMITER"
     local -i idx=1
 
     MENU_ITEM_ENTRIES=()
@@ -518,7 +518,7 @@ read_submenu_items(){
 
 read_menu_items() {
     OLD_IFS=$IFS
-    IFS="$MENU_DELIMITER"
+    IFS="$SAFE_DELIMITER"
     local -i idx=1
 
     MENU_ITEM_ENTRIES=()
@@ -552,18 +552,18 @@ add_row_to_menu_items() {
     shift
     local -a curent_row="$@"
 
-    local menu_item="${current_row[2]}"
+    local menu_item="${current_row[1]}"
     menu_item="${menu_item#"${menu_item%%[![:space:]]*}"}"
     menu_item="${menu_item%"${menu_item##*[![:space:]]}"}"
 
-    local description="${current_row[4]}"
+    local description="${current_row[2]}"
     description="${description#"${description%%[![:space:]]*}"}"
     description="${description%"${description##*[![:space:]]}"}"
 
-    local command="${current_row[6]}"
+    local command="${current_row[3]}"
     command="${command#"${command%%[![:space:]]*}"}"
     command="${command%"${command##*[![:space:]]}"}"
-
+    
     if [[ $menu_item == "skip" ]]; then
         MENU_ITEM_ENTRIES+=("skip")
         MENU_ITEM_DESCRIPTIONS+=("")
@@ -572,7 +572,10 @@ add_row_to_menu_items() {
         MENU_ITEM_ENTRIES+=("$idx - $menu_item")
         MENU_ITEM_DESCRIPTIONS+=("$description")
         MENU_ITEM_COMMANDS+=("$command")
+
+
     fi
+
 }
 
 read_rightpanel_items() {    
@@ -585,7 +588,7 @@ read_rightpanel_items() {
     fi    
 
     OLD_IFS=$IFS
-    IFS="$MENU_DELIMITER"
+    IFS="$SAFE_DELIMITER"
 
     RIGHT_PANEL_ITEM_KEYS=()
     RIGHT_PANEL_ITEM_ENTRIES=()
@@ -599,15 +602,15 @@ read_rightpanel_items() {
         menu_type="${menu_type#"${menu_type%%[![:space:]]*}"}"  # Remove leading whitespace
         menu_type="${menu_type%"${menu_type##*[![:space:]]}"}"  # Remove trailing whitespace
        
-        local shortkey="${current_row[2]}"
+        local shortkey="${current_row[1]}"
         shortkey="${shortkey#"${shortkey%%[![:space:]]*}"}"
         shortkey="${shortkey%"${shortkey##*[![:space:]]}"}"
        
-        local menu_item="${current_row[4]}"
+        local menu_item="${current_row[2]}"
         menu_item="${menu_item#"${menu_item%%[![:space:]]*}"}"
         menu_item="${menu_item%"${menu_item##*[![:space:]]}"}"
        
-        local description="${current_row[6]}"
+        local description="${current_row[3]}"
         description="${description#"${description%%[![:space:]]*}"}"
         description="${description%"${description##*[![:space:]]}"}"
 
@@ -745,6 +748,7 @@ write_menu_items() {
     # Write out the menu items one by one
     # If the position is right, it changes the background.
     max_entry_lenght=$(($left_panel_width - 4))
+    max_menu_length=$(($normal_menu_height - 3))
 
     for ((n = 0; n < $max_menu_length; n++)); do
 
@@ -882,7 +886,7 @@ write_help_menu_items() {
     done
 }
 
-# TODO Somehow rightpanel flashes whent hsi is called, left panel does not, when those items are written. What gives?
+
 write_rightpanel_items() { 
     local menu_type_key
     # clear_right_panel
@@ -894,7 +898,7 @@ write_rightpanel_items() {
     fi  
     
     OLD_IFS=$IFS
-    IFS="$MENU_DELIMITER"
+    IFS="$SAFE_DELIMITER"
      
     for ((n = 0; n < ${#RIGHT_PANEL_ITEM_ENTRIES[@]}; n++)); do
         local shortkey="${RIGHT_PANEL_ITEM_KEYS[$n]}"
@@ -934,7 +938,7 @@ write_rightpanel_items() {
     fi    
 
     OLD_IFS=$IFS
-    IFS="$MENU_DELIMITER"
+    IFS="$SAFE_DELIMITER"
     local -i idx=0
 
     local -a rp_item_descriptions=()
@@ -1407,10 +1411,11 @@ change_panel() {
 toggle_right_panel() {
     if $right_panel; then
         right_panel=false
+
     else
         right_panel=true
     fi
-
+    show_right_panel=$right_panel
     reflow_menu
 }
 
@@ -1420,7 +1425,6 @@ check_and_run(){
         local is_navigation=false
         local delayed_return=false
         local validate_first=false
-        # local redraw_on_return=false
         local clear_before_running=false
 
         local command_item="$1"
@@ -1483,8 +1487,6 @@ check_and_run(){
             fi
         fi
 
-        # TODO: When args contain a ':'' character, everything breaks!
-        # "eval: line 1488: unexpected EOF while looking for matching `"'
         if $is_valid; then
 
             if $clear_before_running; then
@@ -1991,6 +1993,7 @@ shortkey_command(){
 # the second menu entry. Selecting it will apply all the flags to the built chain
 
 # TODO: Descriptor is pointless here. Instad, move the active command up in that spot
+# TODO: When on right panel, active command should not be displaying, so that right panel descriptors can take over
 # TODO: Fix resizing this menu correctly. Size should be dynamic and it shoudl always expand to the maximum extent of the menu or the ternminal, whichever comes first
 # TODO the visual truncation warning should also appear here on the bottom line
 # ToDo: MOVE THE FIXED ITEMS INTO THE RIGHT PANEL!!!!!!!!! OH YEAH!!!
@@ -2204,7 +2207,9 @@ init_menu() {
 
     write_tab_items
     write_menu_items
-    write_rightpanel_items
+    if $show_right_panel; then
+        write_rightpanel_items
+    fi
 }
 
 
