@@ -27,6 +27,8 @@
 # normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
 # submenu_height=$(( $MAX_SUBMENU_ITEMS + 3 )) 
 # menu_height=0
+declare _SAVED_STTY_SETTINGS # Only used if stty is installed
+declare GOT_STTY=false
 menus_force_hidden=false
 tabs_dont_fit=false
 all_tabs_length=0
@@ -56,13 +58,17 @@ declare -i NUMBER_OF_TABS
 
 declare SUBMENU_TITLE=""
 
+
+# TODO: Sort out Help menus properly
+# TODO: Sort our command builder for good
+# TODO: Make Setup tab automatically show up on the last position (if there is room), if enabled from user defaults
+# TODO: Maybe also reassign the Setup shjortketys (now available system-wide)
+# Then
 # TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
 # TODO, all global variables should be UPPER_CASE, 
 # TODO Make constants `readonly`
 # TODO make local variables really local with the `local` keyword
 # TODO remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
-# TODO: When returning to submenu from external function (lkike ncdu), the app title is not printer on the top row
-# TODO: Displaying the title shoudl beoptional (able to turn off from user functions, gain two extra rows on very small terminals)
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
@@ -75,7 +81,19 @@ set_menu_sizes() {
         right_panel_height_warning=false
         right_panel_width_warning=false
         height_warning=false
-        normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
+       
+        if $SHOW_TITLE; then
+            max_menu_height=$(($terminal_height - 10))
+        else
+            max_menu_height=$(($terminal_height - 8))
+        fi
+
+        if [[ $MAX_MENU_ITEMS > 0 ]]; then
+            normal_menu_height=$(( $MAX_MENU_ITEMS + 3 ))
+        else
+            normal_menu_height=$max_menu_height
+        fi
+
 
         menu_height=0
 
@@ -99,8 +117,7 @@ set_menu_sizes() {
             active_panel="left"
         fi
 
-        max_menu_height=$(($terminal_height - 10))
-
+       
         # Got to make sure we fit inside whatever size the terminal currently is
         if [[ $normal_menu_height -gt $max_menu_height ]]; then
             normal_menu_height=$max_menu_height
@@ -249,63 +266,6 @@ write_flags_descriptor() {
     esac
 }
 
-
-# read descriptor lines for menu items
-# years later: I have no idea how sed works any more, so this all looks like magic
-read_descriptor() { 
-    if [[ -z $menu_type || $menu_type == "old" ]]; then
-        
-        if $is_submenu; then
-            OLDIFS="$IFS"
-            IFS=$'\n'
-
-            if [[ "$active_panel" == "right" ]]; then
-                menu_desc_entry=($(cat $menu_file | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'))
-            else
-                menu_desc_entry=($(cat $menu_file | sed -n '/'_descsubmenu$1$2'/{:a;n;/'_enddescsubmenu$1$2'/q;p;ba}'))
-            fi
-
-            IFS="$OLDIFS"
-        else
-            OLDIFS="$IFS"
-            IFS=$'\n'
-
-            if [[ "$active_panel" == "right" ]]; then
-                menu_desc_entry=($(cat $menu_file | sed -n '/'_rightpaneldesc'/{:a;n;/'_endrightpaneldesc'/q;p;ba}'))
-            else
-                menu_desc_entry=($(cat $menu_file | sed -n '/'_descmenu$tab_pos'/{:a;n;/'_enddescmenu$tab_pos'/q;p;ba}'))
-            fi
-
-            IFS="$OLDIFS"
-        fi
-
-    else
-
-        if [[ "$active_panel" == "right" ]]; then
-            for ((n = 0; n < $menu_length; n++)); do
-                eval $(echo ${menu_entry[$n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
-                menu_entry[$n]="$(echo $V1)"
-            done
-
-            OLDIFS="$IFS"
-            IFS=$'\n'
-
-            if $is_submenu; then
-                menu_desc_entry=($(cat $menu_file | sed -n '/'_subrightpaneldesc'/{:a;n;/'_endsubrightpaneldesc'/q;p;ba}'))
-            else
-                menu_desc_entry=($(cat $menu_file | sed -n '/'_rightpaneldesc'/{:a;n;/'_endrightpaneldesc'/q;p;ba}'))
-            fi
-
-            IFS="$OLDIFS"
-        else
-            for ((n = 0; n < $menu_length; n++)); do
-                eval $(echo ${menu_entry[$n]} | sed 's:^:V1=":; /\:\:/ s::";V2=": ;s:$:":')
-                menu_entry[$n]="$(echo $V1)"
-                menu_desc_entry[$n]="$(echo $V2)"
-            done
-        fi
-    fi
-}
 
 
 parse_menu_file() {
@@ -469,8 +429,6 @@ read_tab_items() {
 
 }
 
-
-
 read_submenu_items(){
     OLD_IFS=$IFS
     IFS="$SAFE_DELIMITER"
@@ -484,31 +442,53 @@ read_submenu_items(){
     local submenu_position=$2
     local submenu_toggle=false
 
-    local -i idx=1
+    local -i main_idx=1
+    local -i sub_idx=1
 
     for ((n = 0; n < "${#MENU_ITEM_ROWS[@]}"; n++)); do
         local -a current_row
         read -ra current_row <<< "${MENU_ITEM_ROWS[$n]}"
+
+        # echo "Analysing row ${current_row[@]}"
         
         if $submenu_toggle; then
+            # echo "Toggle is on, row is: "${current_row[@]}""
             local sub_key="${current_row[0]}"
             sub_key="${sub_key#"${sub_key%%[![:space:]]*}"}"  # Remove leading whitespace
             sub_key="${sub_key%"${sub_key##*[![:space:]]}"}"  # Remove trailing whitespace
         
             if [[ "$sub_key" == "--" ]]; then
-                add_row_to_menu_items $idx "${current_row[@]}"
-                ((idx++))
+                add_row_to_menu_items $sub_idx "${current_row[@]}"
+                ((sub_idx++))
             else
                 break
             fi
 
         elif [[ $tab_key == "${TAB_ITEM_KEYS[$tab_pos]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$tab_pos]}" ]]; then
-            submenu_toggle=true
-            ((n+=$submenu_position-1))
-            continue
+           
+            # echo "Row is on correct tab"
+
+            if [[ $main_idx == $submenu_position ]];then
+                # echo "Turning on toggle"
+                submenu_toggle=true
+                # ((n+=main_idx))
+                ((n++))
+                continue
+            else
+                local sub_key="${current_row[0]}"
+                sub_key="${sub_key#"${sub_key%%[![:space:]]*}"}"  # Remove leading whitespace
+                sub_key="${sub_key%"${sub_key##*[![:space:]]}"}"  # Remove trailing whitespace
+            
+                if [[ "$sub_key" == "$tab_key" ]]; then
+                    ((main_idx++))
+                fi
+            fi
+            
         fi
 
     done
+
+# sleep 20
 
     IFS="OLD_IFS"
 
@@ -565,12 +545,19 @@ add_row_to_menu_items() {
     command="${command#"${command%%[![:space:]]*}"}"
     command="${command%"${command##*[![:space:]]}"}"
     
+    if [[ -z $menu_item ]]; then
+        menu_item=skip
+    fi
+
     if [[ $menu_item == "skip" ]]; then
         MENU_ITEM_ENTRIES+=("skip")
         MENU_ITEM_DESCRIPTIONS+=("")
         MENU_ITEM_COMMANDS+=("")
     else
-        MENU_ITEM_ENTRIES+=("$idx - $menu_item")
+        if [[ $menu_item != "---" ]]; then
+            menu_item="$idx - $menu_item"
+        fi
+        MENU_ITEM_ENTRIES+=("$menu_item")
         MENU_ITEM_DESCRIPTIONS+=("$description")
         MENU_ITEM_COMMANDS+=("$command")
 
@@ -616,6 +603,10 @@ read_rightpanel_items() {
         description="${description%"${description##*[![:space:]]}"}"
 
         local should_skip=false
+
+        if [[ -z $shortkey ]]; then
+            shortkey="skip"
+        fi
     
         if  [[ "$menu_type" == "$menu_type_key" ]]; then  
            
@@ -750,10 +741,27 @@ write_menu_items() {
     # If the position is right, it changes the background.
     max_entry_lenght=$(($left_panel_width - 4))
     max_menu_length=$(($normal_menu_height - 3))
+    
+    if [[ $menu_pos -gt $(($max_menu_length - 1)) ]]; then
+        menu_pos=$(($max_menu_length-1))
+        while [[ $menu_pos > 0 ]]; do
+                if [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "---" ]]; then
+                    ((menu_pos--))
+                else
+                    break
+                fi   
+        done
+    fi
+    
 
     for ((n = 0; n < $max_menu_length; n++)); do
 
-        if [[ ! "${MENU_ITEM_ENTRIES[$n]}" == "skip" ]]; then
+        if [[ "${MENU_ITEM_ENTRIES[$n]}" == "---" ]]; then
+            tput cup $(($n + $header_height +2)) 0
+            draw_divider_line "left"
+            continue
+
+        elif [[ ! "${MENU_ITEM_ENTRIES[$n]}" == "skip" ]]; then
          
             local menu_item_line=$(truncate_text "${MENU_ITEM_ENTRIES[$n]}" $max_entry_lenght)
 
@@ -777,11 +785,15 @@ write_menu_items() {
     tput cup $(($max_menu_length + $header_height + $line_offset)) 1
 
     # If the item list was truncated, display a visual clue at the bottom
-    if [[ $menu_length -gt $max_menu_length ]]; then
+    if [[ ${#MENU_ITEM_ENTRIES[@]} -gt $max_menu_length ]]; then
+        menu_length=$max_menu_length
+
         for ((i = 0; i < $(($left_panel_width-2)); i++)); do
             echo -en "\e[01m\e[091m┅\e[00m"
         done
     else
+        menu_length=${#MENU_ITEM_ENTRIES[@]}
+
         # Reset normal line, otherwise
         for ((i = 0; i < $(($left_panel_width-2)); i++)); do
             echo -n "━"
@@ -908,7 +920,7 @@ write_rightpanel_items() {
             continue
         elif [[ "$shortkey" == "---" ]]; then
             tput cup $(($n + $header_height +2)) $(($menu_width - $active_right_panel_width))
-            draw_divider_line $active_right_panel_width "right"
+            draw_divider_line "right"
             continue
         else
             tput cup $(($n + $header_height + 2)) $(($menu_width - $active_right_panel_width + 3))
@@ -984,28 +996,28 @@ draw_line() {
 draw_divider_line() {
     local -i line_lenght
 
-    if [[ $2 -eq "right" ]]; then
+    if [[ "$1" == "right" ]]; then
         line_lenght=$(($active_right_panel_width-1))
     else
         if $show_right_panel; then
-            line_lenght==$(($left_panel_width-1))
+            line_lenght=$(($left_panel_width))
         else
-            line_lenght==$menu_width
+            line_lenght=$menu_width
         fi
     fi
 
-    if [[ $2 -eq "right" ]]; then
+    if [[ "$1" == "right" ]]; then
         echo -n "├"
     fi
 
-    for ((i = 0; i < $(($line_lenght-1)); i++)); do
+    for ((i = 0; i < $line_lenght; i++)); do
         echo -n "╶"
     done
-    echo "╶"
 
-    # if [[ $2 -eq "left" ]] && $show_right_panel; then
-    #     echo -n "┤"
-    # fi
+
+    if [[ "$1" == "left" ]] && $show_right_panel; then
+        echo -n "┤"
+    fi
 
 
 }
@@ -1047,6 +1059,24 @@ clear_line() {
     fi 
 }
 
+write_main_title(){
+    local title=$MAIN_TITLE
+
+    if $root; then
+        title=$title$ROOT_TITLE
+    fi
+
+    tput cup 1 $((menu_width / 2 - (${#title} / 2)))
+
+    if [[ "$root" != "true" ]]; then
+        # Print it in bold
+        echo -e "\e[01m$title\e[00m"
+    else
+        # Print it in bold and red
+        echo -e "\e[01m\e[091m$title\e[00m"
+    fi
+}
+
 #Draws the outline of the menu, with spaces left out for inclusion of items
 draw_menu() {
 
@@ -1059,20 +1089,6 @@ draw_menu() {
 
     menu_height=$normal_menu_height
     header_height=$MAIN_HEADER_HEIGHT
-
-    if $sub_flags_menu; then
-        title=$sub_flags_menutitle
-    else
-        if $is_submenu; then
-            title=$submenu_title
-        else
-            title=$MAIN_TITLE
-        fi
-    fi
-
-    if $root; then
-        title=$title$ROOT_TITLE
-    fi
 
     ## Set width of screen and panels
     menu_width=($(tput cols) - 1)
@@ -1090,20 +1106,14 @@ draw_menu() {
     cursor_pos=0
     tput cup $cursor_pos 0
     draw_line
-    ((cursor_pos++))
-    tput cup $cursor_pos $((menu_width / 2 - (${#title} / 2)))
 
-    
-    if [[ "$root" != "true" ]]; then
-        # Print it in bold
-        echo -e "\e[01m$title\e[00m"
-    else
-        # Print it in bold and red
-        echo -e "\e[01m\e[091m$title\e[00m"
+    if $SHOW_TITLE; then
+        ((header_height+=2))
+        write_main_title
+        ((cursor_pos+=2))
+
+        draw_line
     fi
-
-    ((cursor_pos++))
-    draw_line
 
     #Draw top and bottom border of menu tabs
     #Skip this for submenus
@@ -1239,14 +1249,10 @@ infinite_tab() {
 
     if [[ $tab_pos -eq $limit ]]; then
         tab_pos=0
-        # read_menu_items
-        read_descriptor
     fi
 
     if [[ $tab_pos -lt 0 ]]; then
         tab_pos=$(($limit - 1))
-        # read_menu_items
-        read_descriptor
     fi
 
 }
@@ -1259,8 +1265,10 @@ infinite_tab() {
 
 move_up() {
     #Double jump if run on skip
-    if [[ "$active_panel" == "left" ]] && [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "skip" ]]; then
-        ((menu_pos--))
+    if [[ "$active_panel" == "left" ]]; then
+        while [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "---" ]]; do
+            ((menu_pos--))
+        done
     fi
 
     # Alo in right panel
@@ -1282,8 +1290,10 @@ move_up() {
 
 move_down() {
     #Double jump if running on skip
-    if [[ "$active_panel" == "left" ]] && [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "skip" ]]; then
-        ((menu_pos++))
+    if [[ "$active_panel" == "left" ]]; then
+        while [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "---" ]]; do
+            ((menu_pos++))
+        done
     fi
 
     #Chexck for right panel too
@@ -1295,6 +1305,7 @@ move_down() {
     
     ((menu_pos++))
     infinite_menu
+
     if [[ "$active_panel" == "left" ]]; then
         write_menu_items
     else
@@ -1758,14 +1769,18 @@ cmb_set_arg_by_number() {
 # This is the simplest way I have fund yet to read all sorts of special keys
 
 pick_menu_item() { 
-    
+    local key=""
+    local keytap=""
+
+    # Attempt to flush tinput caches
+    while read -t 0.01; do :; done
+
     while true; do
         
-        key=""
-        keytap=""
         if $AUTO_REFLOW; then
             check_for_size_changes
             size_changed=$?
+            
             if [[ $size_changed -gt 0 ]]; then
                 break
             fi
@@ -1774,15 +1789,20 @@ pick_menu_item() {
         else
             read -rsN1 keytap
         fi
-        
+      
         # loop while read can read any additional character and join all of them ## Original comment, left unchanged
+        
         while [ -n "$keytap" ]; 
-        do
+        do  
             key="${key}${keytap}"
             read -sN1 -t 0.0001 keytap
         done
 
         if [[ -n $key ]]; then 
+
+            # if $GOT_STTY; then
+            #     restore_terminal
+            # fi
             # TODO: Update User guide and key binding guide with F1-9 and t-# keys for tabs access and TAB key for changing panels
             case $key in
             $'\e[A' | $'\e0A')
@@ -2121,6 +2141,10 @@ back_to_main_menu() {
         write_tab_items
     fi
 
+    if $SHOW_TITLE; then
+        write_main_title
+    fi
+
     read_menu_items
     read_rightpanel_items
 
@@ -2137,11 +2161,6 @@ back_to_main_menu() {
 }
 
 
-# # (Re)draws items of main menu and includes the picker
-# main_menu() { 
-#     pick_menu_item
-# }
-
 
 # Same as main menu, only this one invokes a submenu.
 # decide menu type
@@ -2157,7 +2176,7 @@ submenu() {
             read_menu_items $1 $2
         fi
         
-        read_descriptor $1 $2
+
         # infinite_menu
 
         if [[ $1 != "help" ]]; then
@@ -2191,8 +2210,7 @@ init_menu() {
     if [[ $1 != "help" ]]; then
         if [[ $1 != "reflow" ]]; then
             if $is_submenu; then
-                local submenu_pos=($main_menu_pos+1)
-                read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" "$submenu_pos"
+                read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" $main_menu_pos
             else
                 read_menu_items
             fi
@@ -2205,11 +2223,13 @@ init_menu() {
 
     read_rightpanel_items
     draw_menu
+    if ! $menus_force_hidden; then
+        write_tab_items
+        write_menu_items
 
-    write_tab_items
-    write_menu_items
-    if $show_right_panel; then
-        write_rightpanel_items
+        if $show_right_panel; then
+            write_rightpanel_items
+        fi
     fi
 }
 
@@ -2231,18 +2251,18 @@ enter_submenu() {
     main_menu_pos="$menu_pos"
     menu_pos=0
 
-    if [[ -z "$2" ]]; then
-        SUBMENU_TITLE=${MENU_ITEM_ENTRIES[(($1-1))]}
-        SUBMENU_TITLE="${SUBMENU_TITLE#* - }"
+    if [[ -z "$1" ]]; then
+        SUBMENU_TITLE="${MENU_ITEM_ENTRIES[$main_menu_pos]}"
+        SUBMENU_TITLE="Submenu: ${SUBMENU_TITLE#* - }"
     else
-        SUBMENU_TITLE="$2"
+        SUBMENU_TITLE="$1"
     fi
 
     is_submenu=true
     remain_in_submenu=false
 
 
-    read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" "$1"
+    read_submenu_items "${TAB_ITEM_KEYS[$tab_pos]}" $main_menu_pos
     clear_menu
     clear_right_panel
     write_menu_items
@@ -2352,11 +2372,32 @@ return_to_menu() {
     init_menu
 }
 
+restore_terminal(){
 
+    if [[ -n "$_SAVED_STTY_SETTINGS" ]] && $GOT_STTY; then
+        stty "$_SAVED_STTY_SETTINGS"
+    fi
+
+    tput cnorm
+  
+}
 
 # Initialises and displays the main menu
 # This is what the launcher calls, basically
 main() { 
+    
+    # Ensure everything is restored on script exit
+    
+    if $USE_STTY && hash stty 2>/dev/null; then
+        GOT_STTY=true
+        _SAVED_STTY_SETTINGS=$(stty -g)
+        stty -icanon -echo
+    fi
+
+
+    
+    trap restore_terminal EXIT HUP INT QUIT TERM
+
     set_up_menus
 
     for ((i = 1; i <= $#; i++)); do

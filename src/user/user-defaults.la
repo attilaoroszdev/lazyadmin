@@ -23,38 +23,52 @@
 
 #The title displayed in the main menu
 
-MAIN_TITLE="Lazy Admin - v3.0alpha"
+readonly MAIN_TITLE="Lazy Admin - v3.0alpha"
+
+# Settng this to false can give you two extra rows when you are struggling for space
+readonly SHOW_TITLE=true
+
 
 # Switch right panel on or off
-right_panel=true
+declare right_panel=true
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not
 # Maxiumum number of menu items: 99
-MAX_MENU_ITEMS=11
+# The defalt setting of '0' will make LazyAdmin always fill the available vertical 
+# space, regardless of how many menu items you have, which might not always
+# be what you need (e.g. on tall/full-screen terminals with few menu items)
+readonly MAX_MENU_ITEMS=0
 
+# Lazy Admin will try use 'stty' to help with some common issues for printing 
+# unwanted characters on the terminal, when e.g. a key is held down. If 'stty' is
+# not present for any reason, this step will be automaticallt skipped. If LazyAdmin
+# exits or gets interrupted in nay way, the original terminal settings will be 
+# automatically restored Turn it off, if you are certain that 'stty' is not present 
+# or if you experience any iossues (which you should not).
+readonly USE_STTY=true
 
 # Change the size of the right panel
-RIGHT_PANEL_WIDTH=27
+readonly RIGHT_PANEL_WIDTH=27
 
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)
 # Which might render these out of place
-DISPLAY_LINE_CONNECTORS=true
+readonly DISPLAY_LINE_CONNECTORS=true
 
 # This should be handled by the setup script,
 # but you can change it to any editor command
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-DEFAULT_EDITOR="not set"
+readonly DEFAULT_EDITOR="not set"
 
 
-AUTO_REFLOW=true
+readonly AUTO_REFLOW=true
 
 # Do not go lower than 0.5.
 # You can, but the performance will exponentially suffer
 # Until things might beome unresponsive
 # You have been warned
-AUTO_REFLOW_TICK=0.5
+readonly AUTO_REFLOW_TICK=0.5
 
