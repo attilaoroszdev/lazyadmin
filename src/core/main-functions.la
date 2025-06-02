@@ -58,12 +58,13 @@ declare -i NUMBER_OF_TABS
 
 declare SUBMENU_TITLE=""
 
-
-# TODO: Sort out Help menus properly
-# TODO: Sort our command builder for good
 # TODO: Make Setup tab automatically show up on the last position (if there is room), if enabled from user defaults
 # TODO: Maybe also reassign the Setup shjortketys (now available system-wide)
+# TODO: Sort out Help menus properly
+# TODO: Sort our command builder for good
+
 # Then
+
 # TODO find and declare all global variables here, use `declare`, see https://unix.stackexchange.com/questions/510220/what-is-declare-in-bash
 # TODO, all global variables should be UPPER_CASE, 
 # TODO Make constants `readonly`
@@ -430,6 +431,7 @@ read_tab_items() {
 }
 
 read_submenu_items(){
+
     OLD_IFS=$IFS
     IFS="$SAFE_DELIMITER"
     local -i idx=1
@@ -442,21 +444,20 @@ read_submenu_items(){
     local submenu_position=$2
     local submenu_toggle=false
 
-    local -i main_idx=1
+    local -i main_idx=0
     local -i sub_idx=1
 
-    for ((n = 0; n < "${#MENU_ITEM_ROWS[@]}"; n++)); do
+    # for ((n = 0; n < "${#MENU_ITEM_ROWS[@]}"; n++)); do
+    for item_row in "${MENU_ITEM_ROWS[@]}"; do
         local -a current_row
-        read -ra current_row <<< "${MENU_ITEM_ROWS[$n]}"
+        read -ra current_row <<< "$item_row" #"${MENU_ITEM_ROWS[$n]}"
+ 
+        local sub_key="${current_row[0]}"
+        sub_key="${sub_key#"${sub_key%%[![:space:]]*}"}"  # Remove leading whitespace
+        sub_key="${sub_key%"${sub_key##*[![:space:]]}"}"  # Remove trailing whitespace
 
-        # echo "Analysing row ${current_row[@]}"
-        
         if $submenu_toggle; then
-            # echo "Toggle is on, row is: "${current_row[@]}""
-            local sub_key="${current_row[0]}"
-            sub_key="${sub_key#"${sub_key%%[![:space:]]*}"}"  # Remove leading whitespace
-            sub_key="${sub_key%"${sub_key##*[![:space:]]}"}"  # Remove trailing whitespace
-        
+
             if [[ "$sub_key" == "--" ]]; then
                 add_row_to_menu_items $sub_idx "${current_row[@]}"
                 ((sub_idx++))
@@ -464,38 +465,25 @@ read_submenu_items(){
                 break
             fi
 
-        elif [[ $tab_key == "${TAB_ITEM_KEYS[$tab_pos]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$tab_pos]}" ]]; then
-           
-            # echo "Row is on correct tab"
-
+        elif [[ "$sub_key" == "$tab_key" ]]; then
             if [[ $main_idx == $submenu_position ]];then
-                # echo "Turning on toggle"
                 submenu_toggle=true
-                # ((n+=main_idx))
-                ((n++))
-                continue
             else
-                local sub_key="${current_row[0]}"
-                sub_key="${sub_key#"${sub_key%%[![:space:]]*}"}"  # Remove leading whitespace
-                sub_key="${sub_key%"${sub_key##*[![:space:]]}"}"  # Remove trailing whitespace
-            
-                if [[ "$sub_key" == "$tab_key" ]]; then
-                    ((main_idx++))
-                fi
-            fi
-            
+                ((main_idx++))
+            fi        
         fi
 
     done
 
-# sleep 20
 
     IFS="OLD_IFS"
 
-     menu_length=${#MENU_ITEM_ENTRIES[@]}
+    menu_length=${#MENU_ITEM_ENTRIES[@]}
 
     
 }
+
+
 
 read_menu_items() {
     OLD_IFS=$IFS
@@ -513,15 +501,19 @@ read_menu_items() {
         local tab_key="${current_row[0]}"
         tab_key="${tab_key#"${tab_key%%[![:space:]]*}"}"  # Remove leading whitespace
         tab_key="${tab_key%"${tab_key##*[![:space:]]}"}"  # Remove trailing whitespace
-
+        
         if [[ $tab_key == "${TAB_ITEM_KEYS[$tab_pos]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$tab_pos]}" ]]; then
             add_row_to_menu_items $idx "${current_row[@]}"
-            ((idx++))
+
+            # TODO: This is now a problem: How do we detect the correct fucking keys???
+            # TODO: Also need to implement this shit for submenus, once a solution is found
+            if [[ $? == 0 ]]; then
+                ((idx++))
+            fi
         fi 
     done
 
     IFS="$OLD_IFS"
-
     menu_height=$normal_menu_height
     max_menu_length=$(($normal_menu_height - 3))
     menu_length=${#MENU_ITEM_ENTRIES[@]}
@@ -549,20 +541,19 @@ add_row_to_menu_items() {
         menu_item=skip
     fi
 
-    if [[ $menu_item == "skip" ]]; then
-        MENU_ITEM_ENTRIES+=("skip")
+   
+    if [[ $menu_item == "skip" ]] || [[ $menu_item == "---" ]]; then
+        MENU_ITEM_ENTRIES+=("$menu_item")
         MENU_ITEM_DESCRIPTIONS+=("")
         MENU_ITEM_COMMANDS+=("")
+        return 1
     else
-        if [[ $menu_item != "---" ]]; then
-            menu_item="$idx - $menu_item"
-        fi
-        MENU_ITEM_ENTRIES+=("$menu_item")
+        MENU_ITEM_ENTRIES+=("$idx - $menu_item")
         MENU_ITEM_DESCRIPTIONS+=("$description")
         MENU_ITEM_COMMANDS+=("$command")
-
-
+        return 0
     fi
+    
 
 }
 
@@ -1015,9 +1006,9 @@ draw_divider_line() {
     done
 
 
-    if [[ "$1" == "left" ]] && $show_right_panel; then
-        echo -n "┤"
-    fi
+    # if [[ "$1" == "left" ]] && $show_right_panel; then
+    #     echo -n "┤"
+    # fi
 
 
 }
@@ -1534,6 +1525,7 @@ select_menu_item_by_number() {
     # Only read second digit if it makes sense, otherwise avoid the delay
     read_second_digit=false
 
+    # TODO This no longer works when max menu size is set to 0
     if [[ $MAX_MENU_ITEMS -gt 9 ]] && [[ $key -le $(($MAX_MENU_ITEMS/10)) ]]; then
         read_second_digit=true
     fi
@@ -2017,7 +2009,8 @@ shortkey_command(){
 # TODO: When on right panel, active command should not be displaying, so that right panel descriptors can take over
 # TODO: Fix resizing this menu correctly. Size should be dynamic and it shoudl always expand to the maximum extent of the menu or the ternminal, whichever comes first
 # TODO the visual truncation warning should also appear here on the bottom line
-# ToDo: MOVE THE FIXED ITEMS INTO THE RIGHT PANEL!!!!!!!!! OH YEAH!!!
+# TODO: Rightpanel now has more items, account for it when warning/hiding
+# TODO: When height is dynamic, it should somehow know the biggest menu size and warn anyway
 
 command_builder_function() { 
     menu_entry=()
@@ -2274,7 +2267,6 @@ enter_submenu() {
 
 
 # This will be called when help menu is selected
-# TODO: Help menus still need to bne implemented
 enter_helpmenu() { 
     help_submenu=true
 

@@ -1,0 +1,77 @@
+# Copyright © 2017-2025, Attila Orosz
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+
+# If you ever find yourself in a position where you want to modify this file, 
+# you probably already know what you are doing, so comments here will probably 
+# be somewhat scarce
+
+
+[:special_menu_items:]
+
+# TODO: Remove function names, they are kind of self-expnataory and could be automatically called
+
+# Setup tab, Always on the last position (if enabled)
+# ID  :: Menu item text                   :: Longer description text                        :: Function name
+Setup :: Edit menu entries                :: Interactively change menu entries              :: functsetup0
+Setup :: Edit user functions              :: Add user defined scripts and functions         :: functsetup1
+Setup :: Edit default values              :: Edit default menu length, number of tabs, etc. :: functsetup3
+
+# Help menu items
+Help :: Lazy Admin user guide             :: Basic setup and usage guide to Lazy Admin      :: functhelp0
+Help :: Configuration and scripting guide :: A somewhat more in-depth configuration guide   :: functhelp1
+Help :: Command builder usage guide       :: How to use the command-builder submenu         :: functhelp2
+
+[:end_special_menu_items:]
+
+
+[:right_panel_items:]
+
+# Contents of the right panel. Only change this if you alter right panel functionality 
+# After specifying the type of right panel (Main, Sub, Cmb, or Help), the next columns should specify 
+# the shortcut key (mandatory)
+# 
+# These functions have shortkeys assigned, so they don't have functions assigned. Do not change the
+# shortkeys, unless you also want to modify the code where they are read
+
+# Right panel items for main menu
+# ID :: key :: Menu item text   :: Longer description text 
+Main :: f :: Reflow Menu        :: Redraw the Lazy Admin UI
+Main :: h :: Get Help           :: Display the help menu
+Main :: k :: Show key bindings  :: Display the different key bindings
+Main :: b :: Back to Main Menu  :: Return to main menu
+Main :: q :: Quit               :: Quit Lazy Admin, and return to your normal shell... and life...
+
+
+# Right panel items for command builder
+CMB :: m :: Misc. arguments     :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
+CMB :: c :: Run command         :: Run the current command with all the set arguments and flag-options
+CMB :: x :: Delete set flags    :: Remove everything and start over
+CMB :: 
+CMB :: ---
+CMB ::
+CMB :: f :: Reflow Menu         :: Redraw the Lazy Admin UI
+CMB :: h :: Get Help            :: Display the help menu
+CMB :: k :: Show key bindings   :: Display the different key bindings
+CMB :: b :: Back to Main Menu   :: Return to main menu
+CMB :: q :: Quit                :: Quit Lazy Admin, and return to your normal shell... and life...
+
+[:end_right_panel_items:]
+

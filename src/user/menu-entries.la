@@ -56,17 +56,17 @@ Tab 1 ::
 Tab 1 :: Read the system logs    :: Show journalctl (or dmesg, if no systemd) :: show_system_logs  
 Tab 1 :: Browse files            :: Launch Midnight Commander (f installed)   :: /v mc
 Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu
-    # Submenu items for the 7th entry
-    -- :: Analyse root           :: Run ncdu /                                :: /v ncdu /
-    -- :: 
-    -- :: Analyse /home          :: Run ncdu ~                                :: /v ncdu $HOME
-    -- :: Anaylise ~/Downloads   :: Run ncdu ~/Downloads                      :: /v ncdu $HOME/Downloads
-    -- :: Analyse ~/Documents    :: ncdu ~/Documents                          :: /v ncdu $HOME/Documents
-    -- :: Analyse ~/.cache       :: Run ncdu ~/.cache                         :: /v ncdu $HOME/.cache
-    -- :: 
-    -- :: Analyse tmp directory  :: Run ncdu /tmp                             :: /v ncdu /tmp
-    -- :: Analyse logs           :: Run ncdu /var/log                         :: /v ncdu /var/log
-    # End of submenu items
+# Submenu items for the 7th entry
+   -- :: Analyse root           :: Run ncdu /                                :: /v ncdu /
+   -- :: 
+   -- :: Analyse /home          :: Run ncdu ~                                :: /v ncdu $HOME
+   -- :: Anaylise ~/Downloads   :: Run ncdu ~/Downloads                      :: /v ncdu $HOME/Downloads
+   -- :: Analyse ~/Documents    :: Run ncdu ~/Documents                      :: /v ncdu $HOME/Documents
+   -- :: Analyse ~/.cache       :: Run ncdu ~/.cache                         :: /v ncdu $HOME/.cache
+   -- :: 
+   -- :: Analyse tmp directory  :: Run ncdu /tmp                             :: /v ncdu /tmp
+   -- :: Analyse logs           :: Run ncdu /var/log                         :: /v ncdu /var/log
+# End of submenu items
 Tab 1 :: Interactive ping        :: Command-builder with a ping command 
 Tab 1 :: 
 Tab 1 :: Drop to shell           :: Drop to a shell. Type 'exit' to return    :: drop_to_shell
@@ -74,7 +74,16 @@ Tab 1 :: Dummy submenu           :: This is a test                            ::
    -- :: Item 1                  :: Descriptor 1 top                          :: top
    -- :: Item 2                  :: Descriptor 2 htop                         :: htop
    -- :: Item 3                  :: Descriptor 3 sensors                      :: show_sensors
-Tab 1 :: Drop to root shell      :: Drop to a shell as root. (Be careful)l!   :: drop_to_root_shell
+Tab 1 :: Drop to root shell      :: Drop to a shell as root. (Be careful.)   :: drop_to_root_shell
+Tab 1 :: An item with nothing on it
+Tab 1 :: Last item, alo a submenu  :: To see if it works :: enter_submenu
+   -- :: Item 1 Alt                 :: Descriptor 1 top                          :: top
+   -- :: Item 2 Alt                 :: Descriptor 2 htop                         :: htop
+   -- ::
+   -- :: ---
+   -- :: 
+   -- :: Item 3 Alt                :: Descriptor 3 sensors                      :: show_sensors
+   -- :: Item 4 alt                 :: mc again         :: mc
 
 
 # Second tab
