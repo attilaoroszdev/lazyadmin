@@ -40,6 +40,8 @@ menu_height=0
 show_right_panel=$right_panel
 max_menu_height=0
 
+declare -i MENU_ITEMS_COUNT=0
+
 declare -a TAB_ITEM_ROWS
 declare -a TAB_ITEM_KEYS
 declare -a TAB_ITEM_ENTRIES
@@ -58,6 +60,11 @@ declare -i NUMBER_OF_TABS
 
 declare SUBMENU_TITLE=""
 
+
+# TODO: Make menu labels a thing! These should (be probably also centered withing the menu area, and )do notng, also auto-skipped
+##      To declare them,use the key "[inline-label]" witht he description as the label itself, like so:
+##      Tab 1 :: [inline-label] :: Label text
+##      No need to specify the command, it will not be read, anyway
 # TODO: Make Setup tab automatically show up on the last position (if there is room), if enabled from user defaults
 # TODO: Maybe also reassign the Setup shjortketys (now available system-wide)
 # TODO: Sort out Help menus properly
@@ -70,6 +77,7 @@ declare SUBMENU_TITLE=""
 # TODO Make constants `readonly`
 # TODO make local variables really local with the `local` keyword
 # TODO remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
+
 set_menu_sizes() {
     terminal_height=$(tput lines)
     terminal_width=$(tput cols)
@@ -439,6 +447,7 @@ read_submenu_items(){
     MENU_ITEM_ENTRIES=()
     MENU_ITEM_DESCRIPTIONS=()
     MENU_ITEM_COMMANDS=()
+    MENU_ITEMS_COUNT=0
 
     local tab_key="$1"
     local submenu_position=$2
@@ -460,7 +469,11 @@ read_submenu_items(){
 
             if [[ "$sub_key" == "--" ]]; then
                 add_row_to_menu_items $sub_idx "${current_row[@]}"
-                ((sub_idx++))
+                
+                if [[ $? == 0 ]]; then
+                    ((sub_idx++))
+                fi
+                
             else
                 break
             fi
@@ -493,6 +506,7 @@ read_menu_items() {
     MENU_ITEM_ENTRIES=()
     MENU_ITEM_DESCRIPTIONS=()
     MENU_ITEM_COMMANDS=()
+    MENU_ITEMS_COUNT=0
 
     for ((n = 0; n < "${#MENU_ITEM_ROWS[@]}"; n++)); do
         local -a current_row
@@ -505,8 +519,6 @@ read_menu_items() {
         if [[ $tab_key == "${TAB_ITEM_KEYS[$tab_pos]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$tab_pos]}" ]]; then
             add_row_to_menu_items $idx "${current_row[@]}"
 
-            # TODO: This is now a problem: How do we detect the correct fucking keys???
-            # TODO: Also need to implement this shit for submenus, once a solution is found
             if [[ $? == 0 ]]; then
                 ((idx++))
             fi
@@ -542,16 +554,30 @@ add_row_to_menu_items() {
     fi
 
    
-    if [[ $menu_item == "skip" ]] || [[ $menu_item == "---" ]]; then
+    if [[ $menu_item == "skip" ]] || [[ $menu_item == "---" ]] || [[ $menu_item == "[inline-label]" ]]; then
         MENU_ITEM_ENTRIES+=("$menu_item")
-        MENU_ITEM_DESCRIPTIONS+=("")
+        if [[ $menu_item == "[inline-label]" ]]; then
+             MENU_ITEM_DESCRIPTIONS+=("$description")
+        else
+            MENU_ITEM_DESCRIPTIONS+=("")
+        fi
         MENU_ITEM_COMMANDS+=("")
         return 1
     else
-        MENU_ITEM_ENTRIES+=("$idx - $menu_item")
-        MENU_ITEM_DESCRIPTIONS+=("$description")
-        MENU_ITEM_COMMANDS+=("$command")
-        return 0
+        if [[ -z "$description" ]] && [[ -z "$command" ]]; then
+            MENU_ITEM_ENTRIES+=("[inline-label]")
+            MENU_ITEM_DESCRIPTIONS+=("$menu_item")
+            MENU_ITEM_COMMANDS+=("")
+            return 1
+        else
+            MENU_ITEM_ENTRIES+=("$idx - $menu_item")
+            MENU_ITEM_DESCRIPTIONS+=("$description")
+            MENU_ITEM_COMMANDS+=("$command")
+            ((MENU_ITEMS_COUNT++))
+            return 0
+        fi
+       
+        
     fi
     
 
@@ -736,12 +762,21 @@ write_menu_items() {
     if [[ $menu_pos -gt $(($max_menu_length - 1)) ]]; then
         menu_pos=$(($max_menu_length-1))
         while [[ $menu_pos > 0 ]]; do
-                if [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "---" ]]; then
+                if [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "[inline-label]" ]]; then
                     ((menu_pos--))
                 else
                     break
                 fi   
         done
+    else  
+       
+        while [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "[inline-label]" ]]; do
+            ((menu_pos++))
+            if [[  $menu_pos == $(($max_menu_length-1)) ]]; then
+                break
+            fi
+        done   
+        
     fi
     
 
@@ -751,6 +786,10 @@ write_menu_items() {
             tput cup $(($n + $header_height +2)) 0
             draw_divider_line "left"
             continue
+        elif [[ "${MENU_ITEM_ENTRIES[$n]}" == "[inline-label]" ]]; then
+            local menu_label_line=$(truncate_text "${MENU_ITEM_DESCRIPTIONS[$n]}" $max_entry_lenght)
+            tput cup $(($n + $header_height + 2)) 2 # To center, use: $((left_panel_width / 2 - (${#menu_label_line} / 2)))
+            echo -e "\e[01m$menu_label_line\e[00m"
 
         elif [[ ! "${MENU_ITEM_ENTRIES[$n]}" == "skip" ]]; then
          
@@ -1257,7 +1296,7 @@ infinite_tab() {
 move_up() {
     #Double jump if run on skip
     if [[ "$active_panel" == "left" ]]; then
-        while [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "---" ]]; do
+        while [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos - 1]}" == "[inline-label]" ]]; do
             ((menu_pos--))
         done
     fi
@@ -1282,7 +1321,7 @@ move_up() {
 move_down() {
     #Double jump if running on skip
     if [[ "$active_panel" == "left" ]]; then
-        while [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "---" ]]; do
+        while [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos + 1]}" == "[inline-label]" ]]; do
             ((menu_pos++))
         done
     fi
@@ -1314,10 +1353,22 @@ infinite_menu() {
 
     if [[ $menu_pos -ge $limit ]]; then
         menu_pos=0
+
+        if [[ $active_panel == "left" ]]; then
+            while [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "[inline-label]" ]]; do
+                ((menu_pos++))
+            done
+        fi
     fi
 
     if [[ $menu_pos -lt 0 ]]; then
         menu_pos=$(($limit - 1))
+        
+        if [[ $active_panel == "left" ]]; then
+            while [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$menu_pos]}" == "[inline-label]" ]]; do
+                ((menu_pos--))
+            done
+        fi
     fi
 }
 
@@ -1526,7 +1577,7 @@ select_menu_item_by_number() {
     read_second_digit=false
 
     # TODO This no longer works when max menu size is set to 0
-    if [[ $MAX_MENU_ITEMS -gt 9 ]] && [[ $key -le $(($MAX_MENU_ITEMS/10)) ]]; then
+    if [[ $MENU_ITEMS_COUNT -gt 9 ]] && [[ $key -le $(($MENU_ITEMS_COUNT/10)) ]]; then
         read_second_digit=true
     fi
 
@@ -1546,31 +1597,35 @@ select_menu_item_by_number() {
     local is_valid=1
     ((key--))
 
-    if [[ -n "${MENU_ITEM_COMMANDS[$key]}" ]]; then
-        menu_pos=$key
+    local -i idx=0
+    local -i item_idx=0
 
-        check_and_run "${MENU_ITEM_COMMANDS[$key]}"
-        is_valid=$?
+    for item in "${MENU_ITEM_COMMANDS[@]}"; do
 
-    elif [[ $key -le $menu_length ]] && [[ $key -ge 1 ]]; then
-       
-        if $is_submenu; then
-            is_valid=$(function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)))
-
-            if [[ $is_valid == 0 ]]; then
-                menu_pos=$key
-                tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($key + 1)) $tab_pos $menu_pos
+        if [[ $item_idx == $key ]]; then
+            # This is necessary, in case item is skipped, or the user left the command intentionally blank
+            if [[ ${MENU_ITEM_ENTRIES[$idx]} != "skip" ]]  && [[ ${MENU_ITEM_ENTRIES[$idx]} != "---" ]] && [[ ${MENU_ITEM_ENTRIES[$idx]} != "[inline-label]" ]]; then     
+                menu_pos=$idx
+                
+                if [[ -n $item ]]; then
+                    
+                    check_and_run "$item"
+                    is_valid=$?
+                else
+                    # Select the new position but do nothing else
+                    write_menu_items
+                fi
+                break
             fi
         else
-            is_valid=$(function_exists tab$(($tab_pos + 1))item$(($key + 1)))
-
-            if [[ $is_valid == 0 ]]; then
-                menu_pos=$key
-                tab$(($tab_pos + 1))item$(($key + 1)) $tab_pos $menu_pos
-            fi
+            # This is necessary, in case item is skipped, or the user left the command intentionally blank
+            if [[ ${MENU_ITEM_ENTRIES[$idx]} != "skip" ]] && [[ ${MENU_ITEM_ENTRIES[$idx]} != "---" ]] && [[ ${MENU_ITEM_ENTRIES[$idx]} != "[inline-label]" ]]; then 
+                ((item_idx++))
+            fi 
         fi
-    fi
-    
+        ((idx++))
+    done
+
 
     if [[ $is_valid == 0 ]]; then
         reflow_menu
@@ -2385,8 +2440,6 @@ main() {
         _SAVED_STTY_SETTINGS=$(stty -g)
         stty -icanon -echo
     fi
-
-
     
     trap restore_terminal EXIT HUP INT QUIT TERM
 

@@ -72,3 +72,7 @@ readonly AUTO_REFLOW=true
 # You have been warned
 readonly AUTO_REFLOW_TICK=0.5
 
+
+
+# This will be used by Lazy Admin to execute stuff as root
+preferred_root_command="sudo"

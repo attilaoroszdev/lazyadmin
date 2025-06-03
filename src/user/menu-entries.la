@@ -75,13 +75,17 @@ Tab 1 :: Dummy submenu           :: This is a test                            ::
    -- :: Item 2                  :: Descriptor 2 htop                         :: htop
    -- :: Item 3                  :: Descriptor 3 sensors                      :: show_sensors
 Tab 1 :: Drop to root shell      :: Drop to a shell as root. (Be careful.)   :: drop_to_root_shell
-Tab 1 :: An item with nothing on it
+Tab 1 :: An item with nothing    :: Needs a description otherwise it would become a label
 Tab 1 :: Last item, alo a submenu  :: To see if it works :: enter_submenu
+   -- :: The top section
+   -- ::
    -- :: Item 1 Alt                 :: Descriptor 1 top                          :: top
    -- :: Item 2 Alt                 :: Descriptor 2 htop                         :: htop
    -- ::
    -- :: ---
    -- :: 
+   -- :: The bottom section
+   -- ::
    -- :: Item 3 Alt                :: Descriptor 3 sensors                      :: show_sensors
    -- :: Item 4 alt                 :: mc again         :: mc
 
@@ -101,10 +105,14 @@ Tab 2 :: Show package details    :: apt show <whatever>                       ::
 
 # Third tab
 # No. :: Menu item text          :: Longer description text                   :: Fucntion or command to run
+Tab 3 :: This is a label
+Tab 3 ::
 Tab 3 :: Complex script          :: Run a very-very complex script            :: /c /d echo -e "\nHello World!"
 Tab 3 :: Solve for x             :: Solve the mysteries of the universe for x :: /c /d echo -e "\nx == 42"
 Tab 3 :: 
 Tab 3 :: ---
+Tab 3 ::
+Tab 3 :: This is a label for the bottom section
 Tab 3 :: 
 Tab 3 :: Make Window$ secure     :: How to instantly secure any computer      :: /c /d echo -e "\nJust install Linux, or some BSD."
 Tab 3 :: Important script        :: Run a very important script               :: /c /d echo -e "\n"This is a very important script."" 
