@@ -156,3 +156,19 @@ edit_setup_file() {
     fi
     tput civis
 }
+
+functsetup0() { 
+    edit_setup_file "$USER_DIR/menu-entries.la"
+}
+
+
+functsetup1() { 
+    edit_setup_file "$USER_DIR/user-functions.la"
+}
+
+
+functsetup2() { 
+    edit_setup_file "$USER_DIR/user-defaults.la"
+}
+
+

@@ -34,4 +34,4 @@ RESDIRPLACEHOLDER
 
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"
-. "$PLUGINS_DIR/display-help.la"
+. "$PLUGINS_DIR/help-functions.la"

@@ -30,7 +30,7 @@ readonly SHOW_TITLE=true
 
 
 # Switch right panel on or off
-declare right_panel=true
+declare RIGHT_PANEL=true
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not
@@ -61,7 +61,7 @@ readonly DISPLAY_LINE_CONNECTORS=true
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-readonly DEFAULT_EDITOR="not set"
+declare DEFAULT_EDITOR="not set"
 
 
 readonly AUTO_REFLOW=true
@@ -72,7 +72,6 @@ readonly AUTO_REFLOW=true
 # You have been warned
 readonly AUTO_REFLOW_TICK=0.5
 
-
-
-# This will be used by Lazy Admin to execute stuff as root
-preferred_root_command="sudo"
+# If set to true, a Setup tab will automatically be added on the last
+# position (if there is room)
+declare SHOW_SETUP=true

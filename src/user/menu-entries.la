@@ -40,7 +40,6 @@ Tab 2 :: Packages
 Tab 3 :: Third tab
 Tab 4 :: Fourth Tab
 Tab 5 :: Fifth Tab
-Tab 6 :: Setup
 
 [:end_tab_order:]
 
@@ -125,13 +124,6 @@ Tab 3 :: Pointless menuitem      :: This one only pollutes the environment    ::
 Tab 4 :: Nothing here yet        :: Write your own menus here
 Tab 5 :: Nothing here yet        :: Write your own menus here
 
-
-# Setup tab, Always on the last position (if enabled)
-# ID  :: Menu item text          :: Longer description text  
-Setup :: Edit menu entries       :: Interactively change menu entries
-Setup :: Edit user functions     :: Add user defined scripts and functions
-Setup :: Bind functions to menus :: Bind scripts and pre-defined functions to menu items
-Setup :: Edit default values     :: Edit default menu length, number of tabs, etc.
 
 [:end_menu_items:]
 

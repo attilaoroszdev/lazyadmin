@@ -43,6 +43,8 @@ readonly MAIN_MENU_KEY="Main"
 readonly COMMAND_BUILDER_KEY="CMB"
 
 menu_file="$USER_DIR/menu-entries.la"
+readonly SYSTEM_MENU_FILE="$CORE_DIR/system-menus.la"
+
 alt_menu=false # This is not yet fully implemented, and quite frankly, I forgot what it was meant to be``
 is_submenu=false 
 sub_flags_menu=false

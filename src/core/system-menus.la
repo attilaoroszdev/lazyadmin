@@ -26,23 +26,21 @@
 
 [:special_menu_items:]
 
-# TODO: Remove function names, they are kind of self-expnataory and could be automatically called
-
 # Setup tab, Always on the last position (if enabled)
-# ID  :: Menu item text                   :: Longer description text                        :: Function name
-Setup :: Edit menu entries                :: Interactively change menu entries              :: functsetup0
-Setup :: Edit user functions              :: Add user defined scripts and functions         :: functsetup1
-Setup :: Edit default values              :: Edit default menu length, number of tabs, etc. :: functsetup3
+# ID  :: Menu item text                    :: Longer description text                      
+Setup :: Edit menu entries                 :: Interactively change menu entries            
+Setup :: Edit user functions               :: Add user defined scripts and functions        
+Setup :: Edit default values               :: Edit default menu length, number of tabs, etc.
 
 # Help menu items
-Help :: Lazy Admin user guide             :: Basic setup and usage guide to Lazy Admin      :: functhelp0
-Help :: Configuration and scripting guide :: A somewhat more in-depth configuration guide   :: functhelp1
-Help :: Command builder usage guide       :: How to use the command-builder submenu         :: functhelp2
+Help  :: Lazy Admin user guide             :: Basic setup and usage guide to Lazy Admin     
+Help  :: Configuration and scripting guide :: A somewhat more in-depth configuration guide 
+Help  :: Command builder usage guide       :: How to use the command-builder submenu      
 
 [:end_special_menu_items:]
 
 
-[:right_panel_items:]
+
 
 # Contents of the right panel. Only change this if you alter right panel functionality 
 # After specifying the type of right panel (Main, Sub, Cmb, or Help), the next columns should specify 
@@ -50,6 +48,9 @@ Help :: Command builder usage guide       :: How to use the command-builder subm
 # 
 # These functions have shortkeys assigned, so they don't have functions assigned. Do not change the
 # shortkeys, unless you also want to modify the code where they are read
+
+
+[:right_panel_items:]
 
 # Right panel items for main menu
 # ID :: key :: Menu item text   :: Longer description text 

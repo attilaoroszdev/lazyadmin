@@ -24,7 +24,7 @@ This is the version that has it **all**
                                     ├/launcher/ladmin
                                     |
                                     │
-                                    ├/plugins/display-help.la
+                                    ├/plugins/help-functions.la
                                     |        |
                                     |        ├extra-functions.la
                                     |        |
@@ -85,7 +85,7 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |     └main-functions.la
                          |
                          │
-                         ├/plugins/display-help.la
+                         ├/plugins/help-functions.la
                          |        |
                          |        ├extra-functions.la
                          |        |
