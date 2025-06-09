@@ -64,9 +64,12 @@ declare -i NUMBER_OF_TABS
 
 declare SUBMENU_TITLE=""
 
-# TODO: Make tab items selectable by assigning them commands on runtime (if $tabkey == "Setup", or somethng like that)
-# TODO: Sort our command builder for good
-# TODO remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
+# TODO Size checker and menu sizing must take into consideration whether header and/or footer are showing, and allow for longer menus when these are turned off
+
+# TODO:Sort our command builder for good
+# TODO Remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
+
+# TODO: Must restore the terminal before any command is executed, and put it back into the "special mode" on return
 
 
 # Then
@@ -89,7 +92,7 @@ set_menu_sizes() {
         right_panel_width_warning=false
         height_warning=false
        
-        if $SHOW_TITLE; then
+        if $SHOW_HEADER; then
             max_menu_height=$(($terminal_height - 10))
         else
             max_menu_height=$(($terminal_height - 8))
@@ -489,42 +492,42 @@ read_submenu_items(){
     
 }
 
-read_system_menu_items(){
-    local system_menu_type="$1"
+# read_system_menu_items(){
+#     local system_menu_type="$1"
 
-    OLD_IFS=$IFS
-    IFS="$SAFE_DELIMITER"
-    local -i idx=1
+#     OLD_IFS=$IFS
+#     IFS="$SAFE_DELIMITER"
+#     local -i idx=1
 
-    MENU_ITEM_ENTRIES=()
-    MENU_ITEM_DESCRIPTIONS=()
-    MENU_ITEM_COMMANDS=()
-    MENU_ITEMS_COUNT=0
+#     MENU_ITEM_ENTRIES=()
+#     MENU_ITEM_DESCRIPTIONS=()
+#     MENU_ITEM_COMMANDS=()
+#     MENU_ITEMS_COUNT=0
 
-    for ((n = 0; n < "${#SYSTEM_MENU_ITEM_ROWS[@]}"; n++)); do
-        local -a current_row
-        read -ra current_row <<< "${SYSTEM_MENU_ITEM_ROWS[$n]}"
+#     for ((n = 0; n < "${#SYSTEM_MENU_ITEM_ROWS[@]}"; n++)); do
+#         local -a current_row
+#         read -ra current_row <<< "${SYSTEM_MENU_ITEM_ROWS[$n]}"
 
-        local menu_key="${current_row[0]}"
-        menu_key="${menu_key#"${menu_key%%[![:space:]]*}"}"  # Remove leading whitespace
-        menu_key="${menu_key%"${menu_key##*[![:space:]]}"}"  # Remove trailing whitespace
-        if [[ "$menu_key" == "$system_menu_type" ]]; then
-            add_row_to_menu_items $idx "${current_row[@]}"
+#         local menu_key="${current_row[0]}"
+#         menu_key="${menu_key#"${menu_key%%[![:space:]]*}"}"  # Remove leading whitespace
+#         menu_key="${menu_key%"${menu_key##*[![:space:]]}"}"  # Remove trailing whitespace
+#         if [[ "$menu_key" == "$system_menu_type" ]]; then
+#             add_row_to_menu_items $idx "${current_row[@]}"
 
-            if [[ $? == 0 ]]; then
-                ((idx++))
-            fi
-        fi 
-    done
+#             if [[ $? == 0 ]]; then
+#                 ((idx++))
+#             fi
+#         fi 
+#     done
 
-    IFS="$OLD_IFS"
-    menu_height=$normal_menu_height
-    max_menu_length=$(($normal_menu_height - 3))
-    menu_length=${#MENU_ITEM_ENTRIES[@]}
+#     IFS="$OLD_IFS"
+#     menu_height=$normal_menu_height
+#     max_menu_length=$(($normal_menu_height - 3))
+#     menu_length=${#MENU_ITEM_ENTRIES[@]}
     
 
 
-}
+# }
 
 # TODO: Got to disallow tab ID or name: Setup. If it's in user-menus, just ignore it
 
@@ -532,22 +535,30 @@ read_menu_items() {
     OLD_IFS=$IFS
     IFS="$SAFE_DELIMITER"
     local -i idx=1
+    local -l system_menu_type=""
+
+    if [[ -n "$1" ]]; then
+        system_menu_type="$1"
+    elif  [[ "${TAB_ITEM_KEYS[$tab_pos]}" == "Setup" ]]; then 
+        system_menu_type="setup"
+    fi
 
     MENU_ITEM_ENTRIES=()
     MENU_ITEM_DESCRIPTIONS=()
     MENU_ITEM_COMMANDS=()
     MENU_ITEMS_COUNT=0
-    if [[ "${TAB_ITEM_KEYS[$tab_pos]}" == "Setup" ]]; then 
+
+    if [[ -n $system_menu_type ]]; then
         for ((n = 0; n < "${#SYSTEM_MENU_ITEM_ROWS[@]}"; n++)); do
             local -a current_row
             read -ra current_row <<< "${SYSTEM_MENU_ITEM_ROWS[$n]}"
 
-            local tab_key="${current_row[0]}"
+            local -l tab_key="${current_row[0]}"
             tab_key="${tab_key#"${tab_key%%[![:space:]]*}"}"  # Remove leading whitespace
             tab_key="${tab_key%"${tab_key##*[![:space:]]}"}"  # Remove trailing whitespace
             
-            if [[ $tab_key == "Setup" ]]; then
-                add_row_to_menu_items $idx "${current_row[@]}"
+            if [[ $tab_key == $system_menu_type ]]; then
+                add_row_to_menu_items $idx $system_menu_type "${current_row[@]}" 
 
                 if [[ $? == 0 ]]; then
                     ((idx++))
@@ -573,9 +584,6 @@ read_menu_items() {
         done
     fi
 
-   
-
-
 
     IFS="$OLD_IFS"
     menu_height=$normal_menu_height
@@ -587,9 +595,15 @@ read_menu_items() {
 add_row_to_menu_items() {
     local -i idx=$1
     shift
-    local -a curent_row="$@"
+    local system_function=""
+    if [[ $1 == "setup" ]] || [[ $1 == "help" ]]; then
+        system_function=$1
+        shift
+    fi
 
+    local -a curent_row="$@"
     local menu_item="${current_row[1]}"
+
     menu_item="${menu_item#"${menu_item%%[![:space:]]*}"}"
     menu_item="${menu_item%"${menu_item##*[![:space:]]}"}"
 
@@ -624,7 +638,11 @@ add_row_to_menu_items() {
         else
             MENU_ITEM_ENTRIES+=("$idx - $menu_item")
             MENU_ITEM_DESCRIPTIONS+=("$description")
-            MENU_ITEM_COMMANDS+=("$command")
+            if [[ -n $system_function ]]; then
+                MENU_ITEM_COMMANDS+=("funct$system_function$idx")
+            else
+                MENU_ITEM_COMMANDS+=("$command")
+            fi
             ((MENU_ITEMS_COUNT++))
             return 0
         fi
@@ -814,6 +832,7 @@ write_tab_items() {
 
     if $DISPLAY_LINE_CONNECTORS; then
         # Then draw connectors ont he bottom line, but not for the last item
+        local rp_connector_drawn=false
         horizontal_connector_position=0
         tput cup $((header_height)) $horizontal_connector_position
         draw_line
@@ -823,10 +842,19 @@ write_tab_items() {
 
             if $show_right_panel && [[ $horizontal_connector_position == $(($menu_width - $active_right_panel_width)) ]]; then
                 echo -n "┿"
+                rp_connector_drawn=true
             else
                 echo -n "┷"
             fi
         done
+
+
+        if $show_right_panel && ! $rp_connector_drawn; then
+            tput cup $((header_height)) $left_panel_width
+            echo "┯"
+        fi
+
+
     fi
 
     if $tabs_dont_fit; then
@@ -923,7 +951,9 @@ write_menu_items() {
         done
     fi
 
-    write_descriptor
+    if $SHOW_FOOTER; then
+        write_descriptor
+    fi
 }
 
 
@@ -1059,8 +1089,9 @@ write_rightpanel_items() {
     done
 
     IFS=$OLD_IFS
-    
-    write_descriptor
+    if $SHOW_FOOTER; then
+        write_descriptor
+    fi
 }
 
  write_right_panel_descriptor() { 
@@ -1230,7 +1261,7 @@ draw_menu() {
     tput cup $cursor_pos 0
     draw_line
 
-    if $SHOW_TITLE; then
+    if $SHOW_HEADER; then
         ((header_height+=2))
         write_main_title
         ((cursor_pos+=2))
@@ -1273,15 +1304,20 @@ draw_menu() {
         echo "┷"
     fi
 
-    ((cursor_pos += $(($DESCRIPTOR_HEIGHT + 1))))
-    tput cup $cursor_pos 0
-    draw_line
+    if $SHOW_FOOTER; then
+        ((cursor_pos += $(($DESCRIPTOR_HEIGHT + 1))))
+        tput cup $cursor_pos 0
+        draw_line
+    fi
     check_for_warnings
     
 }
 
 check_for_warnings() {
-    warning_position=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT + 2))
+    warning_position=$(($header_height + $menu_height + 2))
+    if $SHOW_FOOTER; then
+        ((warning_position+=$DESCRIPTOR_HEIGHT))
+    fi
     clear_line $warning_position 0 "right"
     clear_line $(($warning_position + 1)) 0 "right"
     msg=""
@@ -1337,29 +1373,6 @@ truncate_text(){
 
     echo "$text"
 }
-
-
-#Simply write a one line descriptor, as read from the menu file
-write_help_descriptor() { 
-    help_menu_desc_entry[0]="Basic setup and usage guide to Lazy Admin"
-    help_menu_desc_entry[1]="In-depth configuration guide"
-    help_menu_desc_entry[2]="How to use the command-builder submenu"
-    
-    cursor_pos=$(($header_height + $menu_height + $DESCRIPTOR_HEIGHT))
-    help_descriptor_line=$(truncate_text "${help_menu_desc_entry[$menu_pos]}" $(($terminal_width-4)))
-
-    tput cup $cursor_pos $menu_width
-    echo -e "\033[1K"
-    tput cup $cursor_pos 2
-
-    if [[ "$active_panel" == "right" ]]; then
-        echo "${menu_desc_entry[$menu_pos]}"
-    else
-        echo "$help_descriptor_line"
-    fi
-}
-
-
 
 
 
@@ -1569,6 +1582,28 @@ toggle_right_panel() {
     reflow_menu
 }
 
+
+toggle_header(){
+    if $SHOW_HEADER; then
+        SHOW_HEADER=false
+    else
+        SHOW_HEADER=true
+    fi
+
+    reflow_menu
+}
+
+toggle_footer(){
+    if $SHOW_FOOTER; then
+        SHOW_FOOTER=false
+    else
+        SHOW_FOOTER=true
+    fi
+
+    reflow_menu
+}
+
+
 toggle_setup_tab() {
 
     if $SHOW_SETUP; then
@@ -1742,17 +1777,6 @@ select_menu_item_by_number() {
 }
 
 
-select_help_menu_item_by_number() {
-    key=$1
-
-    if [[ $key -le 3 ]] && [[ $key -ge 0 ]]; then
-        ((key--))
-        menu_pos=$key
-        functhelp$key
-    fi
-}
-
-
 select_highlighted_menu_item() {
     if [[ "$active_panel" == "right" ]]; then
         functright$menu_pos
@@ -1763,38 +1787,16 @@ select_highlighted_menu_item() {
         if [[ -n "${MENU_ITEM_COMMANDS[(($menu_pos))]}" ]]; then
             check_and_run "${MENU_ITEM_COMMANDS[(($menu_pos))]}"
             is_valid=$?
-        # else
-        #     if $is_submenu; then
-                
-        #         is_valid=$(function_exists tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($menu_pos + 1)))
-        #         if [[ $is_valid == 0 ]]; then
-        #             tab$(($tab_pos + 1))item$(($main_menu_pos + 1))sub$(($menu_pos + 1)) $tab_pos $menu_pos
-        #         fi
-        #     else
-             
-        #         is_valid=$(function_exists tab$(($tab_pos + 1))item$(($menu_pos + 1)))
-        #         if [[ $is_valid == 0 ]]; then
-        #             tab$(($tab_pos + 1))item$(($menu_pos + 1)) $tab_pos $menu_pos
-        #         fi
-        #     fi
         fi
         
     fi
 
     if [[ $is_valid == 0 ]]; then
-        init_menu
+        reflow_menu
     fi
 
 }
 
-
-select_highlighted_help_item() {
-    if [[ "$active_panel" == "right" ]]; then
-        functright$menu_pos
-    else
-        functhelp$menu_pos
-    fi
-}
 
 #########################################
 # Command builder specific menu options #
@@ -2022,8 +2024,6 @@ pick_menu_item() {
             [1-9])
                 if $sub_flags_menu; then
                     cmb_set_arg_by_number "$@" $key
-                elif $help_submenu; then
-                    select_help_menu_item_by_number $key
                 else
                     select_menu_item_by_number $key
                 fi
@@ -2035,8 +2035,6 @@ pick_menu_item() {
                 else
                     if $sub_flags_menu; then
                         set_highlighted_cmb_arg "$@"
-                    elif $help_submenu; then
-                        select_highlighted_help_item
                     else
                         select_highlighted_menu_item
                     fi
@@ -2078,6 +2076,12 @@ shortkey_command(){
             ;;
         "R")
             toggle_right_panel
+            ;;
+        "H")
+            toggle_header
+            ;;
+        "F")
+            toggle_footer
             ;;
         "S")
             toggle_setup_tab
@@ -2300,7 +2304,7 @@ back_to_main_menu() {
         is_submenu=false
         write_tab_items
 
-        if $SHOW_TITLE; then
+        if $SHOW_HEADER; then
             write_main_title
         fi
 
@@ -2467,7 +2471,7 @@ enter_helpmenu() {
     main_menu_pos="$menu_pos"
     menu_pos=0
 
-    read_system_menu_items "Help"
+    read_menu_items "Help"
     clear_menu
     write_menu_items
     
@@ -2573,7 +2577,6 @@ main() {
         stty -icanon -echo
     fi
     
-    # TODO: Must restore the terminal before any command is executed, and put it back into the "special mode" on return
     trap restore_terminal EXIT HUP INT QUIT TERM
 
     set_up_menus

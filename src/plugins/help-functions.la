@@ -55,17 +55,17 @@ display_markdown_help() {
     fi
 }
 
-functhelp0() { 
+functhelp1() { 
     display_markdown_help "$RES_DIR/usage-guide.md" "$RES_DIR/usage-guide.txt"
 }
 
 
-functhelp1() { 
+functhelp2() { 
     display_markdown_help "$RES_DIR/configuration-guide.md" "$RES_DIR/configuration-guide.txt"
 }
 
 
-functhelp2() { 
+functhelp3() { 
     functhelp_commanbuilder
 }
 

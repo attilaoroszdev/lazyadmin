@@ -157,17 +157,17 @@ edit_setup_file() {
     tput civis
 }
 
-functsetup0() { 
+functsetup1() { 
     edit_setup_file "$USER_DIR/menu-entries.la"
 }
 
 
-functsetup1() { 
+functsetup2() { 
     edit_setup_file "$USER_DIR/user-functions.la"
 }
 
 
-functsetup2() { 
+functsetup3() { 
     edit_setup_file "$USER_DIR/user-defaults.la"
 }
 

@@ -26,11 +26,14 @@
 readonly MAIN_TITLE="Lazy Admin - v3.0alpha"
 
 # Settng this to false can give you two extra rows when you are struggling for space
-readonly SHOW_TITLE=true
+declare SHOW_HEADER=true
 
 
 # Switch right panel on or off
 declare RIGHT_PANEL=true
+
+# Footer is where description lives
+declare SHOW_FOOTER=false
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not
