@@ -57,12 +57,14 @@ Help  :: Command builder usage guide       :: How to use the command-builder sub
 Main :: f :: Reflow Menu        :: Redraw the Lazy Admin UI
 Main :: h :: Get Help           :: Display the help menu
 Main :: k :: Show key bindings  :: Display the different key bindings
+Main :: o :: Setup options      :: Directly edit menus, user functions andconfigurable defaults
 Main :: b :: Back to Main Menu  :: Return to main menu
 Main :: q :: Quit               :: Quit Lazy Admin, and return to your normal shell... and life...
 
 
 # Right panel items for command builder
-CMB :: m :: Misc. arguments     :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
+CMB :: m :: Misc. arguments     :: Set you own argumanent(s) manually. (1st arg. will be separated by a space)
+CMB :: p :: Misc. parameter     :: Set an option parameter to the last argument with o space between them
 CMB :: c :: Run command         :: Run the current command with all the set arguments and flag-options
 CMB :: x :: Delete set flags    :: Remove everything and start over
 CMB :: 

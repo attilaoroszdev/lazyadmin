@@ -26,14 +26,14 @@
 readonly MAIN_TITLE="Lazy Admin - v3.0alpha"
 
 # Settng this to false can give you two extra rows when you are struggling for space
-declare SHOW_HEADER=true
+declare -g SHOW_HEADER=true
 
 
 # Switch right panel on or off
-declare RIGHT_PANEL=true
+declare -g RIGHT_PANEL=true
 
 # Footer is where description lives
-declare SHOW_FOOTER=false
+declare -g SHOW_FOOTER=true
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not
@@ -57,14 +57,14 @@ readonly RIGHT_PANEL_WIDTH=27
 # You can switch off line connector characters
 # Useful for incompatible terminals (like those on mobiles)
 # Which might render these out of place
-readonly DISPLAY_LINE_CONNECTORS=true
+declare DISPLAY_LINE_CONNECTORS=true
 
 # This should be handled by the setup script,
 # but you can change it to any editor command
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-declare DEFAULT_EDITOR="not set"
+declare -g DEFAULT_EDITOR="not set"
 
 
 readonly AUTO_REFLOW=true

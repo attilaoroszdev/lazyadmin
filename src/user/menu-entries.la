@@ -47,114 +47,80 @@ Tab 5 :: Fifth Tab
 [:menu_items:]
 
 # First tab
-# No. :: Menu item text          :: Longer description text                   :: Fubcntion or command to run
-Tab 1 :: Resource monitor        :: Show the output of top                    :: /v top
-Tab 1 :: Better resource monitor :: Show the output of htop (if installed)    :: /v htop
-Tab 1 :: Show sensors            :: Thermal readings in real time             :: show_sensors
+# No. :: Menu item text           :: Longer description text                   :: Fubcntion or command to run
+Tab 1 :: Resource monitor         :: Show the output of top                    :: /v top
+Tab 1 :: Better resource monitor  :: Show the output of htop (if installed)    :: /v htop
+Tab 1 :: Show sensors             :: Thermal readings in real time             :: show_sensors
 Tab 1 :: 
-Tab 1 :: Read the system logs    :: Show journalctl (or dmesg, if no systemd) :: show_system_logs  
-Tab 1 :: Browse files            :: Launch Midnight Commander (f installed)   :: /v mc
-Tab 1 :: Analyse disk space      :: Select your options in the submenu        :: enter_submenu
+Tab 1 :: Read the system logs     :: Show journalctl (or dmesg, if no systemd) :: show_system_logs  
+Tab 1 :: Browse files             :: Launch Midnight Commander (f installed)   :: /v mc
+Tab 1 :: Analyse disk space       :: Select your options in the submenu        :: enter_submenu
 # Submenu items for the 7th entry
-   -- :: Analyse root           :: Run ncdu /                                :: /v ncdu /
+   -- :: Analyse root             :: Run ncdu /                                :: /v ncdu /
    -- :: 
-   -- :: Analyse /home          :: Run ncdu ~                                :: /v ncdu $HOME
-   -- :: Anaylise ~/Downloads   :: Run ncdu ~/Downloads                      :: /v ncdu $HOME/Downloads
-   -- :: Analyse ~/Documents    :: Run ncdu ~/Documents                      :: /v ncdu $HOME/Documents
-   -- :: Analyse ~/.cache       :: Run ncdu ~/.cache                         :: /v ncdu $HOME/.cache
+   -- :: Analyse /home            :: Run ncdu ~                                :: /v ncdu $HOME
+   -- :: Anaylise ~/Downloads     :: Run ncdu ~/Downloads                      :: /v ncdu $HOME/Downloads
+   -- :: Analyse ~/Documents      :: Run ncdu ~/Documents                      :: /v ncdu $HOME/Documents
+   -- :: Analyse ~/.cache         :: Run ncdu ~/.cache                         :: /v ncdu $HOME/.cache
    -- :: 
-   -- :: Analyse tmp directory  :: Run ncdu /tmp                             :: /v ncdu /tmp
-   -- :: Analyse logs           :: Run ncdu /var/log                         :: /v ncdu /var/log
+   -- :: Analyse tmp directory    :: Run ncdu /tmp                             :: /v ncdu /tmp
+   -- :: Analyse logs             :: Run ncdu /var/log                         :: /v ncdu /var/log
 # End of submenu items
-Tab 1 :: Interactive ping        :: Command-builder with a ping command 
+Tab 1 :: Interactive ping         :: Command-builder with a ping command       :: cmb "Ping any host with flags" "ping" "-n -q" -v --help '-c 5' -c -n -q -v --help '-c 5' -c
 Tab 1 :: 
-Tab 1 :: Drop to shell           :: Drop to a shell. Type 'exit' to return    :: drop_to_shell
-Tab 1 :: Dummy submenu           :: This is a test                            :: enter_submenu
-   -- :: Item 1                  :: Descriptor 1 top                          :: top
-   -- :: Item 2                  :: Descriptor 2 htop                         :: htop
-   -- :: Item 3                  :: Descriptor 3 sensors                      :: show_sensors
-Tab 1 :: Drop to root shell      :: Drop to a shell as root. (Be careful.)   :: drop_to_root_shell
-Tab 1 :: An item with nothing    :: Needs a description otherwise it would become a label
-Tab 1 :: Last item, alo a submenu  :: To see if it works :: enter_submenu
+Tab 1 :: Drop to shell            :: Drop to a shell. Type 'exit' to return    :: drop_to_shell
+Tab 1 :: Drop to root shell       :: Drop to a shell as root. (Be careful.)    :: drop_to_root_shell
+Tab 1 :: An item with nothing     :: Needs a description not to become a label
+Tab 1 :: Last item, alo a submenu :: To see if it works :: enter_submenu
    -- :: The top section
    -- ::
-   -- :: Item 1 Alt                 :: Descriptor 1 top                          :: top
-   -- :: Item 2 Alt                 :: Descriptor 2 htop                         :: htop
+   -- :: Item 1                   :: Descriptor 1 top                          :: top
+   -- :: Item 2 Alt               :: Descriptor 2 htop                         :: htop
    -- ::
    -- :: ---
    -- :: 
    -- :: The bottom section
    -- ::
-   -- :: Item 3 Alt                :: Descriptor 3 sensors                      :: show_sensors
-   -- :: Item 4 alt                 :: mc again         :: mc
+   -- :: Item 3 Alt               :: Descriptor 3 sensors                      :: show_sensors
+   -- :: Item 4 alt               :: mc again         :: mc
 
 
 # Second tab
-# No. :: Menu item text          :: Longer description text                   :: Fucntion or command to run
-Tab 2 :: Update system           :: With interactyive options. (Uses apt)     :: /d update_system
-Tab 2 :: Quick update system     :: No questions instant upgrade              :: /d upgrade_without_asking
-Tab 2 :: Clean up apt            :: apt autoremove && apt clean               :: /d clean_up_apt
+# No. :: Menu item text           :: Longer description text                   :: Fucntion or command to run
+Tab 2 :: Update system            :: With interactyive options. (Uses apt)     :: /d update_system
+Tab 2 :: Quick update system      :: No questions instant upgrade              :: /d upgrade_without_asking
+Tab 2 :: Clean up apt             :: apt autoremove && apt clean               :: /d clean_up_apt
 Tab 2 :: 
-Tab 2 :: Install package(s)      :: apt install <whatever>                    :: /d install_packages
-Tab 2 :: Remove package(s)       :: apt (--purge) remove <whatever>           :: /d remove_packages
-Tab 2 :: List package(s)         :: apt list <whatever>                       :: /d list_packages
-Tab 2 :: Search package(s)       :: apt search <whatever>                     :: /d search_packages 
-Tab 2 :: Show package details    :: apt show <whatever>                       :: /d show_packages
+Tab 2 :: Install package(s)       :: apt install <whatever>                    :: /d install_packages
+Tab 2 :: Remove package(s)        :: apt (--purge) remove <whatever>           :: /d remove_packages
+Tab 2 :: List package(s)          :: apt list <whatever>                       :: /d list_packages
+Tab 2 :: Search package(s)        :: apt search <whatever>                     :: /d search_packages 
+Tab 2 :: Show package details     :: apt show <whatever>                       :: /d show_packages
 
 
 # Third tab
-# No. :: Menu item text          :: Longer description text                   :: Fucntion or command to run
+# No. :: Menu item text           :: Longer description text                   :: Fucntion or command to run
 Tab 3 :: This is a label
 Tab 3 ::
-Tab 3 :: Complex script          :: Run a very-very complex script            :: /c /d echo -e "\nHello World!"
-Tab 3 :: Solve for x             :: Solve the mysteries of the universe for x :: /c /d echo -e "\nx == 42"
+Tab 3 :: Complex script           :: Run a very-very complex script            :: /c /d echo -e "\nHello World!"
+Tab 3 :: Solve for x              :: Solve the mysteries of the universe for x :: /c /d echo -e "\nx == 42"
 Tab 3 :: 
 Tab 3 :: ---
 Tab 3 ::
 Tab 3 :: This is a label for the bottom section
 Tab 3 :: 
-Tab 3 :: Make Window$ secure     :: How to instantly secure any computer      :: /c /d echo -e "\nJust install Linux, or some BSD."
-Tab 3 :: Important script        :: Run a very important script               :: /c /d echo -e "\n"This is a very important script."" 
-Tab 3 :: Play robotfindskitten   :: You do have it installed, right? Right?   :: /v robotfindskitten 
-Tab 3 :: Pointless menuitem      :: This one only pollutes the environment    :: example_function
+Tab 3 :: Make Window$ secure      :: How to instantly secure any computer      :: /c /d echo -e "\nJust install Linux, or some BSD."
+Tab 3 :: Important script         :: Run a very important script               :: /c /d echo -e "\n"This is a very important script."" 
+Tab 3 :: Play robotfindskitten    :: You do have it installed, right? Right?   :: /v robotfindskitten 
+Tab 3 :: Pointless menuitem       :: This one only pollutes the environment    :: example_function
 
 
 # Fourth and fifth tabs
-# No. :: Menu item text          :: Longer description text  
-Tab 4 :: Nothing here yet        :: Write your own menus here
-Tab 5 :: Nothing here yet        :: Write your own menus here
+# No. :: Menu item text           :: Longer description text  
+Tab 4 :: Nothing here yet         :: Write your own menus here
+Tab 5 :: Nothing here yet         :: Write your own menus here
 
 
 [:end_menu_items:]
 
 
-[:right_panel_items:]
-
-# Contents of the right panel. Only change this if you alter right panel functionality 
-# After specifying the type of right panel (Main, Sub, Cmb, or Help), the next columns should specify 
-# the shortcut key (mandatory)
-
-
-# Right panel items for main menu
-#ID :: key :: Menu item text    :: Longer description text 
-Main :: f :: Reflow Menu        :: Redraw the Lazy Admin UI
-Main :: h :: Get Help           :: Display the help menu
-Main :: k :: Show key bindings  :: Display the different key bindings
-Main :: b :: Back to Main Menu  :: Return to main menu
-Main :: q :: Quit               :: Quit Lazy Admin, and return to your normal shell... and life...
-
-
-# Right panel items for command builder
-CMB :: m :: Misc. arguments     :: Set you own argumanent(s) manually. 1st arg. will be separated by a space
-CMB :: c :: Run command         :: Run the current command with all the set arguments and flag-options
-CMB :: x :: Delete set flags    :: Remove everything and start over
-CMB :: 
-CMB :: ---
-CMB ::
-CMB :: f :: Reflow Menu         :: Redraw the Lazy Admin UI
-CMB :: h :: Get Help            :: Display the help menu
-CMB :: k :: Show key bindings   :: Display the different key bindings
-CMB :: b :: Back to Main Menu   :: Return to main menu
-CMB :: q :: Quit                :: Quit Lazy Admin, and return to your normal shell... and life...
-
-[:end_right_panel_items:]
