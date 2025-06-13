@@ -70,7 +70,6 @@ declare -i NUMBER_OF_TABS
 
 declare SUBMENU_TITLE=""
 
-
 # TODO: When returning to menu from command_builder, I need to clear the connector line on right panel
 # TODO: Tabs don't fit warning is not relevant when in submenus
 # TODO Remove all the tput things, replace them with locally declared function that uses echo and ANSI escape codes (see notes)
@@ -1877,11 +1876,12 @@ cmb_clear_args() {
 
 cmb_set_arg_by_number() {
 
-    key=${!#}
+    local -i key=$1
 
-    read_second_digit=false
-    if [[ $MAX_COMMAND_BUILDER_ARGS -gt 9 ]] && [[ $key -le $(($MAX_COMMAND_BUILDER_ARGS/10)) ]]; then
+    local read_second_digit=false
+    if [[ ${#MENU_ITEM_COMMANDS[@]} -gt 9 ]]; then
         read_second_digit=true
+
     fi
 
     # Half a second should be more or less enough to type that double digit
@@ -1897,14 +1897,13 @@ cmb_set_arg_by_number() {
         fi  
     fi
     
-    let args_to_set=$#-4
-    if [[ $key -le $(($args_to_set + 1)) ]] && [[ $key -ge 0 ]]; then
-        CMB_ARGS="$CMB_ARGS ${MENU_ITEM_COMMANDS[$key]}"
+    if [[ $key -le ${#MENU_ITEM_COMMANDS[@]} ]]; then
+        CMB_ARGS="$CMB_ARGS ${MENU_ITEM_COMMANDS[$key-1]}"
+        menu_pos=$(($key-1))
+        write_menu_items
         write_active_cmb_command
-
-        # ((key += 2))
-        # CMB_ARGS=$CMB_ARGS' '${!key}
     fi
+
 }
 
 # Credit for the previous picking solution (first 5 lines) goes for eMPee584's 
@@ -2018,7 +2017,7 @@ pick_menu_item() {
                 ;;
             [1-9])
                 if $sub_flags_menu; then
-                    cmb_set_arg_by_number "$@" $key
+                    cmb_set_arg_by_number $key
                 else
                     select_menu_item_by_number $key
                 fi
