@@ -95,17 +95,9 @@ declare IS_HELP_SUBMENU=false
 
 declare IS_ROOT=false
 
-# TODO: Command builder: Min size for right term should be higher. 
 
-# The minumm sizes are set. If right panel doesn't fit, move those items into main, and reduce the menu
-# If cmb should be displayed and the terminal is lower than base height, do the warning that cmb is disabled, 
-# and propmpt to press any key to return to menu
-
-# If it doesn't fit, options should be added for menu. Min size should be 4, mandatory items must always be 
-# displayed at a minimum, all other items onlyif there is room before those
-
-# TODO: Missing command builder items are not rewritten when menu is resized
-# TODO: cmb red line is displayed in the rong position when items are cut off
+# TODO: If right panel is turned off, the minimal RP with commands should still show in cmb, but only that.
+# TODO: If it right panel won't fit, cmb shoudl only give an error
 
 # TODO: Cmb: Allow running cmb predefined function or cmb argument list. First check if predefined function exists, and if it does, get args from it,
 
@@ -124,6 +116,7 @@ set_menu_sizes() {
         MIN_TERM_HEIGHT_FOR_R_PANEL=13
     fi
 
+
     if $SHOW_HEADER; then
         ((MIN_TERMINAL_HEIGHT+=2))
         ((MIN_TERM_HEIGHT_FOR_R_PANEL+=2))
@@ -134,14 +127,21 @@ set_menu_sizes() {
     fi
 
     if $SHOW_FOOTER || $IS_SUB_FLAGS_MENU; then
+
         ((MIN_TERMINAL_HEIGHT+=2))
-        ((MIN_TERM_HEIGHT_FOR_R_PANEL+=2))
+
+        if $IS_SUB_FLAGS_MENU; then
+            ((MIN_TERM_HEIGHT_FOR_R_PANEL+=1))
+        else
+            ((MIN_TERM_HEIGHT_FOR_R_PANEL+=2))
+        fi
+        
         FOOTER_HEIGHT=2
     else
         FOOTER_HEIGHT=1
     fi
 
-   
+    MIN_TERM_H_FOR_R_PANEL_CMB=$(($MIN_TERM_HEIGHT_FOR_R_PANEL+8))
 
     if [[ $TERMINAL_HEIGHT -lt $MIN_TERMINAL_HEIGHT ]] || [[ $TERMINAL_WIDTH -lt $MIN_TERMINAL_WIDTH ]]; then
         MENUS_FORCE_HIDDEN=true
@@ -152,8 +152,6 @@ set_menu_sizes() {
         RIGHT_PANEL_WIDTH_WARNING=false
         HEIGHT_WARNING=false
 
-
-
         MAX_MENU_HEIGHT=$(($TERMINAL_HEIGHT - 3 - $HEADER_HEIGHT - $FOOTER_HEIGHT))
 
         if [[ $MAX_MENU_ITEMS > 0 ]]; then
@@ -162,9 +160,7 @@ set_menu_sizes() {
             NORMAL_MENU_HEIGHT=$MAX_MENU_HEIGHT
         fi
 
-
         MENU_HEIGHT=0
-
         SHOW_RIGHT_PANEL=$RIGHT_PANEL
 
         if [[ $TERMINAL_HEIGHT -lt $MIN_TERM_HEIGHT_FOR_R_PANEL ]]; then
@@ -184,8 +180,7 @@ set_menu_sizes() {
         if ! $SHOW_RIGHT_PANEL $$ [[ $ACTIVE_PANEL -eq "right" ]]; then
             ACTIVE_PANEL="left"
         fi
-
-       
+  
         # Got to make sure we fit inside whatever size the terminal currently is
         if [[ $NORMAL_MENU_HEIGHT -gt $MAX_MENU_HEIGHT ]]; then
             NORMAL_MENU_HEIGHT=$MAX_MENU_HEIGHT
@@ -196,7 +191,7 @@ set_menu_sizes() {
 
         if [[ $NORMAL_MENU_HEIGHT -lt $MIN_MENU_HEIGHT ]]; then
                 NORMAL_MENU_HEIGHT=$MIN_MENU_HEIGHT
-            fi
+        fi
 
         if ! $SHOW_RIGHT_PANEL; then
             ACTIVE_RIGHT_PANEL_WIDTH=0
@@ -205,7 +200,6 @@ set_menu_sizes() {
         fi
 
         LEFT_PANEL_WIDTH=$(($MENU_WIDTH - $ACTIVE_RIGHT_PANEL_WIDTH))
-        
         MENU_HEIGHT=$NORMAL_MENU_HEIGHT
     fi
 
@@ -892,7 +886,7 @@ write_menu_items() {
     local -i line_offset=2
 
     if $IS_SUB_FLAGS_MENU; then
-        line_offset=4
+        line_offset=2
     fi
 
     t_put cup $(($MAX_MENU_LENGTH + $HEADER_HEIGHT + $line_offset)) 1
@@ -985,6 +979,14 @@ write_rightpanel_items() {
     IFS="$SAFE_DELIMITER"
      
     for ((n = 0; n < ${#RIGHT_PANEL_ITEM_ENTRIES[@]}; n++)); do
+
+        if  $IS_SUB_FLAGS_MENU && [[ $TERMINAL_HEIGHT -lt $MIN_TERM_H_FOR_R_PANEL_CMB ]]; then
+            if [[ $n > 4 ]]; then
+                break
+            fi
+
+        fi
+
         local shortkey="${RIGHT_PANEL_ITEM_KEYS[$n]}"
 
         if [[ "$shortkey" == "skip" ]]; then
@@ -2088,8 +2090,6 @@ cmb() {
     else
         REMAIN_IN_SUBMENU=false
     fi
-
-    # set_menu_sizes
     
 
     IS_SUBMENU=true
@@ -2106,6 +2106,8 @@ cmb() {
     # Everythingelse goes to processing
     set_command_builder_items "$@"
     if ! $SHOW_FOOTER; then
+        reflow_menu
+    elif $RIGHT_PANEL && ! $SHOW_RIGHT_PANEL; then
         reflow_menu
     fi
     
