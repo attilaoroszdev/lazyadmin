@@ -23,6 +23,8 @@
 # Any functions distrubuted with Lazy Adming, which have external
 # dependencies (other than sed), will live here
 
+declare VALID_EDITOR=false
+
 check_editor() { 
     clear
 
@@ -66,7 +68,7 @@ check_editor() {
             read -p "> " -n 1 editor_preference
             tput civis
 
-            valid_editor=false
+            VALID_EDITOR=false
             case $editor_preference in
                 'c')
                     echo
@@ -79,7 +81,7 @@ check_editor() {
                     function_exists $editor_preference
 
                     if [[ $? == 0 ]]; then
-                        valid_editor=true
+                        VALID_EDITOR=true
                         sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                         break
                     else
@@ -92,37 +94,37 @@ check_editor() {
                     ;;
                 'n')
                     editor_preference="nano"
-                    valid_editor=true
+                    VALID_EDITOR=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
                     ;;
                 'm')
                     editor_preference="micro"
-                    valid_editor=true
+                    VALID_EDITOR=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
                     ;;
                 'v')
                     editor_preference="vi"
-                    valid_editor=true
+                    VALID_EDITOR=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
                     ;;
                 'V')
                     editor_preference="vim"
-                    valid_editor=true
+                    VALID_EDITOR=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
                     ;;
                 'e')
                     editor_preference="emacs"
-                    valid_editor=true
+                    VALID_EDITOR=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
                     ;;
                 'E')
                     editor_preference="emacs --no-window"
-                    valid_editor=true
+                    VALID_EDITOR=true
                     sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
                     break
                     ;;
@@ -142,7 +144,7 @@ check_editor() {
 
         done
 
-        if $valid_editor; then
+        if $VALID_EDITOR; then
             DEFAULT_EDITOR=$editor_preference
         fi
     fi
@@ -151,7 +153,7 @@ check_editor() {
 
 edit_setup_file() { 
     check_editor
-    if $valid_editor; then
+    if $VALID_EDITOR; then
         $DEFAULT_EDITOR $1
     fi
     tput civis

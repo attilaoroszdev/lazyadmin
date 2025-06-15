@@ -148,7 +148,7 @@ remove_packages() {
     echo
     read -p "Package(s) to remove: " line_args
 
-    do_purge=""
+    local do_purge=""
     read -p "Also purge configs? (y/n)" -n 1 yes_or_no
 
     if [[ yes_or_no == "y" || yes_or_no == "Y" ]]; then

@@ -20,9 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
-CURRENT_DIR="$PWD" # Need to store the current one, whatever happens later
-CORE_DIR="$CURRENT_DIR/core"
 PLUGINS_DIR="$CURRENT_DIR/plugins"
 RES_DIR="$CURRENT_DIR/res"
 

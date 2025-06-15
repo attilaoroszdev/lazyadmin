@@ -20,9 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-user_profile="$CURRENT_DIR/user"
+declare CURRENT_DIR="$PWD"
+declare CORE_DIR="$CURRENT_DIR/core"
+declare USER_PROFILE="$CURRENT_DIR/user"
 
 for ((i = 1; i <= $#; i++)); do
 
@@ -32,7 +32,7 @@ for ((i = 1; i <= $#; i++)); do
 
     "-p" | "--load-profile")
 
-        user_profile=""
+        USER_PROFILE=""
         profile_name=${!j}
         absolute_path=false
 
@@ -41,16 +41,16 @@ for ((i = 1; i <= $#; i++)); do
         fi
 
         if $absolute_path && [[ -d "$profile_name" ]]; then
-            user_profile="$profile_name"
+            USER_PROFILE="$profile_name"
         else
 
             if [[ -d "$CURRENT_DIR/$profile_name" ]]; then
-                user_profile="$CURRENT_DIR/$profile_name"
+                USER_PROFILE="$CURRENT_DIR/$profile_name"
             fi
 
         fi
 
-        if [[ -z $user_profile ]]; then
+        if [[ -z $USER_PROFILE ]]; then
             echo
             echo "Error: User profile $profile_name not found. Exiting"
             echo
@@ -60,8 +60,8 @@ for ((i = 1; i <= $#; i++)); do
     esac
 done
 
-USER_DIR="$user_profile"
-CORE_DIR="$CURRENT_DIR/core"
+USER_DIR="$USER_PROFILE"
+
 
 . "$CORE_DIR/includes-port.la"
 

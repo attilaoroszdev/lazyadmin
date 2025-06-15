@@ -49,6 +49,8 @@ readonly MAX_MENU_ITEMS=0
 # exits or gets interrupted in nay way, the original terminal settings will be 
 # automatically restored Turn it off, if you are certain that 'stty' is not present 
 # or if you experience any iossues (which you should not).
+# If set to true, stty will also be used to determine terminal size
+# If off, or not present, it will try foir tput or other methods
 readonly USE_STTY=true
 
 # Change the size of the right panel
@@ -75,6 +77,3 @@ readonly AUTO_REFLOW=true
 # You have been warned
 readonly AUTO_REFLOW_TICK=0.5
 
-# If set to true, a Setup tab will automatically be added on the last
-# position (if there is room)
-declare SHOW_SETUP=true

@@ -22,36 +22,29 @@
 
 
 # Do not change these. (You have been warned)
-MAJOR_VERSION=3
-MINOR_VERSION=0
-IS_PRODUCTION_RELEASE=false
-BOTTOM_SEPARATORS=3
-DESCRIPTOR_HEIGHT=1
+readonly MAJOR_VERSION=3
+readonly MINOR_VERSION=0
+readonly IS_PRODUCTION_RELEASE=false
+readonly BOTTOM_SEPARATORS=3
+readonly DESCRIPTOR_HEIGHT=1
 declare MAIN_HEADER_HEIGHT=2
-HELP_SUB_MENU_HEIGHT=8
-SUB_HEADER_HEIGHT=2
-ROOT_TITLE=" -- ROOT Shell"
-MIN_MENU_HEIGHT=1
-BASE_TERMINAL_HEIGHT=9
-MIN_TERM_HEIGHT_FOR_R_PANEL=13
-MIN_TERMINAL_WIDTH=40
+readonly HELP_SUB_MENU_HEIGHT=8
+readonly SUB_HEADER_HEIGHT=2
+readonly ROOT_TITLE=" -- ROOT Shell"
+readonly MIN_MENU_HEIGHT=1
+readonly BASE_TERMINAL_HEIGHT=9
+declare MIN_TERM_HEIGHT_FOR_R_PANEL=13 #BAse value with header and footer enabled. Don't change this
+readonly MIN_TERMINAL_WIDTH=40
 
 readonly MENU_DELIMITER="::"
 readonly SAFE_DELIMITER=$'\x1f'
 readonly MAIN_MENU_KEY="Main"
 readonly COMMAND_BUILDER_KEY="CMB"
 
-menu_file="$USER_DIR/menu-entries.la"
+readonly MENU_FILE="$USER_DIR/menu-entries.la"
 readonly SYSTEM_MENU_FILE="$CORE_DIR/system-menus.la"
 
-alt_menu=false # This is not yet fully implemented, and quite frankly, I forgot what it was meant to be``
-is_submenu=false 
-sub_flags_menu=false
-help_submenu=false
-cursor_pos=0
-root=false
-
-# You can change some of these values to alter some startup defaults
-tab_pos=0 # Change this to set starting tab position (zero-based)
-menu_pos=0 # Change this to set starting item position (zero-based)
-active_panel="left" # Either "left" (default) or "right" Sets the active startup panel
+# You can change some of these values to alter some startup defaultsde
+declare -i TAB_POS=0 # Change this to set starting tab position (zero-based)
+declare -i MENU_POS=0 # Change this to set starting item position (zero-based)
+declare ACTIVE_PANEL="left" # Either "left" (default) or "right" Sets the active startup panel
