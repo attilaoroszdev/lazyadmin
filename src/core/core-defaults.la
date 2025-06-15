@@ -33,7 +33,9 @@ readonly SUB_HEADER_HEIGHT=2
 readonly ROOT_TITLE=" -- ROOT Shell"
 readonly MIN_MENU_HEIGHT=1
 readonly BASE_TERMINAL_HEIGHT=9
+readonly BASE_TERMINAL_HEIGHT_CMB=14
 declare MIN_TERM_HEIGHT_FOR_R_PANEL=13 #BAse value with header and footer enabled. Don't change this
+declare MIN_TERM_HEIGHT_FOR_R_PANEL_CMB=22
 readonly MIN_TERMINAL_WIDTH=40
 
 readonly MENU_DELIMITER="::"

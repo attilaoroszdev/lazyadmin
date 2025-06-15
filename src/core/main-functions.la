@@ -96,6 +96,11 @@ declare IS_HELP_SUBMENU=false
 declare IS_ROOT=false
 
 # TODO: Command builder: Min size for right term should be higher. 
+
+# The minumm sizes are set. If right panel doesn't fit, move those items into main, and reduce the menu
+# If cmb should be displayed and the terminal is lower than base height, do the warning that cmb is disabled, 
+# and propmpt to press any key to return to menu
+
 # If it doesn't fit, options should be added for menu. Min size should be 4, mandatory items must always be 
 # displayed at a minimum, all other items onlyif there is room before those
 
@@ -128,7 +133,7 @@ set_menu_sizes() {
         HEADER_HEIGHT=3
     fi
 
-    if $SHOW_FOOTER; then
+    if $SHOW_FOOTER || $IS_SUB_FLAGS_MENU; then
         ((MIN_TERMINAL_HEIGHT+=2))
         ((MIN_TERM_HEIGHT_FOR_R_PANEL+=2))
         FOOTER_HEIGHT=2
@@ -200,19 +205,6 @@ set_menu_sizes() {
         fi
 
         LEFT_PANEL_WIDTH=$(($MENU_WIDTH - $ACTIVE_RIGHT_PANEL_WIDTH))
-        # if $SHOW_RIGHT_PANEL; then
-            
-        #     if [[ $NORMAL_MENU_HEIGHT -lt $MIN_MENU_HEIGHT ]]; then
-        #         NORMAL_MENU_HEIGHT=$MIN_MENU_HEIGHT
-        #     fi
-
-        # else
-            
-        #     if [[ $NORMAL_MENU_HEIGHT -lt $MIN_MENU_HEIGHT_SINGLE_PANEL ]]; then
-        #         NORMAL_MENU_HEIGHT=$MIN_MENU_HEIGHT_SINGLE_PANEL
-        #     fi
-
-        # fi
         
         MENU_HEIGHT=$NORMAL_MENU_HEIGHT
     fi
@@ -283,72 +275,26 @@ set_up_menus() {
 
 
 set_command_builder_items() {     
-    #Parse the argument list into the array, starting form the 3rd argument
-    local -a cmb_args=$@
+
     local array_counter=0
     MENU_ITEM_ENTRIES=()
     MENU_ITEM_COMMANDS=()
     MENU_ITEM_DESCRIPTIONS=()
 
-    # for ((n = 0; n <= ${#cmb_args[@]}; n++)); do
     for arg in "$@"; do
-
-        if [[ $array_counter -ge $(($MAX_MENU_HEIGHT - 5)) ]]; then
-            break
-        fi
-
 
         local entry=$(($array_counter+1))" - Set arg. ${arg}"
         MENU_ITEM_ENTRIES+=("$entry")
         MENU_ITEM_COMMANDS+=("$arg")
         
-       
-
         ((array_counter++))
 
     done
     
-    # local last_entry=""
-    
-    # if [[ -n $menu_entry ]]; then
-    #     last_entry=${menu_entry[${#menu_entry[@]} - 1]}
-    # fi
-
-    # #Check if entries have already been written, by checking last element
-    # if [[ "$last_entry" != "x - Delete set flags" ]]; then
-    #     menu_entry+=("m - Enter arguments manually")
-    #     menu_entry+=("o - Enter flag-options (no space)")
-    #     menu_entry+=("c - Commit with flags")
-    #     menu_entry+=("x - Delete set flags")
-    # fi
-
     MENU_LENGTH=${#MENU_ITEM_ENTRIES[@]}
 
 
 }
-
-
-# write_flags_descriptor() { 
-#     CURSOR_POS=$(($HEADER_HEIGHT + $MENU_HEIGHT + $DESCRIPTOR_HEIGHT))
-#     t_put cup $CURSOR_POS $MENU_WIDTH
-#     echo -e "\033[1K"
-#     t_put cup $CURSOR_POS 2
-#     case ${menu_entry[$MENU_POS]} in
-#     "m - Manually enter flags ")
-#         echo "Manually enter flags for the command specified"
-#         ;;
-#     "c - Commit with flags")
-#         echo "Finished entering flags, proceed with command"
-#         ;;
-#     "x - Delete set flags")
-#         echo "Clear list of set flags to start over again"
-#         ;;
-#     *)
-#         echo "Set the specified flag"
-#         ;;
-#     esac
-# }
-
 
 
 parse_menu_file() {
@@ -886,7 +832,13 @@ write_menu_items() {
     # Write out the menu items one by one
     # If the position is right, it changes the background.
     local max_entry_lenght=$(($LEFT_PANEL_WIDTH - 4))
-    MAX_MENU_LENGTH=$(($NORMAL_MENU_HEIGHT - $FOOTER_HEIGHT))
+    if $IS_SUB_FLAGS_MENU; then
+        MAX_MENU_LENGTH=$(($NORMAL_MENU_HEIGHT - 2))
+    else
+        MAX_MENU_LENGTH=$(($NORMAL_MENU_HEIGHT - $FOOTER_HEIGHT))
+    fi
+
+   
 
     if [[ $MENU_POS -gt $(($MAX_MENU_LENGTH - 1)) ]]; then
         MENU_POS=$(($MAX_MENU_LENGTH-1))
@@ -900,17 +852,17 @@ write_menu_items() {
     else  
        
         while [[ "${MENU_ITEM_ENTRIES[$MENU_POS]}" == "skip" ]] || [[ "${MENU_ITEM_ENTRIES[$MENU_POS]}" == "---" ]] || [[ "${MENU_ITEM_ENTRIES[$MENU_POS]}" == "[inline-label]" ]]; do
- 
-           
+        
             ((MENU_POS++))
-            if [[  $MENU_POS == $(($MAX_MENU_LENGTH-1)) ]]; then
+
+            if [[ $MENU_POS == $(($MAX_MENU_LENGTH-1)) ]]; then
                 break
             fi
+
         done   
         
     fi
     
-
     for ((n = 0; n < $MAX_MENU_LENGTH; n++)); do
 
         if [[ "${MENU_ITEM_ENTRIES[$n]}" == "---" ]]; then
@@ -1055,8 +1007,10 @@ write_rightpanel_items() {
     done
 
     IFS=$OLD_IFS
-    if $SHOW_FOOTER && [[ "$ACTIVE_PANEL" == "right" ]]; then
-        write_descriptor
+    if $SHOW_FOOTER || $IS_SUB_FLAGS_MENU; then
+        if [[ "$ACTIVE_PANEL" == "right" ]]; then
+            write_descriptor
+        fi
     fi
 }
 
@@ -1258,13 +1212,13 @@ draw_menu() {
     t_put cup $CURSOR_POS 0
     draw_line
     
-    if $SHOW_FOOTER; then
+    if $SHOW_FOOTER || $IS_SUB_FLAGS_MENU; then
         ((CURSOR_POS -= $FOOTER_HEIGHT))
         t_put cup $CURSOR_POS 0
         draw_line
     fi
 
-      if $SHOW_RIGHT_PANEL && $DISPLAY_LINE_CONNECTORS; then
+    if $SHOW_RIGHT_PANEL && $DISPLAY_LINE_CONNECTORS; then
         t_put cup $CURSOR_POS $LEFT_PANEL_WIDTH
         echo "┷"
     fi
@@ -1582,7 +1536,9 @@ toggle_footer(){
         SHOW_FOOTER=true
     fi
 
-    reflow_menu
+    if ! $IS_SUB_FLAGS_MENU; then
+        reflow_menu
+    fi
 }
 
 
@@ -2133,6 +2089,9 @@ cmb() {
         REMAIN_IN_SUBMENU=false
     fi
 
+    # set_menu_sizes
+    
+
     IS_SUBMENU=true
     IS_SUB_FLAGS_MENU=true
     # First arg is always the menu title
@@ -2146,9 +2105,11 @@ cmb() {
 
     # Everythingelse goes to processing
     set_command_builder_items "$@"
-    clear_menu
+    if ! $SHOW_FOOTER; then
+        reflow_menu
+    fi
+    
     write_menu_items
-
 
     if $SHOW_RIGHT_PANEL; then
         read_rightpanel_items
