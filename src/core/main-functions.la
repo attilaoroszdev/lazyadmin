@@ -24,8 +24,9 @@
 # Non-essential functions are in $INSTALL-DIR/plugins/extra-functions
 # Custom "user functions" will be stored in $USER-DIR/user-function.la
 
-# TODO: Editing setup files doies not seem to work in installed version
-
+# TODO: Get rid of `sed` from setup-functions.la
+# TODO: Add a --quit option to be able to shut it down when it stays running in the background
+# TODO: implement the --headless switches --headless query, --headless eexec, etc
 
 declare _SAVED_STTY_SETTINGS # Only used if stty is installed and used
 declare GOT_STTY=false # Becomes true if stty was found on the system

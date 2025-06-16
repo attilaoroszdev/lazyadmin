@@ -147,6 +147,8 @@ check_editor() {
         if $VALID_EDITOR; then
             DEFAULT_EDITOR=$editor_preference
         fi
+    elif hash $DEFAULT_EDITOR 2>/dev/null; then
+        VALID_EDITOR=true
     fi
 }
 
