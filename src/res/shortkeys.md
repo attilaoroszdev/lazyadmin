@@ -1,5 +1,8 @@
 # Lazy Admin Hotkeys and Key-bindings
 
+**This document is deprecated as of Lazy Admin 3.0 Beta**
+
+
 ## **Navigation:**
 
 

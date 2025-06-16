@@ -1,4 +1,7 @@
 # ***Lazy Admin Customization and Scripting***
+ 
+**This document is deprecated as of Lazy Admin 3.0 Beta**
+
 
 *This file had been formatted to be viewed with lynx/pandoc on a Linux CLI. Your mileage may vary with other software.*
 

@@ -25,7 +25,6 @@ RES_DIR="$CURRENT_DIR/res"
 
 . "$USER_DIR/user-defaults.la"
 . "$USER_DIR/user-functions.la"
-. "$USER_DIR/menu-bindings.la"
 
 . "$CORE_DIR/core-defaults.la"
 . "$CORE_DIR/main-functions.la"

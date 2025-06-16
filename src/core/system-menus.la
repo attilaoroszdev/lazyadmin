@@ -24,6 +24,10 @@
 # be somewhat scarce
 
 
+# Special menus have their commands assigned in the main body, thse are just the
+# Textual representations. If you change the order, you will hnave to change the
+# bindn gs manually
+
 [:special_menu_items:]
 
 # Setup tab, Always on the last position (if enabled)
@@ -48,6 +52,7 @@ Help  :: Command builder usage guide       :: How to use the command-builder sub
 # 
 # These functions have shortkeys assigned, so they don't have functions assigned. Do not change the
 # shortkeys, unless you also want to modify the code where they are read
+# If you add new ones, you will have to add them in the main body
 
 
 [:right_panel_items:]
@@ -63,6 +68,7 @@ Main :: q :: Quit               :: Quit Lazy Admin, and return to your normal sh
 
 
 # Right panel items for command builder
+# Divider lines are now supportedin the right panel as well
 CMB :: m :: Misc. arguments     :: Set you own argumanent(s) manually. (1st arg. will be separated by a space)
 CMB :: p :: Misc. parameter     :: Set an option parameter to the last argument with o space between them
 CMB :: c :: Run command         :: Run the current command with all the set arguments and flag-options

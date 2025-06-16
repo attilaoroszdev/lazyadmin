@@ -22,18 +22,8 @@
 
 
 #The title displayed in the main menu
+readonly MAIN_TITLE="Lazy Admin - v3.0beta"
 
-readonly MAIN_TITLE="Lazy Admin - v3.0alpha"
-
-# Settng this to false can give you two extra rows when you are struggling for space
-declare -g SHOW_HEADER=true
-
-
-# Switch right panel on or off
-declare -g RIGHT_PANEL=true
-
-# Footer is where description lives
-declare -g SHOW_FOOTER=true
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not
@@ -42,6 +32,7 @@ declare -g SHOW_FOOTER=true
 # space, regardless of how many menu items you have, which might not always
 # be what you need (e.g. on tall/full-screen terminals with few menu items)
 readonly MAX_MENU_ITEMS=0
+
 
 # Lazy Admin will try use 'stty' to help with some common issues for printing 
 # unwanted characters on the terminal, when e.g. a key is held down. If 'stty' is
@@ -53,27 +44,48 @@ readonly MAX_MENU_ITEMS=0
 # If off, or not present, it will try foir tput or other methods
 readonly USE_STTY=true
 
+
 # Change the size of the right panel
 readonly RIGHT_PANEL_WIDTH=27
 
-# You can switch off line connector characters
-# Useful for incompatible terminals (like those on mobiles)
-# Which might render these out of place
+
+# If true, the menus will attempt to follow the size of the terminal if it gets
+# resized. If causes cyclicl checks in a loop, so CPU time will always be consumed
+# If false, the menus ide at a `read`` statement, waiting for user input, causing 0%
+# CPU consumption, but everything needs to reflown manually when resized (prefss f, or
+# select form right panel menu to reflow)
+readonly AUTO_REFLOW=true
+
+
+# How often the size check will be performed when AUTO_REFLOW is set to true
+# Do not go lower than 0.5.
+# You can, but the performance will exponentially suffer, until things might beome 
+# unresponsive. You have been warned
+readonly AUTO_REFLOW_TICK=0.5
+
+# Thisis where the main title is displayed. Really just decoration
+# Setting this to false can give you two extra rows when you are struggling for space
+declare -g SHOW_HEADER=true
+
+
+# Footer is where description lives
+# Setting this to false can give you two extra rows when you are struggling for space
+declare -g SHOW_FOOTER=true
+
+
+# Switch right panel on or off
+declare -g RIGHT_PANEL=true
+
+
+# You can switch off line connector characters useful for incompatible terminals 
+# (like those on smartphones), that use weird fonts (non-monospace), which might
+# render them out of place
 declare DISPLAY_LINE_CONNECTORS=true
 
-# This should be handled by the setup script,
-# but you can change it to any editor command
+
+# This should be handled by the setup script, but you can change it to any editor command
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-declare -g DEFAULT_EDITOR="not set"
-
-
-readonly AUTO_REFLOW=true
-
-# Do not go lower than 0.5.
-# You can, but the performance will exponentially suffer
-# Until things might beome unresponsive
-# You have been warned
-readonly AUTO_REFLOW_TICK=0.5
+declare -g DEFAULT_EDITOR="micro"
 

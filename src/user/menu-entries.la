@@ -22,7 +22,7 @@
 
 ##################################################
 # For detailed usage and set-up instructions,    #
-# refer to the help files in the "res" directory #                                                                  #
+# refer to the help files in the "res" directory #                                                                  
 ##################################################
 
 
@@ -44,14 +44,28 @@ Tab 5 :: Fifth Tab
 [:end_tab_order:]
 
 
+# The actual menu entries. 
+# - Tab ID or Tab name are also supported, but Tab ID with number is preferred for clarity
+# - "Menu items text" is what is displayed in the menu
+# - "Longer description text" is displayed in the footer when selected. If left empty, do not skip the :: sepaator
+# - "Fucntion or command to run" is what the item does when selected. This can pre receeded by the following switches:
+#    /c clear before running
+#    /d delayed return (propmpts for keypress after finish)
+#    /v validate before running (cheks if it's a valid function or package name before running
+#
+# If both description and function name are ommitted, the item becomes a label
+# If Menu item is also empty, the position will be skiopped (empty line) (Tab ID still necessary)
+# Dividers lines can be drawn like this:
+#
+# Tab ID :: ---
+#
+# Submenu items start with --  instead of a Tab ID, and belong to the last "proper" menui item
+# Inline comments are NOT supported at this time
+
 [:menu_items:]
 
-# /c clear before running
-# /d delayed return (propmpts for keypress
-# /v validate before running (cheks if it's a valid function name, amnd if not, checks oif it's an installed package
-
 # First tab
-# No. :: Menu item text           :: Longer description text                   :: Fubcntion or command to run
+# No. :: Menu item text           :: Longer description text                   :: Fucntion or command to run
 Tab 1 :: Resource monitor         :: Show the output of top                    :: /v top
 Tab 1 :: Better resource monitor  :: Show the output of htop (if installed)    :: /v htop
 Tab 1 :: Show sensors             :: Thermal readings in real time             :: show_sensors
@@ -70,23 +84,23 @@ Tab 1 :: Analyse disk space       :: Select your options in the submenu        :
    -- :: Analyse tmp directory    :: Run ncdu /tmp                             :: /v ncdu /tmp
    -- :: Analyse logs             :: Run ncdu /var/log                         :: /v ncdu /var/log
 # End of submenu items
-Tab 1 :: Interactive ping         :: Command-builder with a ping command       :: cmb "Ping any host with flags" "ping" "-n -q" -v --help '-c 5' -c -n -q -v --help '-c 5' -c
+Tab 1 :: Interactive ping         :: Command-builder with a ping command       :: cmb show_ping_command_builder
+Tab 1 :: Interactive ping inline  :: cmb defined in-line in the menu           :: cmb "Ping any host with flags" "ping" -a -A -b -B -c "-c 5" -d -i -I -l -n -q -v
 Tab 1 :: 
 Tab 1 :: Drop to shell            :: Drop to a shell. Type 'exit' to return    :: drop_to_shell
-Tab 1 :: Drop to root shell       :: Drop to a shell as root. (Be careful.)    :: drop_to_root_shell
 Tab 1 :: An item with nothing     :: Needs a description not to become a label
 Tab 1 :: Last item, alo a submenu :: To see if it works :: enter_submenu
    -- :: The top section
    -- ::
-   -- :: Item 1                   :: Descriptor 1 top                          :: top
-   -- :: Item 2 Alt               :: Descriptor 2 htop                         :: htop
+   -- :: Item 1                   :: Item 1 (Runs dummy example) function      :: example_function
+   -- :: Item 2                   :: Item 2 (does nothing)                     
    -- ::
    -- :: ---
    -- :: 
    -- :: The bottom section
    -- ::
-   -- :: Item 3 Alt               :: Descriptor 3 sensors                      :: show_sensors
-   -- :: Item 4 alt               :: mc again         :: mc
+   -- :: Item 3                   :: Item 3 (does nothing)                     
+   -- :: Item 4                   :: Item 4 (does nothing)                     
 
 
 # Second tab

@@ -1,5 +1,6 @@
 # Using the command builder
 
+**This document is deprecated as of Lazy Admin 3.0 Beta**
 
 ## **Basic Usage**
 

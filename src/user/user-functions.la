@@ -227,5 +227,10 @@ show_sensors() {
         
     fi
 
+}
 
+show_ping_command_builder(){
+
+    command_builder "Ping localhost with flags" "ping localhost" -a -A -b -B -c "-c 5" -d -i -I -l -n -q -v
+    
 }
