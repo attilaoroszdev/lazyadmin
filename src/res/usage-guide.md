@@ -1,5 +1,8 @@
 # **Lazy Admin User Guide**
 
+**This document is deprecated as of Lazy Admin 3.0 Beta**
+
+
 ## **Overview**
 
 The basic functionality of Lazy Admin is to provide a pseudo graphical UI, one that can be navigated by the arrow keys, or with keyboard shortcuts, to hold script or command aliases on an easily navigable, tabbed menu-like interface. All without the need of external libarires, or tools, not even using `ncurses`.  (Not that I have anything against `ncurses`.)

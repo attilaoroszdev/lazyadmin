@@ -2,6 +2,8 @@
 # Lazy Admin User Guide #
 #########################
 
+**This document is deprecated as of Lazy Admin 3.0 Beta**
+
 
 Overview
 --------
