@@ -40,6 +40,7 @@ Tab 2 :: Packages
 Tab 3 :: Third tab
 Tab 4 :: Fourth Tab
 Tab 5 :: Fifth Tab
+Tab 6 :: Extra tab
 
 [:end_tab_order:]
 
@@ -71,7 +72,7 @@ Tab 1 :: Better resource monitor  :: Show the output of htop (if installed)    :
 Tab 1 :: Show sensors             :: Thermal readings in real time             :: show_sensors
 Tab 1 :: 
 Tab 1 :: Read the system logs     :: Show journalctl (or dmesg, if no systemd) :: show_system_logs  
-Tab 1 :: Browse files             :: Launch Midnight Commander (f installed)   :: /c /v mc
+Tab 1 :: Browse files             :: Launch Midnight Commander (if installed)  :: /c /v mc
 Tab 1 :: Analyse disk space       :: Select your options in the submenu        :: enter_submenu
 # Submenu items for the 7th entry
    -- :: Analyse root             :: Run ncdu /                                :: /v ncdu /
@@ -138,6 +139,90 @@ Tab 3 :: Pointless menuitem       :: This one only pollutes the environment    :
 Tab 4 :: Nothing here yet         :: Write your own menus here
 Tab 5 :: Nothing here yet         :: Write your own menus here
 
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
+Tab 6 :: something :: something
 
 [:end_menu_items:]
 

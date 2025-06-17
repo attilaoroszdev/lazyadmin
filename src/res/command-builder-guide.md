@@ -1,6 +1,9 @@
-# Using the command builder
+# ***Lazy Admin COmmand Builder Usage Guide***
 
 **This document is deprecated as of Lazy Admin 3.0 Beta**
+
+*This file has been formatted to be viewed with lynx/pandoc on a Linux CLI. Your mileage may vary with other software.*
+
 
 ## **Basic Usage**
 

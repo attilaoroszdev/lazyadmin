@@ -137,8 +137,8 @@ set_symlink_dir() {
 }
 
 
-# This currently means `sed` and `tar`, and the latter is only necessary for this installer to work.. 
-# While these come rpesinstalled in most systems, it never hurts to chekc
+# This currently means `tar`, which is only necessary for this installer to work.. 
+# While it comes presinstalled on most systems, it never hurts to check
 check_for_essential_dependencies() {     
     while true; do
         echo
@@ -381,15 +381,6 @@ if [[ $installtype == "local" ]]; then
     tar xvzC "$installdir" -f $installtarball "plugins"
     tar xvzC "$installdir" -f $installtarball "res"
 
-
-# file_content=$(<"$filename")
-# modified_content="${file_content//old/new}"
-# echo "$modified_content" > "$filename"
-
-
-    # sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
-    # sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
-    # sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
 else
     needroot=false
 
@@ -421,10 +412,8 @@ else
 
     if $needroot; then
         run_as_root "mkdir -p /opt/LazyAdmin; tar xvzC $installdir -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res'"
-        #; sed -i \"s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|\" $installdir/core/includes.la; sed -i \"s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|\" $installdir/core/includes.la; sed -i \"s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|\" $installdir/core/includes.la"
     else
         mkdir -p /opt/LazyAdmin && tar xvzC "$installdir" -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res' 
-        #; sed -i "s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|" $installdir/core/includes.la; sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" $installdir/core/includes.la; sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|" $installdir/core/includes.la
     fi
 
     sleep 1
@@ -476,10 +465,8 @@ if [[ $installtype == "global" ]]; then
 
     if $needroot; then
         run_as_root "tar xvzC $launcherdir -f $installtarball --strip=1 'launcher/ladmin'"
-        # sed -i \"s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|\" \"$launcherdir/ladmin\""
     else
         tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
-        #sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|" "$launcherdir/ladmin"
     fi
 
     filename="$launcherdir/ladmin"
@@ -503,7 +490,6 @@ else
     modified_content="${file_contents/"INSTALLDIRPLACEHOLDER"/"INSTALL_DIR=\"$installdir\""}"
 
     echo "$modified_content" > "$filename"
-    #sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=\"$installdir\"|" "$launcherdir/ladmin"
 fi
 
 sleep 1

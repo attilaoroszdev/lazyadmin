@@ -24,8 +24,6 @@
 # Non-essential functions are in $INSTALL-DIR/plugins/extra-functions
 # Custom "user functions" will be stored in $USER-DIR/user-function.la
 
-# TODO: Get rid of `sed` from setup-functions.la
-# TODO: Add a --quit option to be able to shut it down when it stays running in the background
 # TODO: implement the --headless switches --headless query, --headless eexec, etc
 
 declare _SAVED_STTY_SETTINGS # Only used if stty is installed and used
@@ -93,6 +91,7 @@ declare -i ACTIVE_RIGHT_PANEL_WIDTH=0
 declare IS_SUBMENU=false
 declare IS_SUB_FLAGS_MENU=false
 declare IS_HELP_SUBMENU=false
+declare IS_SYSTEM_MENU=false
 
 declare IS_ROOT=false
 
@@ -274,6 +273,7 @@ check_for_size_changes() {
 
     if [[ $TERMINAL_HEIGHT -ne $current_height ]] || [[ $TERMINAL_WIDTH -ne $current_width ]]; then
         reflow_menu
+        check_for_warnings
         return 1
     fi
 
@@ -943,6 +943,8 @@ write_menu_items() {
     elif $SHOW_FOOTER; then
         write_descriptor
     fi
+
+    check_for_warnings
 }
 
 
@@ -953,7 +955,11 @@ write_descriptor() {
     if [[ $ACTIVE_PANEL == "right" ]]; then
         descriptor_line=$(truncate_text "${RIGHT_PANEL_ITEM_DESCRIPTIONS[$MENU_POS]}" $(($TERMINAL_WIDTH-4)))
     else
-        descriptor_line=$(truncate_text "${MENU_ITEM_DESCRIPTIONS[$MENU_POS]}" $(($TERMINAL_WIDTH-4)))
+        if ! $IS_SYSTEM_MENU && [[ $FOOTER_CONTENTS == "command" ]]; then
+             descriptor_line=$(truncate_text "${MENU_ITEM_COMMANDS[$MENU_POS]}" $(($TERMINAL_WIDTH-4)))
+        else
+            descriptor_line=$(truncate_text "${MENU_ITEM_DESCRIPTIONS[$MENU_POS]}" $(($TERMINAL_WIDTH-4)))
+        fi
     fi
 
     CURSOR_POS=$(($HEADER_HEIGHT + $MENU_HEIGHT + $DESCRIPTOR_HEIGHT))
@@ -1103,33 +1109,44 @@ check_for_warnings() {
     local warning_msg=""
     clear_line $warning_position 0 "right"
     clear_line $(($warning_position + 1)) 0 "right"
+
+    local non_official_height_warning=false
+
+    if [[ ${#MENU_ITEM_ENTRIES[@]} -gt $MAX_MENU_LENGTH ]]; then
+        non_official_height_warning=true
+    fi
+
     
-    if $HEIGHT_WARNING || $TABS_DONT_FIT; then
+    if $HEIGHT_WARNING || $non_official_height_warning || $TABS_DONT_FIT; then
         local menus_label=""
         local tabs_label=""
         local min_height_msg=""
         local min_width_msg=""
 
+        # local 
+        
         if $HEIGHT_WARNING; then
             min_height_msg=" Min. H: "$(($MAX_MENU_ITEMS + 13))" ch."
-            menus_label="Menus "
+            menus_label="Menus"
+        elif $non_official_height_warning; then
+            menus_label="Menu items"
         fi
 
         if $TABS_DONT_FIT; then
             min_width_msg=" Min. W: "$ALL_TABS_LENTH" ch"
 
-            if $HEIGHT_WARNING; then
-                tabs_label="and tabs "
+            if $HEIGHT_WARNING || $non_official_height_warning; then
+                tabs_label=" and tabs"
             else
-                tabs_label="Tabs "
+                tabs_label="Tabs"
             fi
 
         fi
 
-        msg="$menus_label$tabs_label""won't fit.$min_height_msg$min_width_msg"
+        msg="$menus_label$tabs_label won't fit.$min_height_msg$min_width_msg"
         warning_msg=$(truncate_text "$msg" $(($TERMINAL_WIDTH-4)))
         t_put cup $warning_position 0
-        echo -e "\e[01m\e[091m$warning_msg\e[00m"
+        echo -ne "\e[01m\e[091m$warning_msg\e[00m"
         ((warning_position++))
         msg=""    
     fi
@@ -1573,11 +1590,10 @@ select_menu_item_by_number() {
 }
 
 
-# TODO: Get rid of the "functright" thing and select by the command"
 # When selecting with enter
 select_highlighted_menu_item() {
     if [[ "$ACTIVE_PANEL" == "right" ]]; then
-        functright$MENU_POS
+        shortkey_command "${RIGHT_PANEL_ITEM_KEYS[(($MENU_POS))]}"
     else
 
         local is_valid=1
@@ -1776,6 +1792,9 @@ shortkey_command(){
         "F")
             toggle_footer
             ;;
+        "I")
+            toggle_footer_contents
+            ;;
         "o")
             if ! $IS_SUBMENU; then
                 enter_setupmenu
@@ -1830,29 +1849,31 @@ shortkey_command(){
 
 # This will be called when a submenu is selected
 enter_submenu() {
-    MAIN_MENU_POS="$MENU_POS"
-    MENU_POS=0
+    if ! $IS_SUBMENU; then
+        MAIN_MENU_POS="$MENU_POS"
+        MENU_POS=0
 
-    if [[ -z "$1" ]]; then
-        SUBMENU_TITLE="${MENU_ITEM_ENTRIES[$MAIN_MENU_POS]}"
-        SUBMENU_TITLE="Submenu: ${SUBMENU_TITLE#* - }"
-    else
-        SUBMENU_TITLE="$1"
+        if [[ -z "$1" ]]; then
+            SUBMENU_TITLE="${MENU_ITEM_ENTRIES[$MAIN_MENU_POS]}"
+            SUBMENU_TITLE="Submenu: ${SUBMENU_TITLE#* - }"
+        else
+            SUBMENU_TITLE="$1"
+        fi
+
+        IS_SUBMENU=true
+        REMAIN_IN_SUBMENU=false
+        read_submenu_items "${TAB_ITEM_KEYS[$TAB_POS]}" $MAIN_MENU_POS
+        clear_menu
+        write_menu_items
+        
+        if $SHOW_RIGHT_PANEL; then
+            read_rightpanel_items
+            clear_right_panel 
+            write_rightpanel_items
+        fi   
+
+        write_submenu_title
     fi
-
-    IS_SUBMENU=true
-    REMAIN_IN_SUBMENU=false
-    read_submenu_items "${TAB_ITEM_KEYS[$TAB_POS]}" $MAIN_MENU_POS
-    clear_menu
-    write_menu_items
-    
-    if $SHOW_RIGHT_PANEL; then
-        read_rightpanel_items
-        clear_right_panel 
-        write_rightpanel_items
-    fi   
-
-    write_submenu_title
 
 }
 
@@ -1860,6 +1881,7 @@ enter_submenu() {
 # This will be called when help menu is selected
 enter_helpmenu() { 
     IS_HELP_SUBMENU=true
+    IS_SYSTEM_MENU=true
 
     if $IS_SUBMENU; then
         REMAIN_IN_SUBMENU=true
@@ -1894,6 +1916,7 @@ enter_setupmenu() {
 
     REMAIN_IN_SUBMENU=false
     IS_SUBMENU=true
+    IS_SYSTEM_MENU=true
     SUBMENU_TITLE="Setup Options"
     MAIN_MENU_POS="$MENU_POS"
     MENU_POS=0
@@ -1944,12 +1967,11 @@ enter_setupmenu() {
 
 # Shortcut to use in menus
 cmb() {
-    
     if [[ $# -ge 3 ]]; then
         command_builder "$@"
 
     elif [[ $(function_exists "$1") == 0 ]]; then
-        $1
+        "$1"
     fi
 }
 
@@ -2067,7 +2089,7 @@ show_cmb_disabled_error() {
 set_highlighted_cmb_arg() {
     # If enter is pressed
     if [[ "$ACTIVE_PANEL" == "right" ]]; then
-        functright$MENU_POS
+        shortkey_command "${RIGHT_PANEL_ITEM_KEYS[(($MENU_POS))]}"
     else
         CMB_ARGS="$CMB_ARGS ${MENU_ITEM_COMMANDS[$MENU_POS]}"
         write_active_cmb_command
@@ -2216,7 +2238,17 @@ toggle_footer(){
     fi
 }
 
+toggle_footer_contents() {
+    if [[ $FOOTER_CONTENTS != "command" ]]; then
+        FOOTER_CONTENTS="command"
+    else
+        FOOTER_CONTENTS="description"
+    fi  
 
+    if $SHOW_FOOTER and ! $IS_SUB_FLAGS_MENU; then
+        write_descriptor
+    fi
+}
 
 ####################
 # Rightpanel stuff #
@@ -2255,7 +2287,7 @@ display_help() {
 # not returning from a nested root shell
 # (It is possible to run another shell of ladmin form within)
 exit_lazy_admin() { 
-    t_put cnorm
+    restore_terminal
     clear
     clear
     echo
@@ -2270,6 +2302,7 @@ exit_lazy_admin() {
 # help menu or command builder
 back_to_main_menu() { 
 
+    IS_SYSTEM_MENU=false
     ACTIVE_PANEL="left"
     MENU_POS=$MAIN_MENU_POS
     local should_reflow=false
@@ -2326,7 +2359,7 @@ back_to_main_menu() {
 
 # Returns 0 if function name is valid, other nuber if not
 function_exists() {
-    declare -f -F $1 > /dev/null
+    declare -f -F "$1" > /dev/null
     echo $?
 }
 
@@ -2588,7 +2621,7 @@ main() {
     set_up_terminal
 
     # Everything should be restired tomnormal if interrupted
-    trap restore_terminal EXIT HUP INT QUIT TERM
+    trap exit_lazy_admin EXIT HUP INT QUIT TERM
 
     set_up_menus
 

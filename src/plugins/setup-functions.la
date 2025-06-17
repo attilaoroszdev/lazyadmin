@@ -69,6 +69,7 @@ check_editor() {
             tput civis
 
             VALID_EDITOR=false
+            local should_save_choice=false
             case $editor_preference in
                 'c')
                     echo
@@ -82,7 +83,7 @@ check_editor() {
 
                     if [[ $? == 0 ]]; then
                         VALID_EDITOR=true
-                        sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                        should_save_choice=true
                         break
                     else
                         clear
@@ -95,37 +96,37 @@ check_editor() {
                 'n')
                     editor_preference="nano"
                     VALID_EDITOR=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    should_save_choice=true
                     break
                     ;;
                 'm')
                     editor_preference="micro"
                     VALID_EDITOR=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    should_save_choice=true
                     break
                     ;;
                 'v')
                     editor_preference="vi"
                     VALID_EDITOR=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    should_save_choice=true
                     break
                     ;;
                 'V')
                     editor_preference="vim"
                     VALID_EDITOR=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    should_save_choice=true
                     break
                     ;;
                 'e')
                     editor_preference="emacs"
                     VALID_EDITOR=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    should_save_choice=true
                     break
                     ;;
                 'E')
                     editor_preference="emacs --no-window"
                     VALID_EDITOR=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    should_save_choice=true
                     break
                     ;;
                 'x' | 'X')
@@ -144,8 +145,18 @@ check_editor() {
 
         done
 
+
         if $VALID_EDITOR; then
             DEFAULT_EDITOR=$editor_preference
+
+            if $should_save_choice; then
+                local filename="$USER_DIR/user-defaults.la"
+                local file_contents=$(<"$filename")
+                local modified_content="${file_contents/"DEFAULT_EDITOR=\"not set\""/"DEFAULT_EDITOR=\"$DEFAULT_EDITOR\""}"
+                echo "$modified_content" > "$filename"
+            fi
+
+
         fi
     elif hash $DEFAULT_EDITOR 2>/dev/null; then
         VALID_EDITOR=true

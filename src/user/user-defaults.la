@@ -51,7 +51,7 @@ readonly RIGHT_PANEL_WIDTH=27
 
 # If true, the menus will attempt to follow the size of the terminal if it gets
 # resized. If causes cyclicl checks in a loop, so CPU time will always be consumed
-# If false, the menus ide at a `read`` statement, waiting for user input, causing 0%
+# If false, the menus ide at a `read` statement, waiting for user input, causing 0%
 # CPU consumption, but everything needs to reflown manually when resized (prefss f, or
 # select form right panel menu to reflow)
 readonly AUTO_REFLOW=true
@@ -63,6 +63,7 @@ readonly AUTO_REFLOW=true
 # unresponsive. You have been warned
 readonly AUTO_REFLOW_TICK=0.5
 
+
 # Thisis where the main title is displayed. Really just decoration
 # Setting this to false can give you two extra rows when you are struggling for space
 declare -g SHOW_HEADER=true
@@ -71,6 +72,12 @@ declare -g SHOW_HEADER=true
 # Footer is where description lives
 # Setting this to false can give you two extra rows when you are struggling for space
 declare -g SHOW_FOOTER=true
+
+
+# The footer, if enabled, will either display the description as set in  the menu file, or the command assigned
+# The possible values are "description" or "command", with descriptions being default, if anthing else is set here.
+# This only affects user menus. System menu and right-panel tems will always display descriptions
+declare FOOTER_CONTENTS="description"
 
 
 # Switch right panel on or off
@@ -87,5 +94,4 @@ declare DISPLAY_LINE_CONNECTORS=true
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-declare -g DEFAULT_EDITOR="micro"
-
+declare DEFAULT_EDITOR="not set"
