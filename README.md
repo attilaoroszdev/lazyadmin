@@ -35,27 +35,35 @@ You can think of Lazy Admin as **aliases on steroids**. Instead of remembering a
 They say that a picture is worth a thousand words. So here's Lazy Admin in 8000 words:
 
 ![Lazy Admin](/media/lazy-admin-3-1.png "Lazy Admin in a standard 24x80 terminal window")
+
 *Lazy Admin in a standard 24x80 terminal window*
 
 ![Section labels and dividers](/media/lazy-admin-3-2.png "Section labels and dividers help with visual grouping")
+
 *Section labels and dividers help with visual grouping*
 
 ![Submenus](/media/lazy-admin-3-3.png "Submenus can extend the total capacity imensely")
+
 *Submenus can extend the total capacity imensely*
 
 ![The command builder](/media/lazy-admin-3-4.png "The interactive command builder gives you more flexibility")
+
 *The interactive command builder gives you more flexibility*
 
 ![Righ panel navigation](/media/lazy-admin-3-5.png "You can navigate the right panel just like the menus")
+
 *You can navigate the right panel just like the menus*
 
 ![Help menu](/media/lazy-admin-3-6.png "Detailed documentation is included in the help menu")
+
 *Detailed documentation is included in the help menu*
 
 ![Minimal interface](/media/lazy-admin-3-7.png "Interface elements can be turned off on-demand")
+
 *Interface elements can be turned off on-demand*
 
 ![Small window](/media/lazy-admin-3-8.png "If the terminal (window) is too small, you get visual warnings")
+
 *If the terminal (window) is too small, you get visual warnings*
 
 
