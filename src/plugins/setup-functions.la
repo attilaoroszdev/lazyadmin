@@ -23,6 +23,8 @@
 # Any functions distrubuted with Lazy Adming, which have external
 # dependencies (other than sed), will live here
 
+declare VALID_EDITOR=false
+
 check_editor() { 
     clear
 
@@ -66,7 +68,8 @@ check_editor() {
             read -p "> " -n 1 editor_preference
             tput civis
 
-            valid_editor=false
+            VALID_EDITOR=false
+            local should_save_choice=false
             case $editor_preference in
                 'c')
                     echo
@@ -79,8 +82,8 @@ check_editor() {
                     function_exists $editor_preference
 
                     if [[ $? == 0 ]]; then
-                        valid_editor=true
-                        sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                        VALID_EDITOR=true
+                        should_save_choice=true
                         break
                     else
                         clear
@@ -92,45 +95,44 @@ check_editor() {
                     ;;
                 'n')
                     editor_preference="nano"
-                    valid_editor=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    VALID_EDITOR=true
+                    should_save_choice=true
                     break
                     ;;
                 'm')
                     editor_preference="micro"
-                    valid_editor=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    VALID_EDITOR=true
+                    should_save_choice=true
                     break
                     ;;
                 'v')
                     editor_preference="vi"
-                    valid_editor=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    VALID_EDITOR=true
+                    should_save_choice=true
                     break
                     ;;
                 'V')
                     editor_preference="vim"
-                    valid_editor=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    VALID_EDITOR=true
+                    should_save_choice=true
                     break
                     ;;
                 'e')
                     editor_preference="emacs"
-                    valid_editor=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    VALID_EDITOR=true
+                    should_save_choice=true
                     break
                     ;;
                 'E')
                     editor_preference="emacs --no-window"
-                    valid_editor=true
-                    sed -i "s|DEFAULT_EDITOR=\"not set\"|DEFAULT_EDITOR=\"$editor_preference\"|" "$USER_DIR/user-defaults.la"
+                    VALID_EDITOR=true
+                    should_save_choice=true
                     break
                     ;;
                 'x' | 'X')
                     echo
                     echo -e "\nOK then, bye..."
                     echo
-                    return_to_menu
                     break
                     ;;
                 *) 
@@ -143,17 +145,32 @@ check_editor() {
 
         done
 
-        if $valid_editor; then
+
+        if $VALID_EDITOR; then
             DEFAULT_EDITOR=$editor_preference
+
+            if $should_save_choice; then
+                local filename="$USER_DIR/user-defaults.la"
+                local file_contents=$(<"$filename")
+                local modified_content="${file_contents/"DEFAULT_EDITOR=\"not set\""/"DEFAULT_EDITOR=\"$DEFAULT_EDITOR\""}"
+                echo "$modified_content" > "$filename"
+            fi
+
+
         fi
+    elif hash $DEFAULT_EDITOR 2>/dev/null; then
+        VALID_EDITOR=true
     fi
 }
 
 
 edit_setup_file() { 
     check_editor
-    if $valid_editor; then
+    if $VALID_EDITOR; then
         $DEFAULT_EDITOR $1
     fi
     tput civis
 }
+
+
+

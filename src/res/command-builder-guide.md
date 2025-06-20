@@ -1,122 +1,273 @@
-# Using the command builder
+# ***Lazy Admin Command Builder Usage Guide v3.0***
+
+*This file has been formatted to be viewed with lynx/pandoc on a Linux CLI. Your mileage may vary with other software.*
 
 
 ## **Basic Usage**
 
-The command builder let you visually build a command, and then execute it. In the command builder menu, you can select an item by navigating to it and pressing enter (or just press its corresponding number) and then the flag or argument bound to that item will be added to the build command. You can keep track of how your command looks below the menu. There is an option to manually enter any unspecified flags or arguments, to delete all set flags, and to run the built command. Currently the number of preset arguments or argument sets is limited to 9, so as to keep the number-shortkey functionality intact. The height of the command builder menu will dynamically change according to the number of preset arguments passed to it.
+The command builder let you visually build a command, and then execute it. In the command builder menu, you can select an item by navigating to it and pressing enter (or just press its corresponding number) and then the flag or argument bound to that item will be added to the active command.
 
-- When you select a predefined flag or argument (or set of flags/arguments) or press its corresponding number, it will be appended to your active command. You can see the complete command below the menu.
-- When you select "manually enter flags", or press `m`, you will be prompted to enter as many optional arguments as you want. Pressing `<Enter>` will append them to the end of the command
-- When you select "Commit with flags", or press `c`, the whole command, as displayed at the bottom, will be executed.
-- When you select "Delete Set args", or press `x`, the command builder will be reset, and all flags will be removed, so you can start over again
+You can keep track of how your command looks in the footer below the menu. In the right panel, there are options to manually enter any unspecified flags or arguments (with or without the preceding space), to delete all set flags, and to run the built command.
+
+- When you select a predefined flag or argument (or set of flags/arguments) or press its corresponding number, it will be appended to your active command. You can see the complete command below the menu in the footer
+- When you select `Misc. arguments` in the right panel, or press `m`, you will be prompted to enter as many optional arguments as you want. Pressing `<Enter>` will append them to the end of the command. *The first one of these will be separated from the man command or previous argument by a single space.*
+- When you select `Misc. parameter` in the right panel, or press `p`, you will be prompted to enter any option parameters. Pressing `<Enter>` will append them to the end of the command. *The option parameter will **not** by separated from the main command or last argument of the active command by a space.*
+- When you select `Run command`, or press `c`, the whole command, as displayed at the bottom, will be executed.
+- When you select `Delete Set args`, or press `x`, the command builder will be reset, and all flags will be removed, so you can start over again
+
+<br />
+
+```bash
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                            Lazy Admin - v3.0
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            Run my_favourite_cmb_command with these args
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━
+                                             │
+       1 - Set arg. --arg0                   │  m - Misc. arguments
+       2 - Set arg. -arg2                    │  p - Misc. parameter
+       3 - Set arg. arg_3                    │  c - Run command
+      *4 - Set arg. arg_no_4*                │  x - Delete set args 
+       5 - Set arg. arg_no5                  │
+       6 - Set arg. --arg_no_6               ├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶
+       7 - Set arg. arg_7                    │
+       8 - Set arg. arg_no_8                 │  f - Reflow Menu
+                                             │  h - Get Help
+                                             │  q - Quit
+                                             │ 
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━ 
+      Active command: my_favourite_cmb_command --arg0 arg_no_4
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```
+
+<br />
+
 
 
 ## **How to set up a command builder sub_menu**
 
-To access this functionality, you will use the predefined function named `command_builder_function`. It will accept a number of arguments, each having their own specific functionality:
+To access this functionality, you will use the predefined function named `cmb`. It will accept a number of arguments, each having their own specific functionality:
 
 - **The first argument**, placed inside double quotes, will mark the name of the sub-menu. (It is worth putting the name of the command there, for clarity's sake.)
-- **The second argument** will be the command itself. It can be a `bash` command, or your own function, that you have defined in `user-functions.la`. It can also include some preset flags, or arguments. If it is more than one word, you'll need to put it in double quotes, again.
-- **From the third to the eleventh arguments** you will basically set the flags for your command, which you want to use as selecteable options, to be used with the builder. You can use compound arguments, or multiple flags, anything in double quotes goes on one line. The maximum number of "settable" lines is 9.
+- **The second argument** will be the command itself. It can be a `bash` command, or your own function, that you have defined in `user-functions.la`, or the name of any executable that is on your $PATH. It can also include some preset flags, or arguments. If it is more than one word, you'll need to put it in double quotes, again.
+- **From the 3rd to the 99th arguments** will basically become the flags/args. for your command, which you want to use as selectable options, to be used with the builder. You can use compound arguments, or multiple flags, anything in double quotes goes on one line. The maximum number of "settable" lines is 99.
 
-So, for example, if you want to ping *google.com* with five packets and get a verbose output, and you wish to do this 23 times a day, you could set up the `-v` and `-c 5` flags, and manually enter the domain to ping. To do this, you would have to bind the command builder to a menu item, like so:
+So, for example, if you want to ping *any domain* with five packets and get a verbose output, and you wish to do this 23 times a day, you could set up the `-v` and `-c 5` flags, and manually enter the domain to ping. To do this, you would have to bind the command builder to a menu item, like so:
+
+<br />
 
 ```bash
 
-    command_builder_function "Ping any host with flags" "ping" -v -n '-c 5' --help
+    cmb "Ping any host with flags" "ping localhost" -v -n '-c 5' --help
 
 ```
+
+<br />
+
 
 Your command builder sub_menu should look something like this:
 
+
+<br />
+
+
+
 ```bash
 
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Ping any host
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     1 - Set arg. -v
-     2 - Set arg. -n
-     3 - Set arg. -c 5
-     4 - Set arg. --help
-     m - Manually enter flags
-     c - Commit with flags
-     x - Delete set flags
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Set the specified flag
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Active command: ping
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                            Lazy Admin - v3.0
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                        Ping any host with flags
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━
+                                             │
+      *1 - Set arg. -v*                      │  m - Misc. arguments
+       2 - Set arg. -n                       │  p - Misc. parameter
+       3 - Set arg. -c 5                     │  c - Run command
+       4 - Set arg. --help                   │  x - Delete set args 
+                                             │
+                                             ├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶
+                                             │
+                                             │  f - Reflow Menu
+                                             │  h - Get Help
+                                             │  q - Quit
+                                             │ 
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━ 
+      Active command: ping
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```
+
+<br />
+
 
 You would choose first `-v` (or press `1`), then `-c 5` (or press `3`)
 
-Now press `m` (or navigate there with the arrows) to manually enter the domain (google.com). So after pressing m, you would type: `google.com`
+Now press `m` (or navigate there with the arrows) to manually enter the domain (google.com). So after pressing `m`, you would type a domain name, e.g.: `google.com`, then press `<Enter>`
 
 This would result in the output: `ping -v -c 5 google.com`. Your command builder should display it below the menu:
 
+
+<br />
+
+
 ```bash
 
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Ping any host
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     1 - Set arg. -v
-     2 - Set arg. -n
-     3 - Set arg. -c 5
-     4 - Set arg. --help
-     m - Manually enter flags
-     c - Commit with flags
-     x - Delete set flags
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Set the specified flag
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Active command: ping -v -c 5 google.com
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                            Lazy Admin - v3.0
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                        Ping any host with flags
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━
+                                             │
+       1 - Set arg. -v                       │ *m - Misc. arguments*
+       2 - Set arg. -n                       │  p - Misc. parameter
+       3 - Set arg. -c 5                     │  c - Run command
+       4 - Set arg. --help                   │  x - Delete set args 
+                                             │
+                                             ├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶
+                                             │
+                                             │  f - Reflow Menu
+                                             │  h - Get Help
+                                             │  q - Quit
+                                             │ 
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━ 
+      Active command: ping -v -c 5 google.com
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```
+
+<br />
+
+
 
 Then you would just need to press `c` (or navigate down and press `<Enter>`) to actually do the deed. I am sure you will find it very useful, if you love pinging google.com all day, every day...
 
 The manual option is not reserved to the end of the sequence, you can set manual flags any time and continue adding predefined ones. E.g. the previous command could be done this way:
 
-1. select `c`
-2. press `m` and enter `5`, then `<Enter>`
-3. select `-v`
-4. press `m` and enter "google.com"
-5. press `c` to commit.
+1. Press `m` and enter `-v
+2. Press r select `2`
+3. Press `m` and enter "google.com"
+4. Press `c` to commit.
 
 Of course, you are not confined to bash commands, you can use any predefined function that you have in `user-functions.la` If you were to use some other function that you've written yourself, you would use
 
+
+<br />
+
+
 ```bash
 
-    command_builder_function "My function name" my_user_function -f -c --any_other_arg --yet_another_arg "--compound_arg X Y Z" --last_arg`
+    cmb "My function name" my_user_function -f -c --any_other_arg --yet_another_arg "--compound_arg X Y Z" --last_arg`
   
 
 ```
+
+<br />
+
+
 
 in the exact same way, you'd declared in the function itself. This would result in the following command builder sub-menu layout:
-  
+
+
+<br />
+
+
 ```bash
 
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     My function name
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     1 - Set arg. -f
-     2 - Set arg. -c
-     3 - Set arg. --any_other_arg
-     4 - Set arg. --yet_another_arg
-     5 - Set arg. --compound_arg X Y Z
-     6 - Set arg. --last_arg`
-     m - Manually enter flags
-     c - Commit with flags
-     x - Delete set flags
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Set the specified flag
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     Active command: my_user_function
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                            Lazy Admin - v3.0
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                         My function name
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━
+                                             │
+      *1 - Set arg. -f*                      │  m - Misc. arguments
+       2 - Set arg. -c                       │  p - Misc. parameter
+       3 - Set arg. --any_other_arg          │  c - Run command
+       4 - Set arg. --yet_another_arg        │  x - Delete set args 
+       5 - Set arg. --compound_arg X Y Z     │
+       6 - Set arg. --last_arg`              ├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶
+                                             │
+                                             │  f - Reflow Menu
+                                             │  h - Get Help
+                                             │  q - Quit
+                                             │ 
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━ 
+      Active command: my_user_function
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   
 ```
 
-...and that's it. You will also have other functionality, like manually adding flags, automatically added. Numbers for short-keys are also automatically added. Please be aware, that short-keys only work from `1` to `9`, so any more than `9` flag entries will simply be ignored.
+...and that's it.
+
+## **How to invoke the command builder in the menus**
+
+
+To call `cmb` directly on any menu item, you would put it on the appropriate line on `menu-entries.la`, something like this:
+
+
+<br />
+
+
+```bash
+    
+
+    Tab 3 :: Show command builder :: This will let you visually build your favourite command :: cmb "Ping any host with flags" "ping localhost" -v -n '-c 5' --help
+    
+
+```
+
+
+<br />
+
+
+But as you can see, it takes up way too much space. It's probably better to predefine your command builder arguments as an array in `user-functions.la`, something like:
+
+
+<br />
+
+
+```bash
+
+
+    declare -a CMB_PING_HOST=("Ping any host with flags" "ping localhost" -v -n '-c 5' --help)
+
+
+```
+
+
+<br />
+
+In this case, you should pass the ***NAME*** of the array to the cmb function as an argument for `cmb`, such as:
+
+
+<br />
+
+
+```bash
+
+
+    Tab 3 :: Show command builder :: This will let you visually build your favioutite command :: cmb CMB_PING_HOST
+
+
+```
+
+<br />
+
+
+This way, the menu file will have less complexity and become more readable.
+
+
+## **Mandatory elements**
+
+Some UI elements will always be displayed in the command builder menu, as they are contain essential functionality.
+
+If you disable the right panel, either in the defaults or toggling it off be pressing `<Shift>` + `r`, the top four command builder specific items will still be displayed.
+
+The footer are also always displayed in command builder, even if you have otherwise disabled it.
+
+
+## **Finally**
 
 To exit the command builder and return to the calling menu or sub_menu, just press `b` (or navigate to the right panel and choose the option)
 

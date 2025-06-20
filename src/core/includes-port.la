@@ -20,20 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# USER_DIR="$(dirname "$CURRENT_DIR")/user"
-CORE_DIR="$(dirname "$CURRENT_DIR")/core"
-PLUGINS_DIR="$(dirname "$CURRENT_DIR")/plugins"
-RES_DIR="$(dirname "$CURRENT_DIR")/res"
+PLUGINS_DIR="$CURRENT_DIR/plugins"
+RES_DIR="$CURRENT_DIR/res"
 
 . "$USER_DIR/user-defaults.la"
 . "$USER_DIR/user-functions.la"
-. "$USER_DIR/menu-bindings.la"
 
 . "$CORE_DIR/core-defaults.la"
 . "$CORE_DIR/main-functions.la"
 
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"
-. "$PLUGINS_DIR/display-help.la"
+. "$PLUGINS_DIR/help-functions.la"

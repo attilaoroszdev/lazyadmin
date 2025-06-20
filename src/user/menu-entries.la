@@ -22,14 +22,8 @@
 
 ##################################################
 # For detailed usage and set-up instructions,    #
-# refer to the help files in the "res" directory #                                                                  #
+# refer to the help files in the "res" directory #                                                                  
 ##################################################
-
-# This tells WLAdmin how the menu-file should be read. "simple" means one liners, 
-# "old" means separate menudescriptors, like in right-panel
-_menutype
-simple
-_endmenutype
 
 
 ##############
@@ -38,175 +32,111 @@ _endmenutype
 
 # The tabs displayed at the top. Change names here as desired
 # The last one should remain setup, unless you with to disable that functionality
-_menutab
-System
-Packages
-Third tab
-Fourth Tab
-Fifth Tab
-Setup
-_endmenutab
+
+[:tab_order:]
+
+Tab 1 :: System
+Tab 2 :: Packages
+Tab 3 :: Third tab
+Tab 4 :: Fourth Tab
+Tab 5 :: Fifth Tab
+
+[:end_tab_order:]
 
 
-# (Hint: In "old" menustyle, tab numbers start from 0
-# In "simple" menu style (default), tab numbers start from 1
-# The default is "simple")
-# 
-# Syntax: 
-# _menu# (where # is the tab number)
-# Menu item 1 :: Menu item 1 desription (Appears at the bottom when item is highlighted)
-# Menu item 2 :: Menu item 1 desription
-# Menu item 3 :: Menu item 1 desription
-# skip
-# Menu item 5 :: Menu item 1 desription
-# Menu item 6 :: Menu item 1 desription
-# _endmenu# (same number as above)
+# The actual menu entries. 
+# - Tab ID or Tab name are also supported, but Tab ID with number is preferred for clarity
+# - "Menu items text" is what is displayed in the menu
+# - "Longer description text" is displayed in the footer when selected. If left empty, do not skip the :: sepaator
+# - "Fucntion or command to run" is what the item does when selected. This can pre receeded by the following switches:
+#    /c clear before running
+#    /d delayed return (propmpts for keypress after finish)
+#    /v validate before running (cheks if it's a valid function or package name before running
 #
-# Adding `skip` to a line will leave that line empty, useful for visual/logical separation
+# If both description and function name are ommitted, the item becomes a label
+# If Menu item is also empty, the position will be skiopped (empty line) (Tab ID still necessary)
+# Dividers lines can be drawn like this:
+#
+# Tab ID :: ---
+#
+# Submenu items start with --  instead of a Tab ID, and belong to the last "proper" menui item
+# Inline comments are NOT supported at this time
 
+[:menu_items:]
 
 # First tab
-_menu1
-1 - Resource monitor :: Show the output of top
-2 - Better resource monitor :: Show the output of htop (if installed)
-3 - Show sensors :: Thermal readings in real time 
-skip
-5 - Read the system logs ::  See the output of journalctl (or dmesg, if not systemd)
-6 - Browse files :: Launch Midnight Commander (f installed)
-7 - Analyse disk space :: Select your options in the submenu
-8 - Interactive ping :: Use the built-in command-builder to construct a ping command
-skip
-10 - Drop to shell :: Drop to a bash shell. Type 'exit' to return to menu
-11 - Drop to root shell :: Drop to a bash shell as root. Be very careful, this is real!
-_endmenu1
-
-
-# submenu itmes for tab 1, item 6
-_submenu17
-1 - Analyse root :: Run ncdu /
-skip
-3 - Analyse /home :: Run ncdu /home/attila
-4 - Anaylise ~/Downloads :: Run ncdu ~/Downloads
-5 - Analyse ~/Documents :: ncdu ~/Documents
-6 - Analyse ~/.cache :: Run ncdu ~/.cache
-skip
-8 - Analyse tmp directory :: Run ncdu /tmp
-9 - Analyse logs :: Run ncdu /var/log
-_endsubmenu17
+# No. :: Menu item text           :: Longer description text                   :: Fucntion or command to run
+Tab 1 :: Resource monitor         :: Show the output of top                    :: /v top
+Tab 1 :: Better resource monitor  :: Show the output of htop (if installed)    :: /v htop
+Tab 1 :: Show sensors             :: Thermal readings in real time             :: show_sensors
+Tab 1 :: 
+Tab 1 :: Read the system logs     :: Show journalctl (or dmesg, if no systemd) :: show_system_logs  
+Tab 1 :: Browse files             :: Launch Midnight Commander (if installed)  :: /c /v mc
+Tab 1 :: Analyse disk space       :: Select your options in the submenu        :: enter_submenu
+# Submenu items for the 7th entry
+   -- :: Analyse root             :: Run ncdu /                                :: /v ncdu /
+   -- :: 
+   -- :: Analyse /home            :: Run ncdu ~                                :: /v ncdu $HOME
+   -- :: Anaylise ~/Downloads     :: Run ncdu ~/Downloads                      :: /v ncdu $HOME/Downloads
+   -- :: Analyse ~/Documents      :: Run ncdu ~/Documents                      :: /v ncdu $HOME/Documents
+   -- :: Analyse ~/.cache         :: Run ncdu ~/.cache                         :: /v ncdu $HOME/.cache
+   -- :: 
+   -- :: Analyse tmp directory    :: Run ncdu /tmp                             :: /v ncdu /tmp
+   -- :: Analyse logs             :: Run ncdu /var/log                         :: /v ncdu /var/log
+# End of submenu items
+Tab 1 :: Interactive ping         :: Command-builder with a ping command       :: cmb PING_COMMAND_BUILDER_ARRAY
+Tab 1 :: Interactive ping inline  :: cmb defined in-line in the menu           :: cmb "Ping any host with flags" "ping" -a -A -b -B -c "-c 5" -d -i -I -l -n -q -v
+Tab 1 :: 
+Tab 1 :: Drop to shell            :: Drop to a shell. Type 'exit' to return    :: drop_to_shell
+Tab 1 :: Last item, alo a submenu :: To see if it works :: enter_submenu
+   -- :: The top section
+   -- ::
+   -- :: Item 1                   :: Item 1 (Runs dummy example) function      :: example_function
+   -- :: Item 2                   :: Item 2 (does nothing)                     
+   -- ::
+   -- :: ---
+   -- :: 
+   -- :: The bottom section
+   -- ::
+   -- :: Item 3                   :: Item 3 (does nothing)                     
+   -- :: Item 4                   :: Item 4 (does nothing)                     
 
 
 # Second tab
-_menu2
-1 - Update system :: With options to look at upgradeable stuff and cancel the process. (Uses apt)
-1 - Quick update system :: No silly questions, just do it already. (apt update && apt upgrade -y)
-3 - Clean up apt :: apt autoremove && apt clean
-skip
-5 - Install package(s) :: apt install <whatever>
-6 - Remove package(s) :: apt (--purge) remove <whatever>
-7 - List package(s) :: apt list <whatever>
-8 - Search package(s) :: apt search <whatever>
-9 - Show package details :: apt show <whatever>
-_endmenu2
+# No. :: Menu item text           :: Longer description text                   :: Fucntion or command to run
+Tab 2 :: Update system            :: With interactyive options. (Uses apt)     :: /d update_system
+Tab 2 :: Quick update system      :: No questions instant upgrade              :: /d upgrade_without_asking
+Tab 2 :: Clean up apt             :: apt autoremove && apt clean               :: /d clean_up_apt
+Tab 2 :: 
+Tab 2 :: Install package(s)       :: apt install <whatever>                    :: /d install_packages
+Tab 2 :: Remove package(s)        :: apt (--purge) remove <whatever>           :: /d remove_packages
+Tab 2 :: List package(s)          :: apt list <whatever>                       :: /d list_packages
+Tab 2 :: Search package(s)        :: apt search <whatever>                     :: /d search_packages 
+Tab 2 :: Show package details     :: apt show <whatever>                       :: /d show_packages
 
 
-# Third Tab
-_menu3
-1 - Complex script :: Run a very-very complex script
-2 - Solve for x :: Solve the mysteries of the universe (all of them) for x
-3 - Make Window$ secure :: How to instantly secure any computer running Window$
-4 - Important script :: Run a very important script
-5 - Play robotfindskitten :: You don have robotfindskitten installed, right? Right?
-6 - Pointless menuitem :: This does not do anything, only pollutes the environment
-_endmenu3
+# Third tab
+# No. :: Menu item text           :: Longer description text                   :: Fucntion or command to run
+Tab 3 :: This is a label
+Tab 3 ::
+Tab 3 :: Complex script           :: Run a very-very complex script            :: /c /d echo -e "\nHello World!"
+Tab 3 :: Solve for x              :: Solve the mysteries of the universe for x :: /c /d echo -e "\nx == 42"
+Tab 3 :: 
+Tab 3 :: ---
+Tab 3 ::
+Tab 3 :: This is a label for the bottom section
+Tab 3 :: 
+Tab 3 :: Make Window$ secure      :: How to instantly secure any computer      :: /c /d echo -e "\nJust install Linux, or some BSD."
+Tab 3 :: Important script         :: Run a very important script               :: /c /d echo -e "\n"This is a very important script."" 
+Tab 3 :: Play robotfindskitten    :: You do have it installed, right? Right?   :: /v robotfindskitten 
 
 
-# Fourth tab
-_menu4
-Nothing here yet :: Write your own menus here
-_endmenu4
+# Fourth and fifth tabs
+# No. :: Menu item text           :: Longer description text  
+Tab 4 :: An item with nothing     :: Needs a description not to become a label
+Tab 4 :: Pointless menuitem       :: This one only pollutes the environment    :: example_function
+Tab 5 :: Nothing here yet         :: Write your own menus here
+
+[:end_menu_items:]
 
 
-# Fifth tab
-_menu5
-Nothing here yet :: Write your own menus here
-_endmenu5
-
-
-
-
-################
-# System menus #
-################
-
-# Keep these on the LAST TAB to preserve hotkeys
-# Sixth tab. (If you add or remove some tabs, change this accordingly)
-_menu6
-e - Edit menu entries :: Interactively change menu entries
-u - Edit user functions :: Add user defined scripts and functions
-m - Bind functions to menus :: Bind scripts and pre-defined functions to menu items
-v - Edit default values :: Edit default menu length, number of tabs, etc.
-_endmenu6
-
-
-# Contents of the right panel. Only change this if you alter right panel functionality 
-
-# Simplified menu-style is not currently implemented for the right panel
-# Skip is a placeholder for an empty menu entry. it is used in the right panel to ensure the
-# menu positions for the other entries are identical (needed for aliases, when using enter for selection)
-# This is necessary, for "b -Back to Main Menu" is added in the submenu function
-
-# In the main menus
-_rightpanel
-f - Reflow Menu
-h - Get Help
-k - Show key bindings
-skip
-q - Quit
-_endrightpanel
-
-# Descriptions of menuitems in main menu in the same order as the items above
-_rightpaneldesc
-Redraw the Lazy Admin UI
-Display the help menu
-Display the different key bindings
-skip
-Quit Lazy Admin, and return to your normal shell... and life...
-_endrightpaneldesc
-
-
-# In the submenus (contains back link) 
-_subrightpanel
-f - Reflow menu
-h - Get Help
-k - Show key bindings
-b - Back to Main Menu
-q - Quit
-_endsubrightpanel
-
-# Descriptions of menuitems in submenus in the same order as the items above
-_subrightpaneldesc
-Redraw the Lazy Admin UI
-Display the help menu
-Display the different key bindings
-Return to main menu
-Quit Lazy Admin, and return to your normal shell... and life...
-_endsubrightpaneldesc
-
-
-# Rightpanel items in help menus
-_helprightpanel
-f - Reflow Menu
-skip
-k - Show key bindings
-b - Back to Main Menu
-q - Quit
-_endhelprightpanel
-
-# Descriptions of menuitems in main menu in the same order as the items above
-_rightpaneldesc
-Redraw the Lazy Admin UI
-skip
-Display the different key bindings
-Return to parent menu
-Quit Lazy Admin, and return to your normal shell... and life...
-_endrightpaneldesc

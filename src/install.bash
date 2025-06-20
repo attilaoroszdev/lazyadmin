@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-installtarball=./files-v2.2.tar.gz
+installtarball=./files-v3.0.tar.gz
 
 # Installer function(s)
 
@@ -86,18 +86,17 @@ run_as_root() {
         done
     fi
     
-    command_suffix=""
     echo
     echo "I need to become root now."
 
     if [[ $preferred_root_command == "su" ]]; then
         echo "Plase provide root pasword when prompted"
         echo
-        su -c "$1; exit"
+        su -c "$@; exit"
     else 
         echo "Please provide sudo password if prompted"
         echo
-        sudo -- sh -c "$1"                
+        sudo -- bash -c "$@"      
     fi
 }
 
@@ -138,48 +137,9 @@ set_symlink_dir() {
 }
 
 
-# This currently means `sed` and `tar`, and the latter is only necessary for this installer to work.. 
-# While these come rpesinstalled in most systems, it never hurts to chekc
+# This currently means `tar`, which is only necessary for this installer to work.. 
+# While it comes presinstalled on most systems, it never hurts to check
 check_for_essential_dependencies() {     
-    while true; do
-        echo
-        echo "Checking if we have 'sed'..."
-        sleep 1
-
-        if hash sed 2>/dev/null; then
-            echo
-            echo "Of course, we do. Why wouldn't we...?"
-            break
-        else
-            echo
-            echo "It looks like 'sed' is missing."
-            echo "Seriously, what kind of systemn is this???)"
-            echo
-            echo "Do you wan tto install sed now? (I wil try to use apt)"
-            echo
-            read -p "(y/n) > " -n 1 installsed
-
-            if [[ $installsed == "y" || $installsed == "Y" ]]; then
-                run_as_root "apt install sed"
-            elif [[ $installsed == "n" || $installsed == "N" ]]; then
-                echo
-                echo "Awright, suit yourself. But I cannto go on without 'sed', sorry."
-                echo 
-                echo "I will now exit. Come back when you have 'sed'."
-                echo "(Yeah, I know, that's what she sed... I will see myself out.)"
-
-                exit 69
-            else
-                echo
-                echo "You want to try that again."
-                echo "It's really quite simple: Press y for 'yes', or n for 'no'". 
-                echo "(You know, on the keyboard.)"
-                echo
-                read -p "(y/n) > " -n 1 installsed
-            fi
-        fi
-    done 
-
     while true; do
         echo
         echo "Checking if we have 'tar'..."
@@ -233,13 +193,9 @@ check_for_external_dependencies() {
         xdotoolinstalled=true
     fi
 
-    if hash setxkbmap 2>/dev/null; then
-        setxkbmapinstalled=true
-    fi
-
-    if [[ $pandoc_installed && $lynx_installed && $xdotoolinstalled && $setxkbmapinstalled ]]; then
+    if [[ $pandoc_installed && $lynx_installed && $xdotoolinstalled ]]; then
         echo
-        echo "All dependencies are satisfied, nothing to do..."
+        echo "All non-essential dependencies are satisfied, nothing to do..."
     else
         echo
         echo "Some non-essential dependencies are missing:"
@@ -259,18 +215,13 @@ check_for_external_dependencies() {
             xdotoolpackage="xdotool"
         fi
 
-        if [[ ! $setxkbmapinstalled ]]; then
-            echo "  - setxkbmap"
-            setxkbmappackage="x11-xkb-utils"
-        fi
-
         echo
         echo "Want to install them now? (I wil try to use apt)"
         echo
         read -p "(y/n) > " -n 1 isitok
 
         if [[ $isitok == "y" || $isitok == "Y" ]]; then
-            run_as_root "apt install $pandocinpackage $lynxpackage $xdotoolpackage $setxkbmappackage"
+            run_as_root "apt install $pandocinpackage $lynxpackage $xdotoolpackage"
         fi
     fi
 }
@@ -366,36 +317,54 @@ fi
 echo
 echo "Extracting Lazy Admin system and user files..."
 
+# TODO: Make this default to false again in subsequent versions.
+declare extract_new_user_files=true
+
 if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
+    # Only for the 3.0 upgrade, for later versions, restore the brlow check
     echo
-    echo "A user config directory already exists. Can I purge it?"
-    echo "This will delete all your previous configurations, so be careful."
-    echo "(If you are upgrading from a previous version, it's probably better to say no...)"
-    echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to"
-    echo "keep the config files"
+    echo "A user config directory already exists, but this version is not complatible with any previous versions."
     echo
-    read -p "(yes/no) > " isitok
+    echo "I will create a backup of your old configuration in: $HOME/.config/LazyAdmin/user.OLD"
 
-    if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes" ]]; then
-        echo
-        echo
-        echo "Purging old configs..."
-
-        if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
-            rm -rf "$HOME/.config/LazyAdmin/user.OLD"
-        fi
-
-        mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
-        echo
-        echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later"
-        sleep 1
-    else
-        echo
-        echo
-        echo "Using old configs can lead to unexpected behavour..."
-        echo "if you encounter problems, run the installer again, and purge old config files"
-        sleep 1
+    if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
+        rm -rf "$HOME/.config/LazyAdmin/user.OLD"
     fi
+
+    mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
+
+    # echo
+    # echo "A user config directory already exists. Can I purge it?"
+    # echo "This will delete all your previous configurations, so be careful."
+    # echo "(If you are upgrading from a previous version, it's probably better to say no...)"
+    # echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to"
+    # echo "keep the config files"
+    # echo
+    # read -p "(yes/no) > " isitok
+
+    # if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes" ]]; then
+    #     echo
+    #     echo
+    #     echo "Purging old configs..."
+    #     extract_new_user_files=true
+
+
+    #     if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
+    #         rm -rf "$HOME/.config/LazyAdmin/user.OLD"
+    #     fi
+
+    #     mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
+    #     echo
+    #     echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later"
+    #     sleep 1
+    # else
+    #     echo
+    #     echo
+    #     echo "Using old configs can lead to unexpected behavour..."
+    #     echo "if you encounter problems, run the installer again, and purge old config files"
+    #     echo
+    #     sleep 1
+    # fi
 
 else
     echo
@@ -409,9 +378,11 @@ fi
 
 userfilesdir="$HOME/.config/LazyAdmin"
 
-echo
-echo "Extracting files..."
-tar xvzC "$userfilesdir" -f $installtarball "user"
+if $extract_new_user_files; then
+    echo
+    echo "Extracting files..."
+    tar xvzC "$userfilesdir" -f $installtarball "user"
+fi
 
 if [[ "$(whoami)" != "root" ]]; then
     chown -R "$currentuser":"$currentuser" "$userfilesdir"
@@ -430,9 +401,6 @@ if [[ $installtype == "local" ]]; then
     tar xvzC "$installdir" -f $installtarball "plugins"
     tar xvzC "$installdir" -f $installtarball "res"
 
-    sed -i "s|RESDIRPLACEHOLDER|RES_DIR=\"$installdir/res\"|" "$installdir/core/includes.la"
-    sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=\"$installdir/plugins\"|" "$installdir/core/includes.la"
-    sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=\"$installdir/core\"|" "$installdir/core/includes.la"
 else
     needroot=false
 
@@ -463,12 +431,23 @@ else
     echo "Extracting stuff..."
 
     if $needroot; then
-        run_as_root "mkdir -p /opt/LazyAdmin && tar xvzC \"$installdir\" -f $installtarball 'core'; tar xvzC \"$installdir\" -f $installtarball 'plugins'; tar xvzC \"$installdir\" -f $installtarball 'res'; sed -i \"s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|\" $installdir/core/includes.la; sed -i \"s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|\" $installdir/core/includes.la; sed -i \"s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|\" $installdir/core/includes.la"
+        run_as_root "mkdir -p /opt/LazyAdmin; tar xvzC $installdir -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res'"
     else
-        mkdir -p /opt/LazyAdmin && tar xvzC "$installdir" -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res'; sed -i "s|RESDIRPLACEHOLDER|RES_DIR=$installdir/res|" $installdir/core/includes.la; sed -i "s|PLUGINSDIRPLACEHOLDER|PLUGINS_DIR=$installdir/plugins|" $installdir/core/includes.la; sed -i "s|COREDIRPLACEHOLDER|CORE_DIR=$installdir/core|" $installdir/core/includes.la
+        mkdir -p /opt/LazyAdmin && tar xvzC "$installdir" -f $installtarball 'core'; tar xvzC "$installdir" -f $installtarball 'plugins'; tar xvzC "$installdir" -f $installtarball 'res' 
     fi
 
     sleep 1
+fi
+
+declare filename="$installdir/core/includes.la"
+declare file_contents=$(<"$filename")
+declare modified_content="${file_contents/"RESDIRPLACEHOLDER"/"RES_DIR=\"$installdir/res\""}"
+modified_content="${modified_content/"PLUGINSDIRPLACEHOLDER"/"PLUGINS_DIR=\"$installdir/plugins\""}"
+modified_content="${modified_content/"COREDIRPLACEHOLDER"/"CORE_DIR=\"$installdir/core\""}"
+if $needroot; then
+    run_as_root "echo '$modified_content' > \"$filename\""
+else
+    echo "$modified_content" > "$filename"
 fi
 
 echo
@@ -490,7 +469,7 @@ if [[ -f "$launcherdir/ladmin" ]]; then
     echo "Starter file already exists. Removing..."
 
     if [[ $installtype == "global" ]] && $needroot; then
-       run_as_root rm "$launcherdir/ladmin"
+       run_as_root "rm $launcherdir/ladmin"
     else
         rm "$launcherdir/ladmin"
     fi
@@ -505,14 +484,32 @@ echo
 if [[ $installtype == "global" ]]; then
 
     if $needroot; then
-        run_as_root "tar xvzC \"$launcherdir\" -f $installtarball --strip=1 \"launcher/ladmin\"; sed -i \"s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|\" \"$launcherdir/ladmin\""
+        run_as_root "tar xvzC $launcherdir -f $installtarball --strip=1 'launcher/ladmin'"
     else
-        tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"; sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=$installdir|" "$launcherdir/ladmin"
+        tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
     fi
+
+    filename="$launcherdir/ladmin"
+    file_contents=$(<"$filename")
+    modified_content="${file_contents/"INSTALLDIRPLACEHOLDER"/"INSTALL_DIR=\"$installdir\""}"
+
+    if $needroot; then
+        run_as_root "echo '$modified_content' > \"$filename\""
+    else
+        echo "$modified_content" > "$filename"
+    fi
+
+
+
     
 else
     tar xvzC "$launcherdir" -f $installtarball --strip=1 "launcher/ladmin"
-    sed -i "s|INSTALLDIRPLACEHOLDER|INSTALL_DIR=\"$installdir\"|" "$launcherdir/ladmin"
+
+    filename="$launcherdir/ladmin"
+    file_contents=$(<"$filename")
+    modified_content="${file_contents/"INSTALLDIRPLACEHOLDER"/"INSTALL_DIR=\"$installdir\""}"
+
+    echo "$modified_content" > "$filename"
 fi
 
 sleep 1
@@ -523,7 +520,7 @@ echo "Attempting to make launcher executable."
 echo "(If this step fails, you will need to do this manually)"
 
 if [[ $installtype == "gobal" ]] && $needroot; then
-    run_as_root "chmod 0755 \"$launcherdir/ladmin\""
+    run_as_root "chmod 0755 $launcherdir/ladmin"
 else
     chmod 0755 "$launcherdir/ladmin"
 fi
@@ -548,7 +545,7 @@ if $symlinking; then
     if [[ -f "$symlinkdir/ladmin" ]]; then
 
         if $needroot; then
-            run_as_root "rm \"$symlinkdir/ladmin\""
+            run_as_root "rm $symlinkdir/ladmin"
         else
             rm "$symlinkdir/ladmin"
         fi
@@ -556,7 +553,7 @@ if $symlinking; then
     fi
 
     if $needroot; then
-        run_as_root "ln -s \"$launcherdir/ladmin\" \"$symlinkdir/ladmin\""
+        run_as_root "ln -s $launcherdir/ladmin $symlinkdir/ladmin"
     else
         ln -s "$launcherdir/ladmin" "$symlinkdir/ladmin"
     fi

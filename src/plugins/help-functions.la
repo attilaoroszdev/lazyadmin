@@ -1,0 +1,98 @@
+#!/bin/bash
+#
+# Copyright © 2017-2025, Attila Orosz
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+display_markdown_help() { 
+
+    local pandoc_installed=false
+    local lynx_installed=false
+    
+    if  [[ $(package_exists "pandoc") == 0 ]] then
+        pandoc_installed=true
+        echo "Pandoc is installed"
+    fi
+
+    if  [[ $(package_exists "lynx") == 0 ]] then
+        lynx_installed=true
+        echo "Lynx is installed"
+    fi
+
+    if $pandoc_installed && $lynx_installed && $USE_PANDOC; then
+        clear
+        echo
+        echo "Using lynx with pandoc to display help. If you prefer to read in plain text,"
+        echo "set USE_PANDOC=false in use-defaults.la"
+        echo
+        echo "Use the  arrow keys or <Space> for paging and"
+        echo "<Ctrl> + p or <Ctrl> + n to simulate scrolling"
+        echo
+        echo "Press any key to continue"
+        read -n 1 -s key_press
+
+        pandoc "$1.md" | lynx -collapse_br_tags off -stdin
+    else
+        clear
+
+        if $USE_PANDOC; then 
+            echo
+            echo "Some dependencies are missing."
+            echo "To display a formatted markdown, install the following packag(es):"
+            echo
+
+            if ! $pandoc_installed; then
+                echo "  - pandoc"
+            fi
+
+            if ! $lynx_installed; then
+                echo "  - lynx"
+            fi
+
+            echo
+            echo "Now press any key to display plain text"
+            read -n 1 -s key_press
+        fi
+
+
+        if  [[ $(package_exists "less") == 0 ]] then
+            less "$1.txt"
+        elif  [[ $(package_exists "more") == 0 ]] then
+            more "$1.txt"
+
+        elif  [[ $(package_exists "most") == 0 ]] then
+
+            most "$1.txt"
+
+        else
+            clear
+            echo "I haven't found anything to reliably display help files (tried "less", "more" and "most")"
+            echo "What kind of system is this??"
+            echo
+            return_to_menu
+
+        fi
+
+    fi
+}
+
+
+functhelp_commanbuilder() { 
+    display_markdown_help "$RES_DIR/command-builder-guide" #.md" "$RES_DIR/command-builder-guide.txt"
+}

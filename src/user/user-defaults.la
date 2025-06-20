@@ -22,39 +22,80 @@
 
 
 #The title displayed in the main menu
+readonly MAIN_TITLE="Lazy Admin - v3.0beta"
 
-MAIN_TITLE="Lazy Admin - v3.0alpha"
-
-# Switch right panel on or off
-right_panel=true
 
 # How many elements should the main menu hold
 # Minumum number of menu items: 5, if right panel is enabled, 1 if not
 # Maxiumum number of menu items: 99
-MAX_MENU_ITEMS=11
+# The defalt setting of '0' will make LazyAdmin always fill the available vertical 
+# space, regardless of how many menu items you have, which might not always
+# be what you need (e.g. on tall/full-screen terminals with few menu items)
+readonly MAX_MENU_ITEMS=0
 
-# How many elements should sub-menus hold
-# Minumum number of menu items: 5, if right panel is enabled, 1 if not
-# Maxiumum number of sub-menu items: 99
-MAX_SUBMENU_ITEMS=13
+
+# Lazy Admin will try use 'stty' to help with some common issues for printing 
+# unwanted characters on the terminal, when e.g. a key is held down. If 'stty' is
+# not present for any reason, this step will be automaticallt skipped. If LazyAdmin
+# exits or gets interrupted in nay way, the original terminal settings will be 
+# automatically restored Turn it off, if you are certain that 'stty' is not present 
+# or if you experience any iossues (which you should not).
+# If set to true, stty will also be used to determine terminal size
+# If off, or not present, it will try foir tput or other methods
+readonly USE_STTY=true
 
 
 # Change the size of the right panel
-RIGHT_PANEL_WIDTH=27
+readonly RIGHT_PANEL_WIDTH=27
 
-# You can switch off line connector characters
-# Useful for incompatible terminals (like those on mobiles)
-# Which might render these out of place
-DISPLAY_LINE_CONNECTORS=true
 
-# This should be handled by the setup script,
-# but you can change it to any editor command
+# If true, the menus will attempt to follow the size of the terminal if it gets
+# resized. If causes cyclicl checks in a loop, so CPU time will always be consumed
+# If false, the menus ide at a `read` statement, waiting for user input, causing 0%
+# CPU consumption, but everything needs to reflown manually when resized (prefss f, or
+# select form right panel menu to reflow)
+readonly AUTO_REFLOW=true
+
+
+# How often the size check will be performed when AUTO_REFLOW is set to true
+# Do not go lower than 0.5.
+# You can, but the performance will exponentially suffer, until things might beome 
+# unresponsive. You have been warned
+readonly AUTO_REFLOW_TICK=0.5
+
+
+# Thisis where the main title is displayed. Really just decoration
+# Setting this to false can give you two extra rows when you are struggling for space
+declare -g SHOW_HEADER=true
+
+
+# Footer is where description lives
+# Setting this to false can give you two extra rows when you are struggling for space
+declare -g SHOW_FOOTER=true
+
+
+# The footer, if enabled, will either display the description as set in  the menu file, or the command assigned
+# The possible values are "description" or "command", with descriptions being default, if anthing else is set here.
+# This only affects user menus. System menu and right-panel tems will always display descriptions
+declare FOOTER_CONTENTS="description"
+
+
+# Switch right panel on or off
+declare -g RIGHT_PANEL=true
+
+
+# You can switch off line connector characters useful for incompatible terminals 
+# (like those on smartphones), that use weird fonts (non-monospace), which might
+# render them out of place
+declare DISPLAY_LINE_CONNECTORS=true
+
+
+# If true, the Markdown formatted version of the Help articles will be displayed, using pandoc and lynx,
+# if both of those packages exist on the system, otherwise a plain text version is shown
+declare USE_PANDOC=true
+
+# This should be handled by the setup script, but you can change it to any editor command
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename
 # So make sure all arguments are BEFORE the filename
-DEFAULT_EDITOR="not set"
-
-
-AUTO_REFLOW=true
-
-AUTO_REFLOW_TICK=0.5
+declare DEFAULT_EDITOR="not set"

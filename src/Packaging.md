@@ -8,30 +8,40 @@ There are currently two (2) "officially" packaged versions, both using slightly 
 This is the version that has it **all**
 
 ```
-/Lazy_Admin_v2.2/─ install.sh
+/Lazy_Admin_v3.0/─ install.bash
                 │
                 ├─ LICENSE
                 │
                 ├─ README
                 │
-                └─ files-v2.2.tar.gz/core/core-defaults.la
+                └─ files-v3.0.tar.gz/core/core-defaults.la
                                     |    |
                                     |    ├includes.la
                                     |    |
-                                    |    └main-functions.la
+                                    |    ├main-functions.la
+                                    |    |
+                                    |    └system-menus.la
                                     |
                                     |
                                     ├/launcher/ladmin
                                     |
                                     │
-                                    ├/plugins/display-help.la
+                                    ├/plugins/extra-functions.la
                                     |        |
-                                    |        ├extra-functions.la
+                                    |        ├help-functions.la
                                     |        |
                                     |        └setup-functions.la
                                     │
                                     │
-                                    ├/res/command-builder-guide.md
+                                    ├/res/advanced-menu-setup-guide.md
+                                    |    |
+                                    |    ├advanced-menu-setup-guide.txt
+                                    |    |
+                                    |    ├basic-menu-setup-guide.md
+                                    |    |
+                                    |    ├basic-menu-setup-guide.txt
+                                    |    |
+                                    |    ├command-builder-guide.md
                                     |    |
                                     |    ├command-builder-guide.txt
                                     |    |
@@ -47,18 +57,14 @@ This is the version that has it **all**
                                     |    |
                                     |    ├usage-guide.txt
                                     |    |
-                                    |    └user_files.tar.gz/user/menu-bindings.la
-                                    |                           |
-                                    |                           ├menu-entries.la
-                                    |                           |
+                                    |    └user_files.tar.gz/user/menu-entries.la
+                                    |                           |                          
                                     |                           ├user-defaults.la
                                     |                           |
                                     |                           └user-functions.la
                                     |
                                     |
-                                    └/user/menu-bindings.la
-                                          |
-                                          ├menu-entries.la
+                                    └/user/menu-entries.la
                                           |
                                           ├user-defaults.la
                                           |
@@ -72,7 +78,7 @@ This is the version that has it **all**
 Ready to go, no installation needed. Everything is dynamically linked, so it's useable from anywhere, any time
 
 ```
-/Lazy_Admin_v2.2_Portable/pladmin
+/Lazy_Admin_v3.0_Portable/pladmin
                          │
                          ├LICENSE
                          │
@@ -82,17 +88,27 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |     |
                          |     ├includes-port.la
                          |     |
-                         |     └main-functions.la
+                         |     ├main-functions.la
+                         |     |
+                         |     └system-menus.la
                          |
                          │
-                         ├/plugins/display-help.la
+                         ├/plugins/extra-functions.la
                          |        |
-                         |        ├extra-functions.la
+                         |        ├help-functions.la
                          |        |
                          |        └setup-functions.la
                          │
                          │
-                         ├/res/command-builder-guide.md
+                         ├/res/advanced-menu-setup-guide.md
+                         |    |
+                         |    ├advanced-menu-setup-guide.txt
+                         |    |
+                         |    ├basic-menu-setup-guide.md
+                         |    |
+                         |    ├basic-menu-setup-guide.txt
+                         |    |
+                         |    ├command-builder-guide.md
                          |    |
                          |    ├command-builder-guide.txt
                          |    |
@@ -106,12 +122,10 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |    |
                          |    ├usage-guide.md
                          |    |
-                         |    ├usage-guide.txt
+                         |    └usage-guide.txt
                          |
                          |
-                         └/user/menu-bindings.la
-                               |
-                               ├menu-entries.la
+                         └/user/menu-entries.la
                                |
                                ├user-defaults.la
                                |

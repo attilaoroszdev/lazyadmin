@@ -1,41 +1,50 @@
 # Lazy Admin Hotkeys and Key-bindings
 
+**This document is deprecated as of Lazy Admin 3.0 Beta**
+
+
 ## **Navigation:**
 
 
 ```
-    Up - ↑  or 'w''
-    Down - ↓  or 's'
-    Left (change tab) - ←  or 'a'
-    Right (change tab) - →  or 'd'
-    Change to right panel - Ctrl + →  or 'r'
-    Change to left panel - Ctrl + ←  or 'l'
-    Back to previous level - 'b'
-    Select menu item - '1' to '9' or <Enter>
+    Up:                        ↑  or 'w'
+    Down:                      ↓  or 's'
+    Left (change tab):         ←  or 'a'
+    Right (change tab):        →  or 'd'
+    Select Tab:                'F1' – 'F9'  or  't 1' – 't 9'
+    Change to right panel:     <Ctrl> + →  or 'r'
+    Change to left panel:      <Ctrl> + ←  or 'l'
+    Change to the other panel: <Tab>
+    Back to previous level:    'b'
+    Select menu item:          '1' to '9' or <Enter>
 ```
 
 ## **Other actions:**
 
 ```
-    Reflow menu - 'f'
-    Get help - 'h'
-    Display shortkeys - 'k'
-    Quit LazyAdmin - 'q'
+    Reflow menu:          'f'
+    Get help:             'h'
+    Display shortkeys:    'k'
+    Got o setup ooptions: 'o'
+    Quit LazyAdmin:       'q'
 ```
 
-## **Reserved keys for setup options (works from main level only):**
+## **Temporarily override settings (toggles):**
 
 ```
-    Edit menu entries - 'e'
-    Edit user functions - 'u'
-    Bind functions to menus - 'm'
-    Edit default values - 'v'
+    Turn right panel on / off:                'R'
+    Turn header (title) on /off:              'H'
+    Turn footer (descriptions) on / off:      'F'
+    Toggle footer contents (desc. / command): 'I'
+    Turn line connectors on / off:            'L'  
+    Turn using pandoc for help on / off:      'P'
 ```
 
-## **Reserved keys for command builder options (works from command buidler only):**
+## **Reserved keys for command builder:**
 
 ```
-    Manually specify flags or arguments - 'm'
-    Clear all flags or arguments - 'x'
-    Run the command with the set flags or arguments - 'c'
+    Manually specify arguments:                    'm'
+    Manually specify option parameters (no space): 'p'
+    Clear all flags or arguments:                  'x'
+    Run the active command:                        'c'
 ```
