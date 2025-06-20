@@ -33,7 +33,15 @@ This is the version that has it **all**
                                     |        └setup-functions.la
                                     │
                                     │
-                                    ├/res/command-builder-guide.md
+                                    ├/res/advanced-menu-setup-guide.md
+                                    |    |
+                                    |    ├advanced-menu-setup-guide.txt
+                                    |    |
+                                    |    ├basic-menu-setup-guide.md
+                                    |    |
+                                    |    ├basic-menu-setup-guide.txt
+                                    |    |
+                                    |    ├command-builder-guide.md
                                     |    |
                                     |    ├command-builder-guide.txt
                                     |    |
@@ -92,7 +100,15 @@ Ready to go, no installation needed. Everything is dynamically linked, so it's u
                          |        └setup-functions.la
                          │
                          │
-                         ├/res/command-builder-guide.md
+                         ├/res/advanced-menu-setup-guide.md
+                         |    |
+                         |    ├advanced-menu-setup-guide.txt
+                         |    |
+                         |    ├basic-menu-setup-guide.md
+                         |    |
+                         |    ├basic-menu-setup-guide.txt
+                         |    |
+                         |    ├command-builder-guide.md
                          |    |
                          |    ├command-builder-guide.txt
                          |    |
