@@ -529,10 +529,14 @@ read_menu_items() {
     OLD_IFS=$IFS
     IFS="$SAFE_DELIMITER"
     local -i idx=1
-    local -l system_menu_type=""
+    local system_menu_type=""
+    local -a current_menu_items=()
 
     if [[ -n "$1" ]]; then
         system_menu_type="$1"
+        current_menu_items=("${SYSTEM_MENU_ITEM_ROWS[@]}")
+    else
+        current_menu_items=("${MENU_ITEM_ROWS[@]}")
     fi
 
     MENU_ITEM_ENTRIES=()
@@ -540,43 +544,32 @@ read_menu_items() {
     MENU_ITEM_COMMANDS=()
     MENU_ITEMS_COUNT=0
 
-    if [[ -n $system_menu_type ]]; then
-        for ((n = 0; n < "${#SYSTEM_MENU_ITEM_ROWS[@]}"; n++)); do
-            local -a current_row
-            read -ra current_row <<< "${SYSTEM_MENU_ITEM_ROWS[$n]}"
+   
+    for ((n = 0; n < "${#current_menu_items[@]}"; n++)); do
+        local -a current_row
+        read -ra current_row <<< "${current_menu_items[$n]}"
 
-            local -l tab_key="${current_row[0]}"
-            tab_key="${tab_key#"${tab_key%%[![:space:]]*}"}"  # Remove leading whitespace
-            tab_key="${tab_key%"${tab_key##*[![:space:]]}"}"  # Remove trailing whitespace
-            
-            if [[ $tab_key == $system_menu_type ]]; then
-                add_row_to_menu_items $idx $system_menu_type "${current_row[@]}" 
+        local tab_key="${current_row[0]}"
+        tab_key="${tab_key#"${tab_key%%[![:space:]]*}"}"  # Remove leading whitespace
+        tab_key="${tab_key%"${tab_key##*[![:space:]]}"}"  # Remove trailing whitespace
+        
+        if [[ -n "$system_menu_type" ]] && [[ $tab_key == $system_menu_type ]]; then
+            add_row_to_menu_items $idx "${current_row[@]}" 
 
-                if [[ $? == 0 ]]; then
-                    ((idx++))
-                fi
+            if [[ $? == 0 ]]; then
+                ((idx++))
+            fi
 
-            fi 
-        done
-    else
-        for ((n = 0; n < "${#MENU_ITEM_ROWS[@]}"; n++)); do
-            local -a current_row
-            read -ra current_row <<< "${MENU_ITEM_ROWS[$n]}"
+        elif [[ $tab_key == "${TAB_ITEM_KEYS[$TAB_POS]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$TAB_POS]}" ]]; then
+            add_row_to_menu_items $idx "${current_row[@]}"
 
-            local tab_key="${current_row[0]}"
-            tab_key="${tab_key#"${tab_key%%[![:space:]]*}"}"  # Remove leading whitespace
-            tab_key="${tab_key%"${tab_key##*[![:space:]]}"}"  # Remove trailing whitespace
-            
-            if [[ $tab_key == "${TAB_ITEM_KEYS[$TAB_POS]}" ]] || [[ $tab_key == "${TAB_ITEM_ENTRIES[$TAB_POS]}" ]]; then
-                add_row_to_menu_items $idx "${current_row[@]}"
+            if [[ $? == 0 ]]; then
+                ((idx++))
+            fi
 
-                if [[ $? == 0 ]]; then
-                    ((idx++))
-                fi
+        fi 
+    done
 
-            fi 
-        done
-    fi
 
     IFS="$OLD_IFS"
     MENU_HEIGHT=$NORMAL_MENU_HEIGHT
@@ -589,11 +582,6 @@ read_menu_items() {
 add_row_to_menu_items() {
     local -i idx=$1
     shift
-    local system_function=""
-    if [[ $1 == "setup" ]] || [[ $1 == "help" ]]; then
-        system_function=$1
-        shift
-    fi
 
     local -a curent_row="$@"
     local menu_item="${current_row[1]}"
@@ -637,12 +625,7 @@ add_row_to_menu_items() {
         else
             MENU_ITEM_ENTRIES+=("$idx - $menu_item")
             MENU_ITEM_DESCRIPTIONS+=("$description")
-
-            if [[ -n $system_function ]]; then
-                MENU_ITEM_COMMANDS+=("funct$system_function$idx")
-            else
-                MENU_ITEM_COMMANDS+=("$command")
-            fi
+            MENU_ITEM_COMMANDS+=("$command")
 
             ((MENU_ITEMS_COUNT++))
 
@@ -777,18 +760,15 @@ write_tab_items() {
     fi
 
     local horizontal_connector_position=0
+
+    draw_line $((HEADER_HEIGHT - 3)) 0
     # Display joints if on, but not for the last item
-    if $DISPLAY_LINE_CONNECTORS; then
-      
-        # need to clear any lefrtovers inn case of resizing
-        draw_line $((HEADER_HEIGHT - 3)) 0
-        
+    if $DISPLAY_LINE_CONNECTORS; then  
         for ((n = 0; n < $(($DISPLAYED_TAB_ENTRIES - $connector_offset)); n++)); do
             horizontal_connector_position=$(($horizontal_connector_position + ${#TAB_ITEM_ENTRIES[$n]} + 3))
             t_put cup $((HEADER_HEIGHT - 3)) $horizontal_connector_position
             echo -n "┯"
         done
-
     fi
 
     # Then write out the tab items, with separators
@@ -1792,6 +1772,10 @@ shortkey_command(){
         "F")
             toggle_footer
             ;;
+
+        "P")
+            toggle_pandoc
+            ;;
         "I")
             toggle_footer_contents
             ;;
@@ -1968,12 +1952,15 @@ enter_setupmenu() {
 # Shortcut to use in menus
 cmb() {
     if [[ $# -ge 3 ]]; then
-        command_builder "$@"
-
-    elif [[ $(function_exists "$1") == 0 ]]; then
-        "$1"
+        command_builder "$@"   
+    else
+        local array_name_string="$1"
+        # Eval shuld be safe enough since we have defined the input
+        eval "local -a cmd_args_array=(\"\${${array_name_string}[@]}\")"
+        command_builder "${cmd_args_array[@]}"
     fi
 }
+
 
 # This is the real thing, but don't use it directly
 command_builder(){
@@ -2250,6 +2237,15 @@ toggle_footer_contents() {
     fi
 }
 
+toggle_pandoc() {
+     if $USE_PANDOC; then
+        USE_PANDOC=false
+    else
+        USE_PANDOC=true
+    fi
+
+}
+
 ####################
 # Rightpanel stuff #
 ####################
@@ -2359,14 +2355,15 @@ back_to_main_menu() {
 
 # Returns 0 if function name is valid, other nuber if not
 function_exists() {
-    declare -f -F "$1" > /dev/null
+    declare -f -F "$1" &> /dev/null
     echo $?
 }
 
 # Returns 0 if package exists on system, other number if not
 
 package_exists() {
-    if hash "$1" 2>/dev/null; then
+
+    if command -v "$1" &>/dev/null; then
         echo 0
     else
         echo 1
@@ -2448,7 +2445,7 @@ check_and_run(){
         else
             clear
             echo 
-            echo "The specified command: '$command_function' is not a valid function or package name"
+            echo "The specified command: '$command_function' is not a valid function, command or package name"
             echo
             return_to_menu
         fi

@@ -90,6 +90,10 @@ declare -g RIGHT_PANEL=true
 declare DISPLAY_LINE_CONNECTORS=true
 
 
+# If true, the Markdown formatted version of the Help articles will be displayed, using pandoc and lynx,
+# if both of those packages exist on the system, otherwise a plain text version is shown
+declare USE_PANDOC=true
+
 # This should be handled by the setup script, but you can change it to any editor command
 # It will be launched like this:
 # $DEFAULT_EDITOR $filename

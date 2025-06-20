@@ -35,6 +35,7 @@ Temporarily override settings (toggles):
   Turn header (title) on /off         - 'H'
   Turn footer (descriptions) on / off - 'F'
   Turn line connectors on / off       - 'L'
+  Turn using pandoc for help on / off - 'P'
 
 
 Reserved keys for command builder:

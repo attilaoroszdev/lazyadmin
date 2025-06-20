@@ -1,4 +1,4 @@
-# Lazy Admin v2.2 README
+# Lazy Admin v3.0 README
 
 ## To install
 
@@ -10,14 +10,14 @@ Run `./install.sh`. In case you have the portable edition, there is no installer
     
 Run one of the following launchers:
 
-- `ladmin` - for full edition   
-  It will be placed in either `$HOME` or `/opt/Lazy_Admin/`, depending on the type of your install. If you agreed to symlink to `/usr/local/bin`, you can also run it as a command
+- `ladmin` - for the full edition   
+  It will be placed in either `$HOME` or `/opt/Lazy_Admin/`, depending on the type of installation (you will b e promptedat install time.) If you agreed to symlink to `/usr/local/bin`, you can also run it as a command
 
-- `pladmin` - for portable edition
-  It will be in the Lazy Admin directory, which you have extracted from the release tarball. You could also symlink it, but then it would lose its "portable-ness" wouldn't it?
+- `pladmin` - for the portable edition
+  It will be in the Lazy Admin directory, which you have extracted from the release tarball. You could also symlink it, but then it would lose its "portable-ness", wouldn't it?
 
 
-### Launcher flags
+### Launcher arguments
 
 To load a different user profile (located next to the "user" directory, and with similar contents"), run
 
@@ -45,4 +45,4 @@ These switches can be included in any order.
 
 ## How to configure
 
-Lazy Admin comes with detailed documentation included. Access the Help menu for details
+Lazy Admin comes with detailed documentation included. Access the Help menu for details, or look in `<installation folder>/res` for the files themselves.

@@ -40,7 +40,6 @@ Tab 2 :: Packages
 Tab 3 :: Third tab
 Tab 4 :: Fourth Tab
 Tab 5 :: Fifth Tab
-Tab 6 :: Extra tab
 
 [:end_tab_order:]
 
@@ -85,11 +84,10 @@ Tab 1 :: Analyse disk space       :: Select your options in the submenu        :
    -- :: Analyse tmp directory    :: Run ncdu /tmp                             :: /v ncdu /tmp
    -- :: Analyse logs             :: Run ncdu /var/log                         :: /v ncdu /var/log
 # End of submenu items
-Tab 1 :: Interactive ping         :: Command-builder with a ping command       :: cmb show_ping_command_builder
+Tab 1 :: Interactive ping         :: Command-builder with a ping command       :: cmb PING_COMMAND_BUILDER_ARRAY
 Tab 1 :: Interactive ping inline  :: cmb defined in-line in the menu           :: cmb "Ping any host with flags" "ping" -a -A -b -B -c "-c 5" -d -i -I -l -n -q -v
 Tab 1 :: 
 Tab 1 :: Drop to shell            :: Drop to a shell. Type 'exit' to return    :: drop_to_shell
-Tab 1 :: An item with nothing     :: Needs a description not to become a label
 Tab 1 :: Last item, alo a submenu :: To see if it works :: enter_submenu
    -- :: The top section
    -- ::
@@ -131,98 +129,13 @@ Tab 3 ::
 Tab 3 :: Make Window$ secure      :: How to instantly secure any computer      :: /c /d echo -e "\nJust install Linux, or some BSD."
 Tab 3 :: Important script         :: Run a very important script               :: /c /d echo -e "\n"This is a very important script."" 
 Tab 3 :: Play robotfindskitten    :: You do have it installed, right? Right?   :: /v robotfindskitten 
-Tab 3 :: Pointless menuitem       :: This one only pollutes the environment    :: example_function
 
 
 # Fourth and fifth tabs
 # No. :: Menu item text           :: Longer description text  
-Tab 4 :: Nothing here yet         :: Write your own menus here
+Tab 4 :: An item with nothing     :: Needs a description not to become a label
+Tab 4 :: Pointless menuitem       :: This one only pollutes the environment    :: example_function
 Tab 5 :: Nothing here yet         :: Write your own menus here
-
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
-Tab 6 :: something :: something
 
 [:end_menu_items:]
 

@@ -37,6 +37,7 @@
     Turn footer (descriptions) on / off:      'F'
     Toggle footer contents (desc. / command): 'I'
     Turn line connectors on / off:            'L'  
+    Turn using pandoc for help on / off:      'P'
 ```
 
 ## **Reserved keys for command builder:**

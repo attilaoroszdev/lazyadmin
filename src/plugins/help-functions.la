@@ -21,56 +21,78 @@
 # THE SOFTWARE.
 
 display_markdown_help() { 
-    if hash pandoc 2>/dev/null; then
+
+    local pandoc_installed=false
+    local lynx_installed=false
+    
+    if  [[ $(package_exists "pandoc") == 0 ]] then
         pandoc_installed=true
+        echo "Pandoc is installed"
     fi
 
-    if hash lynx 2>/dev/null; then
+    if  [[ $(package_exists "lynx") == 0 ]] then
         lynx_installed=true
+        echo "Lynx is installed"
     fi
 
-    if [[ $pandoc_installed && $lynx_installed ]]; then
-        pandoc "$1" | lynx -stdin
-    else
+    if $pandoc_installed && $lynx_installed && $USE_PANDOC; then
         clear
         echo
-        echo "Some dependencies are missing."
-        echo "To display a formatted markdown,  install the following packag(es):"
+        echo "Using lynx with pandoc to display help. If you prefer to read in plain text,"
+        echo "set USE_PANDOC=false in use-defaults.la"
         echo
-
-        if [[ ! $pandoc_installed ]]; then
-            echo "  - pandoc"
-        fi
-
-        if [[ ! $lynx_installed ]]; then
-            echo "  - lynx"
-        fi
-
+        echo "Use the  arrow keys or <Space> for paging and"
+        echo "<Ctrl> + p or <Ctrl> + n to simulate scrolling"
         echo
-        echo "Now press any key to display plain text"
+        echo "Press any key to continue"
         read -n 1 -s key_press
 
-        less "$2"
+        pandoc "$1.md" | lynx -collapse_br_tags off -stdin
+    else
+        clear
+
+        if $USE_PANDOC; then 
+            echo
+            echo "Some dependencies are missing."
+            echo "To display a formatted markdown, install the following packag(es):"
+            echo
+
+            if ! $pandoc_installed; then
+                echo "  - pandoc"
+            fi
+
+            if ! $lynx_installed; then
+                echo "  - lynx"
+            fi
+
+            echo
+            echo "Now press any key to display plain text"
+            read -n 1 -s key_press
+        fi
+
+
+        if  [[ $(package_exists "less") == 0 ]] then
+            less "$1.txt"
+        elif  [[ $(package_exists "more") == 0 ]] then
+            more "$1.txt"
+
+        elif  [[ $(package_exists "most") == 0 ]] then
+
+            most "$1.txt"
+
+        else
+            clear
+            echo "I haven't found anything to reliably display help files (tried "less", "more" and "most")"
+            echo "What kind of system is this??"
+            echo
+            return_to_menu
+
+        fi
 
     fi
-}
-
-
-functhelp1() { 
-    display_markdown_help "$RES_DIR/usage-guide.md" "$RES_DIR/usage-guide.txt"
-}
-
-
-functhelp2() { 
-    display_markdown_help "$RES_DIR/configuration-guide.md" "$RES_DIR/configuration-guide.txt"
-}
-
-
-functhelp3() { 
-    functhelp_commanbuilder
 }
 
 
 functhelp_commanbuilder() { 
-    display_markdown_help "$RES_DIR/command-builder-guide.md" "$RES_DIR/command-builder-guide.txt"
+    display_markdown_help "$RES_DIR/command-builder-guide" #.md" "$RES_DIR/command-builder-guide.txt"
 }

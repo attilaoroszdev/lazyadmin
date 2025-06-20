@@ -8,7 +8,7 @@ There are currently two (2) "officially" packaged versions, both using slightly 
 This is the version that has it **all**
 
 ```
-/Lazy_Admin_v3.0/─ install.sh
+/Lazy_Admin_v3.0/─ install.bash
                 │
                 ├─ LICENSE
                 │

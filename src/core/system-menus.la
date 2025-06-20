@@ -24,22 +24,22 @@
 # be somewhat scarce
 
 
-# Special menus have their commands assigned in the main body, thse are just the
-# Textual representations. If you change the order, you will hnave to change the
-# bindn gs manually
-
 [:special_menu_items:]
 
 # Setup tab, Always on the last position (if enabled)
-# ID  :: Menu item text                    :: Longer description text                      
-Setup :: Edit menu entries                 :: Interactively change menu entries            
-Setup :: Edit user functions               :: Add user defined scripts and functions        
-Setup :: Edit default values               :: Edit default menu length, number of tabs, etc.
+# ID  :: Menu item text                    :: Longer description text                        :: Specify the file to edit
+Setup :: Edit menu entries                 :: Interactively change menu entries              :: edit_setup_file "$USER_DIR/menu-entries.la"
+Setup :: Edit user functions               :: Add user defined scripts and functions         :: edit_setup_file "$USER_DIR/user-functions.la"
+Setup :: Edit default values               :: Edit default menu length, number of tabs, etc. :: edit_setup_file "$USER_DIR/user-defaults.la"
+
 
 # Help menu items
-Help  :: Lazy Admin user guide             :: Basic setup and usage guide to Lazy Admin     
-Help  :: Configuration and scripting guide :: A somewhat more in-depth configuration guide 
-Help  :: Command builder usage guide       :: How to use the command-builder submenu      
+# ID  :: Menu item text                    :: Longer description text                       :: Help file command (no file extension!)
+Help  :: Lazy Admin user guide             :: Basic setup and usage guide to Lazy Admin     :: display_markdown_help "$RES_DIR/usage-guide"
+Help  :: Basic menu setup guide            :: The basics of menus, in some more detail      :: display_markdown_help "$RES_DIR/basic-menu-setup-guide"
+Help  :: Advanced menu setup guide         :: More advanced menu options, in some detail    :: display_markdown_help "$RES_DIR/advanced-menu-setup-guide"
+Help  :: Configuration guide               :: Defining user functions and changing defaults :: display_markdown_help "$RES_DIR/configuration-guide"
+Help  :: Command builder usage guide       :: How to use the command-builder submenu        :: display_markdown_help "$RES_DIR/command-builder-guide"
 
 [:end_special_menu_items:]
 
@@ -72,7 +72,7 @@ Main :: q :: Quit               :: Quit Lazy Admin, and return to your normal sh
 CMB :: m :: Misc. arguments     :: Set you own argumanent(s) manually. (1st arg. will be separated by a space)
 CMB :: p :: Misc. parameter     :: Set an option parameter to the last argument with o space between them
 CMB :: c :: Run command         :: Run the current command with all the set arguments and flag-options
-CMB :: x :: Delete set flags    :: Remove everything and start over
+CMB :: x :: Delete set args     :: Remove everything and start over
 CMB :: 
 CMB :: ---
 CMB ::

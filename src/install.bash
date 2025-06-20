@@ -317,36 +317,54 @@ fi
 echo
 echo "Extracting Lazy Admin system and user files..."
 
+# TODO: Make this default to false again in subsequent versions.
+declare extract_new_user_files=true
+
 if [[ -d "$HOME/.config/LazyAdmin/" ]]; then
+    # Only for the 3.0 upgrade, for later versions, restore the brlow check
     echo
-    echo "A user config directory already exists. Can I purge it?"
-    echo "This will delete all your previous configurations, so be careful."
-    echo "(If you are upgrading from a previous version, it's probably better to say no...)"
-    echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to"
-    echo "keep the config files"
+    echo "A user config directory already exists, but this version is not complatible with any previous versions."
     echo
-    read -p "(yes/no) > " isitok
+    echo "I will create a backup of your old configuration in: $HOME/.config/LazyAdmin/user.OLD"
 
-    if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes" ]]; then
-        echo
-        echo
-        echo "Purging old configs..."
-
-        if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
-            rm -rf "$HOME/.config/LazyAdmin/user.OLD"
-        fi
-
-        mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
-        echo
-        echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later"
-        sleep 1
-    else
-        echo
-        echo
-        echo "Using old configs can lead to unexpected behavour..."
-        echo "if you encounter problems, run the installer again, and purge old config files"
-        sleep 1
+    if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
+        rm -rf "$HOME/.config/LazyAdmin/user.OLD"
     fi
+
+    mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
+
+    # echo
+    # echo "A user config directory already exists. Can I purge it?"
+    # echo "This will delete all your previous configurations, so be careful."
+    # echo "(If you are upgrading from a previous version, it's probably better to say no...)"
+    # echo "Type \"yes\" (without the quotes) to proceed with purging, or anything else to"
+    # echo "keep the config files"
+    # echo
+    # read -p "(yes/no) > " isitok
+
+    # if [[ "$isitok" == "yes" || "$isitok" == "YES" || "$isitok" == "Yes" ]]; then
+    #     echo
+    #     echo
+    #     echo "Purging old configs..."
+    #     extract_new_user_files=true
+
+
+    #     if [[ -d "$HOME/.config/LazyAdmin/user.OLD" ]]; then
+    #         rm -rf "$HOME/.config/LazyAdmin/user.OLD"
+    #     fi
+
+    #     mv "$HOME/.config/LazyAdmin/user" "$HOME/.config/LazyAdmin/user.OLD"
+    #     echo
+    #     echo "Just kidding. I renamed the old configs and preserved it in case you'd change you mind later"
+    #     sleep 1
+    # else
+    #     echo
+    #     echo
+    #     echo "Using old configs can lead to unexpected behavour..."
+    #     echo "if you encounter problems, run the installer again, and purge old config files"
+    #     echo
+    #     sleep 1
+    # fi
 
 else
     echo
@@ -360,9 +378,11 @@ fi
 
 userfilesdir="$HOME/.config/LazyAdmin"
 
-echo
-echo "Extracting files..."
-tar xvzC "$userfilesdir" -f $installtarball "user"
+if $extract_new_user_files; then
+    echo
+    echo "Extracting files..."
+    tar xvzC "$userfilesdir" -f $installtarball "user"
+fi
 
 if [[ "$(whoami)" != "root" ]]; then
     chown -R "$currentuser":"$currentuser" "$userfilesdir"
