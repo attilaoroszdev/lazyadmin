@@ -22,7 +22,7 @@
 
 
 #The title displayed in the main menu
-readonly MAIN_TITLE="Lazy Admin - v3.0beta"
+readonly MAIN_TITLE="Lazy Admin - v3.0"
 
 
 # How many elements should the main menu hold
