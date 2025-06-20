@@ -34,22 +34,55 @@ You can think of Lazy Admin as **aliases on steroids**. Instead of remembering a
 
 They say that a picture is worth a thousand words. So here's Lazy Admin in 8000 words:
 
-![](/media/lazy-admin-3-1.png)
+<br />
 
-![](/media/lazy-admin-3-2.png)
+![Lazy Admin](/media/lazy-admin-3-1.png "Lazy Admin in a standard 24x80 terminal window")
 
-![](/media/lazy-admin-3-3.png)
+*Lazy Admin in a standard 24x80 terminal window*
 
-![](/media/lazy-admin-3-4.png)
+<br />
 
-![](/media/lazy-admin-3-5.png)
+![Section labels and dividers](/media/lazy-admin-3-2.png "Section labels and dividers help with visual grouping")
 
-![](/media/lazy-admin-3-6.png)
+*Section labels and dividers help with visual grouping*
 
-![](/media/lazy-admin-3-7.png)
+<br />
 
-![](/media/lazy-admin-3-8.png)
+![Submenus](/media/lazy-admin-3-3.png "Submenus can extend the total capacity imensely")
 
+*Submenus can extend the total capacity imensely*
+
+<br />
+
+![The command builder](/media/lazy-admin-3-4.png "The interactive command builder gives you more flexibility")
+
+*The interactive command builder gives you more flexibility*
+
+<br />
+
+![Righ panel navigation](/media/lazy-admin-3-5.png "You can navigate the right panel just like the menus")
+
+*You can navigate the right panel just like the menus*
+
+<br />
+
+![Help menu](/media/lazy-admin-3-6.png "Detailed documentation is included in the help menu")
+
+*Detailed documentation is included in the help menu*
+
+<br />
+
+![Minimal interface](/media/lazy-admin-3-7.png "Interface elements can be turned off on-demand")
+
+*Interface elements can be turned off on-demand*
+
+<br />
+
+![Small window](/media/lazy-admin-3-8.png "If the terminal (window) is too small, you get visual warnings")
+
+*If the terminal (window) is too small, you get visual warnings*
+
+<br />
 
 ### Yeak ok, but why *Lazy* Admin?
 
