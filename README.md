@@ -40,9 +40,13 @@ They say that a picture is worth a thousand words. So here's Lazy Admin in 8000 
 
 *Lazy Admin in a standard 24x80 terminal window*
 
+<br />
+
 ![Section labels and dividers](/media/lazy-admin-3-2.png "Section labels and dividers help with visual grouping")
 
 *Section labels and dividers help with visual grouping*
+
+<br />
 
 ![Submenus](/media/lazy-admin-3-3.png "Submenus can extend the total capacity imensely")
 
