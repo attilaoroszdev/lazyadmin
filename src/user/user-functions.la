@@ -231,4 +231,4 @@ show_sensors() {
 
 
 # This array contains all the arguments for the command builder command to be claled from the menuss
-declare -a PING_COMMAND_BUILDER_ARRAY=("Ping localhost with flags" "ping localhost" "-a" "-A" "-b" "-B" "-c" "-c 5" "-d" "-i" "-I" "-l" "-n" "-q" "-v")  
+declare -a PING_COMMAND_BUILDER_ARRAY=("Ping any host with flags (from user-functions)" "ping" "-a" "-A" "-b" "-B" "-c" "-c 5" "-d" "-i" "-I" "-l" "-n" "-q" "-v")  
