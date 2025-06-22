@@ -2262,7 +2262,7 @@ reflow_menu() {
 
 # Navigation help
 display_hotkeys() { 
-    display_markdown_help "$RES_DIR/shortkeys.md" "$RES_DIR/shortkeys.txt"
+    display_markdown_help "$RES_DIR/shortkeys"
     reflow_menu
 }
 
