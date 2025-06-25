@@ -140,7 +140,7 @@ init_menu() {
     read_rightpanel_items
     draw_menu
 
-    if ! $MENUS_FORCE_HIDDEN; then
+    if ! $MENUS_FORCE_HIDDEN && [[ $2 != "nowrite" ]]; then
         if $IS_SUBMENU; then
             write_submenu_title
         else
@@ -1545,6 +1545,8 @@ select_menu_item_by_number() {
                 MENU_POS=$idx
                 
                 if [[ -n $item ]]; then    
+                    # Untrap this signal to avoid confusion
+                    trap - SIGTSTP
                     check_and_run "$item"
                     is_valid=$?
                 else
@@ -1563,6 +1565,10 @@ select_menu_item_by_number() {
         ((idx++))
     done
 
+    
+    # We need to trap this signal in the menu itself
+    trap "exit 0" SIGTSTP
+
     if [[ $is_valid == 0 ]]; then
         reflow_menu
     fi
@@ -1579,11 +1585,16 @@ select_highlighted_menu_item() {
         local is_valid=1
 
         if [[ -n "${MENU_ITEM_COMMANDS[(($MENU_POS))]}" ]]; then
+            # Untrap this signal to avoid confusion
+            trap - SIGTSTP
             check_and_run "${MENU_ITEM_COMMANDS[(($MENU_POS))]}"
             is_valid=$?
         fi
         
     fi
+
+    #Signal needs trapping when we return to the menus
+    trap "exit 0" SIGTSTP
 
     if [[ $is_valid == 0 ]]; then
         reflow_menu
@@ -1645,7 +1656,6 @@ pick_menu_item() {
             # if $GOT_STTY; then
             #     restore_terminal
             # fi
-            # TODO: Update User guide and key binding guide with F1-9 and t-# keys for tabs access and TAB key for changing panels
             case $key in
             $'\e[A' | $'\e0A')
                 move_up
@@ -1796,8 +1806,8 @@ shortkey_command(){
             display_hotkeys
             ;;
         "q") 
-            #this handles exit function
-            exit_lazy_admin
+            #this handles exit function, but now we prefert use signals
+            exit 0 
             ;;
         "b")
             if $IS_SUBMENU; then
@@ -2039,7 +2049,7 @@ set_command_builder_items() {
 
 
 write_active_cmb_command(){
-    # ~~TODO: Got to make sure this does not go ovber the screen limit.~~
+    # ~~TODO: Got to make sure this does not go over the screen limit.~~
     # 7 years leter: No, that's the user's problem, terminal emulators can be resized
     # 1 Week later: Nah, I got it.
     local cmd_msg="Active command: $CMB_COMMAND$CMB_ARGS"
@@ -2256,7 +2266,7 @@ reflow_menu() {
     clear
     set_menu_sizes
     if ! MENUS_FORCE_HIDDEN; then
-        init_menu "reflow"
+        init_menu "reflow" $1
     fi
 }
 
@@ -2284,7 +2294,6 @@ display_help() {
 # (It is possible to run another shell of ladmin form within)
 exit_lazy_admin() { 
     restore_terminal
-    clear
     clear
     echo
     echo "$@"
@@ -2321,9 +2330,19 @@ back_to_main_menu() {
         REMAIN_IN_SUBMENU=false  
         TAB_POS=$OLD_TAB_POS
         MENU_POS=$OLD_MAIN_MENU_POS
+        if $should_reflow; then
+            reflow_menu "nowrite"
+        fi
+   
         enter_submenu "$OLD_SUBMENU_TITLE"
     else
         IS_SUBMENU=false
+
+        if $should_reflow; then
+            reflow_menu "nowrite"
+        fi
+   
+
         write_tab_items
 
         if $SHOW_HEADER; then
@@ -2341,9 +2360,9 @@ back_to_main_menu() {
         fi
     fi
 
-    if $should_reflow; then
-        reflow_menu
-    fi
+    # if $should_reflow; then
+    #     reflow_menu
+    # fi
    
     return
 }
@@ -2617,8 +2636,13 @@ main() {
     # Ensure everything is restored on script exit
     set_up_terminal
 
-    # Everything should be restired tomnormal if interrupted
-    trap exit_lazy_admin EXIT HUP INT QUIT TERM
+    # trap 'echo "An error occurred at line $LINENO." >&2' ERR
+    # This one will be unset when running anyting, to avoid surprises
+    # It's there to ensure restoring the terminal whjn user presses Ctr + z
+    trap "exit 0" SIGTSTP
+
+    # All thypes ofinterruption should lead to a graceful exit
+    trap "exit_lazy_admin Lazy Admin exited. Your terminal settings should now be restored." EXIT  SIGTERM SIGHUP SIGQUIT SIGABRT SIGSEGV
 
     set_up_menus
 
