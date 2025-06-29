@@ -2470,10 +2470,12 @@ check_and_run(){
         fi
     fi
 
+    if ! $is_navigation; then
+        restore_terminal
+    fi
+
     if $is_valid; then
-        if ! $is_navigation; then
-            restore_terminal
-        fi
+       
 
         if $clear_before_running; then
             clear

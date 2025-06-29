@@ -25,11 +25,12 @@ COREDIRPLACEHOLDER
 PLUGINSDIRPLACEHOLDER
 RESDIRPLACEHOLDER
 
-. "$USER_DIR/user-defaults.la"
-. "$USER_DIR/user-functions.la"
 
 . "$CORE_DIR/core-defaults.la"
+. "$USER_DIR/user-defaults.la"
+
 . "$CORE_DIR/main-functions.la"
+. "$USER_DIR/user-functions.la"
 
 . "$PLUGINS_DIR/extra-functions.la"
 . "$PLUGINS_DIR/setup-functions.la"
