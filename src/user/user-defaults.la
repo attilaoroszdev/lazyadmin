@@ -21,8 +21,15 @@
 # THE SOFTWARE.
 
 
+declare version_number="$MAJOR_VERSION.$MINOR_VERSION"
+
+if [[ $BUGFIX_VERSION > 0 ]]; then
+    version_number="$version_number.$BUGFIX_VERSION"
+fi
+
+
 #The title displayed in the main menu
-readonly MAIN_TITLE="Lazy Admin - v3.0.1"
+readonly MAIN_TITLE="Lazy Admin - v$version_number"
 
 
 # How many elements should the main menu hold

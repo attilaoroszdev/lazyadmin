@@ -22,9 +22,9 @@
 
 
 # Do not change these. (You have been warned)
-readonly MAJOR_VERSION=3 # This currently does nothing. I had plans, but...
-readonly MINOR_VERSION=0 # This currently does nothing. I had plans, but...
-readonly BUGFIX_VERSION=1
+declare -r -g -i MAJOR_VERSION=3
+declare -r -g -i MINOR_VERSION=0
+declare -r -g -i BUGFIX_VERSION=2
 readonly IS_PRODUCTION_RELEASE=true # This currently does nothing. I had plans, but...
 readonly BOTTOM_SEPARATORS=3
 readonly DESCRIPTOR_HEIGHT=1

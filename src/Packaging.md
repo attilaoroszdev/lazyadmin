@@ -8,13 +8,13 @@ There are currently two (2) "officially" packaged versions, both using slightly 
 This is the version that has it **all**
 
 ```
-/Lazy_Admin_v3.0/─ install.bash
+/Lazy_Admin_v3.0.2/─ install.bash
                 │
                 ├─ LICENSE
                 │
                 ├─ README
                 │
-                └─ files-v3.0.tar.gz/core/core-defaults.la
+                └─ files-v3.0.2.tar.gz/core/core-defaults.la
                                     |    |
                                     |    ├includes.la
                                     |    |
@@ -78,7 +78,7 @@ This is the version that has it **all**
 Ready to go, no installation needed. Everything is dynamically linked, so it's useable from anywhere, any time
 
 ```
-/Lazy_Admin_v3.0_Portable/pladmin
+/Lazy_Admin_v3.0.2_Portable/pladmin
                          │
                          ├LICENSE
                          │

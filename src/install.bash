@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-installtarball=./files-v3.0.tar.gz
+installtarball=./files-v3.0.1.tar.gz
 
 # Installer function(s)
 
