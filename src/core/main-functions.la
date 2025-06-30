@@ -2406,7 +2406,11 @@ validate_item() {
 # Originally written for the preset menus, in case some stuff is not 
 # present on th tyarget system, but it can be useful in other scenarios too
 check_and_run(){
-    local is_valid=false
+
+    # echo "Check and rtun called"
+    # sleep 5
+
+    local is_valid=true
     local is_navigation=false
     local delayed_return=false
     local validate_first=false
@@ -2442,7 +2446,6 @@ check_and_run(){
         fi
     done
     
-    is_valid=true
     
     case "$command_function" in
         "enter_submenu")
@@ -2456,12 +2459,21 @@ check_and_run(){
             ;;
     esac
 
+
+    if ! $is_navigation; then
+        restore_terminal
+    fi
+
+    local terminal_set=false
+
     if $validate_first && ! $is_navigation; then
         is_valid=false
         
         if [[ $(validate_item $command_function) == 0 ]]; then
             is_valid=true
         else
+            set_up_terminal
+            terminal_set=true
             clear
             echo 
             echo "The specified command: '$command_function' is not a valid function, command or package name"
@@ -2469,10 +2481,7 @@ check_and_run(){
             return_to_menu
         fi
     fi
-
-    if ! $is_navigation; then
-        restore_terminal
-    fi
+   
 
     if $is_valid; then
        
@@ -2492,6 +2501,7 @@ check_and_run(){
 
             if ! $is_navigation; then
                 set_up_terminal
+                terminal_set=true
             fi
 
             return_to_menu
@@ -2499,7 +2509,7 @@ check_and_run(){
 
     fi
 
-    if ! $is_navigation; then
+    if ! $is_navigation && ! $terminal_set; then
         set_up_terminal
     fi
 
